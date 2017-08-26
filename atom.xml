@@ -1,19 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hexo</title>
+  <title>逼格运维说</title>
   
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-26T07:59:15.000Z</updated>
+  <updated>2017-08-26T09:58:13.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>Andy Xu</name>
     
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Dockerfile-etcd</title>
+    <link href="http://yoursite.com/2017/08/26/Dockerfile-etcd/"/>
+    <id>http://yoursite.com/2017/08/26/Dockerfile-etcd/</id>
+    <published>2017-08-26T09:56:15.000Z</published>
+    <updated>2017-08-26T09:58:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><a id="more"></a>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Dockerfile&quot;&gt;&lt;a href=&quot;#Dockerfile&quot; class=&quot;headerlink&quot; title=&quot;Dockerfile&quot;&gt;&lt;/a&gt;Dockerfile&lt;/h2&gt;
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+      <category term="Etcd" scheme="http://yoursite.com/tags/Etcd/"/>
+    
+  </entry>
   
   <entry>
     <title>Ansible-Etcd-cluster</title>

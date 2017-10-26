@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Docker,GPU,AI,NVIDIA,NVIDIA-Docker," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="逼格运维说" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="背景：随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。 从GPU到GPGP">
+<meta name="keywords" content="Docker,GPU,AI,NVIDIA,NVIDIA-Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPU环境下玩转Docker(一)">
+<meta property="og:url" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/index.html">
+<meta property="og:site_name" content="逼格运维说">
+<meta property="og:description" content="背景：随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。 从GPU到GPGP">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/gpu-type.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/nvidia-toolkit.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/conflict-specifics.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/meta-packages.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/meta-packages.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/cuda-sample.png">
+<meta property="og:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/cuda-sample-1.png">
+<meta property="og:updated_time" content="2017-10-26T02:52:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GPU环境下玩转Docker(一)">
+<meta name="twitter:description" content="背景：随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。 从GPU到GPGP">
+<meta name="twitter:image" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/gpu-type.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/"/>
+
+
+
+
+
+  <title>GPU环境下玩转Docker(一) | 逼格运维说</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">逼格运维说</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="逼格运维说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GPU环境下玩转Docker(一)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T10:07:34+08:00">
+                2017-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h3><p>随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。</p>
+<p><a href="http://www.jianshu.com/p/e72a352a2bd7" target="_blank" rel="external">从GPU到GPGPU</a><br><a href="http://www.jianshu.com/p/609e0530a19c" target="_blank" rel="external">CPU与GPU</a></p>
+<a id="more"></a>
+<h3 id="一、GPU准备"><a href="#一、GPU准备" class="headerlink" title="一、GPU准备"></a>一、GPU准备</h3><p><a href="http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#redhat-installation" target="_blank" rel="external">CUDA安装部署</a></p>
+<p><a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=CentOS&amp;target_version=7&amp;target_type=rpmlocal" target="_blank" rel="external">CUDA Toolkit下载页面</a></p>
+<p><a href="http://www.nvidia.cn/page/home.html" target="_blank" rel="external">英伟达中文官网</a></p>
+<h3 id="二、GPU驱动安装"><a href="#二、GPU驱动安装" class="headerlink" title="二、GPU驱动安装"></a>二、GPU驱动安装</h3><p><code>注意：由于GPU需要在宿主机上安装相关驱动才能够被用户态的程序所识别，所以需要先安装CUDA</code></p>
+<p>参考上述的<code>CUDA安装部署</code></p>
+<h4 id="1-系统需求"><a href="#1-系统需求" class="headerlink" title="1. 系统需求"></a>1. 系统需求</h4><p>想要在系统上使用<code>CUDA</code>，必须安装如下依赖：</p>
+<ul>
+<li>CUDA-capable CPU</li>
+<li>一个特定版本的gcc编译器以及相关工具链</li>
+<li><a href="http://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">NVIDIA CUDA Toolkit</a></li>
+</ul>
+<p>在linux X86_64架构平台上建议的配置：</p>
+<table>
+<thead>
+<tr>
+<th>linux发行版</th>
+<th>内核版本</th>
+<th>GCC</th>
+<th>GLIBC</th>
+<th>ICC</th>
+<th>PGI</th>
+<th>XLC</th>
+<th>CLANG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RHEL 7.X</td>
+<td>3.10</td>
+<td>4.8.5</td>
+<td>2.17</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>Centos 7.X</td>
+<td>3.10</td>
+<td>4.8.5</td>
+<td>2.17</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>RHEL 6.X</td>
+<td>2.6.32</td>
+<td>4.4.7</td>
+<td>2.12</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>Centos 6.X</td>
+<td>2.6.32</td>
+<td>4.4.7</td>
+<td>2.12</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>Fedora 25</td>
+<td>4.8.8</td>
+<td>6.2.1</td>
+<td>2.24-3</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>OpenSUSE Leap 42.2</td>
+<td>4.4.27</td>
+<td>4.8</td>
+<td>2.22</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>SLES 12 SP2</td>
+<td>4.4.21</td>
+<td>4.8.5</td>
+<td>2.22</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>Ubuntu 17.04</td>
+<td>4.9.0</td>
+<td>6.3.0</td>
+<td>2.24-3</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+<tr>
+<td>Ubuntu 16.04</td>
+<td>4.4</td>
+<td>5.3.1</td>
+<td>2.23</td>
+<td>17.0</td>
+<td>17.1</td>
+<td>NO</td>
+<td>3.9</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-安装前准备"><a href="#2-安装前准备" class="headerlink" title="2. 安装前准备"></a>2. 安装前准备</h4><p>在安装CUDA Toolkit和驱动之前，需要在GPU主机上执行相关的操作：</p>
+<ul>
+<li>检测系统中有CUDA-capable GPU卡</li>
+<li>检测系统是否是上述列表中支持的linux发行版本</li>
+<li>检测系统中是否安装了依赖的gcc编译器</li>
+<li>检测系统中是否安装了正确的内核头文件以及开发包</li>
+<li>下载NVIDIA CUDA Toolkit</li>
+<li>处理一些安装过程中的冲突问题</li>
+</ul>
+<p><strong>2.1 检测是否有一个CUDA-Capable GPU</strong></p>
+<p>如下显示当前主机上支持并有四个GPU设备<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sh-4.2# lspci | grep -i nvidia</div><div class="line">04:00.0 3D controller: NVIDIA Corporation Device 17fd (rev a1)</div><div class="line">05:00.0 3D controller: NVIDIA Corporation Device 17fd (rev a1)</div><div class="line">06:00.0 3D controller: NVIDIA Corporation Device 17fd (rev a1)</div><div class="line">07:00.0 3D controller: NVIDIA Corporation Device 17fd (rev a1)</div></pre></td></tr></table></figure></p>
+<p><code>注意：如果使用上述命令没有任何输出，那需要更新你的PCI 硬件数据库，然后再次执行；</code></p>
+<p>查看GPU相关基础信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">sh-4.2# nvidia-smi</div><div class="line">Wed Oct 18 11:58:03 2017</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| NVIDIA-SMI 375.39                 Driver Version: 375.39                    |</div><div class="line">|-------------------------------+----------------------+----------------------+</div><div class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</div><div class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</div><div class="line">|===============================+======================+======================|</div><div class="line">|   0  Tesla M40 24GB      On   | 0000:04:00.0     Off |                    0 |</div><div class="line">| N/A   23C    P8    17W / 250W |      0MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   1  Tesla M40           On   | 0000:05:00.0     Off |                    0 |</div><div class="line">| N/A   26C    P8    17W / 250W |      0MiB / 11443MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   2  Tesla M40 24GB      On   | 0000:06:00.0     Off |                    0 |</div><div class="line">| N/A   22C    P8    17W / 250W |      0MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   3  Tesla M40           On   | 0000:07:00.0     Off |                    0 |</div><div class="line">| N/A   23C    P8    16W / 250W |      0MiB / 11443MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line"></div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| Processes:                                                       GPU Memory |</div><div class="line">|  GPU       PID  Type  Process name                               Usage      |</div><div class="line">|=============================================================================|</div><div class="line">|  No running processes found                                                 |</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line"></div><div class="line"># Temp 标识GPU设备的温度</div><div class="line"># Memory-Usage 表示内存使用率</div><div class="line"># GPU-Util 表示GPU使用率</div></pre></td></tr></table></figure>
+<p><code>注意：上述输出也可以看出该系统上有4块GPU设备，使用Tesla M40型号。其中分别有两块卡24G内存，两块是12G内存，分别处于两个PCIE总线上</code></p>
+<p><code>注意：宿主机内存为256G，cpu为Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz 开启超线程后为24颗逻辑cpu(两颗6核心的cpu开启了超线程)</code></p>
+<p><code>注意：如果你的GPU卡是NVIDIA的，并且是在http://developer.nvidia.com/cuda-gpus中可用查看到的，那么你的GPU就是 CUDA-capable</code></p>
+<p><img src="./gpu-type.png" alt=""></p>
+<p><strong>2.2 检测Linux的架构和操作系统版本</strong></p>
+<p>因为CUDA开发工具只支持一些指定发行版本的linux，需要用户查看操作系统的架构以及发行版本。可以在CUDA Toolkit发布版本的中查看支持的linux版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># uname -m &amp;&amp; cat /etc/redhat-release</div><div class="line">x86_64</div><div class="line">CentOS Linux release 7.2.1511 (Core)</div></pre></td></tr></table></figure>
+<p><strong>2.3 检测系统是否安装了gcc</strong></p>
+<p>当使用CUDA Toolkit进行开发的时候，gcc编译器是必须需要的。一般情况下linux主机都会安装了gcc编译器，但是为确保之后的操作不会出现大问题，建议检查下gcc以及版本是否为对应的版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># gcc --version</div><div class="line">gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-4)</div></pre></td></tr></table></figure>
+<p><strong>2.4 检测系统是否有正确的内核头文件以及一些开发包是否安装</strong></p>
+<p>CUDA驱动需要内核头文件和开发工具包来保证驱动程序的安装以及rebuilt，比如你的内核版本为<code>3.17.4-301</code>，那么<code>3.17.4-301</code>的内核头文件以及相关的开发包也必须安装。</p>
+<p>当驱动程序的安装过程没有进行包的验证，在使用RPM或者DEB包安装驱动的时候如果系统上没有安装正确的软件包，它将会尝试去安装内核头文件以及开发工具包。但是通常情况下，这种安装会默认去寻找仓库中最新版本的软件包，可能会导致内核版本的不匹配等问题。因此，在安装CUDA驱动之前，最好手动确认内核头文件的版本以及开发工具包的安装。</p>
+<p>在centos系统上可以执行如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># uname -r</div><div class="line">3.10.0-327.el7.x86_64</div><div class="line"></div><div class="line"># yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r) -y</div></pre></td></tr></table></figure></p>
+<p><strong>2.5 选择安装方式</strong></p>
+<p>官方有两种方式去安装： distribution-specific packages (RPM and Deb packages)和distribution-independent package (runfile packages)。其中前者对接了linux发行版原生的包管理系统，是强烈建议的一种安装方式。</p>
+<p><strong>2.6 下载NVIDIA CUDA Toolkit</strong></p>
+<p><a href="http://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">下载地址</a><br>根据当前系统的基础状况来选择相对应的版本。<br><img src="./nvidia-toolkit.png" alt="NVIDIA CUDA Toolkit"><br>可以看到安装类型支持两种方式<code>runfile</code>和<code>rpm</code>,其中rpm方式又分为<code>local</code>和<code>network</code>方式，由于我们的宿主机不能直接访问外网，先使用rpm（local）方式进行安装下载。</p>
+<p>下载完成之后需要使用<code>md5sum</code>进行文件验证，以保证最终的包一致性。官方提供的checksums文件被损坏，暂时无法检验。</p>
+<p><strong>2.7 处理安装冲突的一些方法</strong></p>
+<p>在安装CUDA之前，任何可能冲突的安装包都需要被卸载。<br>以下为相关细节。</p>
+<p><img src="./conflict-specifics.png" alt=""></p>
+<p>使用如下方式去卸载相关的冲突包。</p>
+<p>卸载runfile方式的Toolkit :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/local/cuda-X.Y/bin/uninstall_cuda_X.Y.pl</div></pre></td></tr></table></figure></p>
+<p>卸载runfile方式的Driver：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/bin/nvidia-uninstall</div></pre></td></tr></table></figure></p>
+<p>卸载RPM/Deb方式安装的包：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ yum remove &lt;package_name&gt;                      # Redhat/CentOS</div><div class="line">$ dnf remove &lt;package_name&gt;                      # Fedora</div><div class="line">$ zypper remove &lt;package_name&gt;                   # OpenSUSE/SLES</div><div class="line">$ apt-get --purge remove &lt;package_name&gt;          # Ubuntu</div></pre></td></tr></table></figure></p>
+<h4 id="3-安装包管理程序-Package-Manager"><a href="#3-安装包管理程序-Package-Manager" class="headerlink" title="3. 安装包管理程序(Package Manager)"></a>3. 安装包管理程序(Package Manager)</h4><p><a href="http://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html#redhat-x86_64" target="_blank" rel="external">快速安装指南</a></p>
+<p><strong>3.1 在Redhat/CentOS上安装</strong></p>
+<ul>
+<li>1.执行2中的操作</li>
+<li>2.确认DKMS依赖<br> NVIDIA驱动的RPM包会依赖一些额外的包，比如说<code>DKMS</code>和<code>libvdpau</code>,这些包在系统默认的仓库中是不包含的，只存在与第三方镜像仓库，比如<a href="http://fedoraproject.org/wiki/EPEL" target="_blank" rel="external">EPEL</a>,因此在安装驱动之前，必须将第三方源添加到本地的仓库中，否则缺失依赖会阻止安装继续进行。</li>
+<li><p>3.如果需要，自定义xorg.conf文件<br>驱动会依赖一个自动生成的xorg.conf文件<code>/etc/X11/xorg.conf</code>，该文件可能会影响驱动的正常工作，可以删除该文件，或者添加<code>/etc/X11/xorg.conf.d/00-nvidia.conf</code>的内容到xorg.conf文件中。</p>
+</li>
+<li><p>4.安装meta-data仓库</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># rpm --install cuda-repo-&lt;distro&gt;-&lt;version&gt;.&lt;architecture&gt;.rpm</div></pre></td></tr></table></figure>
+<ul>
+<li>5.清除仓库缓存</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># yum clean expire-cache</div></pre></td></tr></table></figure>
+<ul>
+<li>6.安装CUDA</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># yum install cuda</div></pre></td></tr></table></figure>
+<p>如果i686的libvdpau包安装失败，可以尝试以下步骤来修复该问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># yumdownloader libvdpau.i686</div><div class="line"># sudo rpm -U --oldpackage libvdpau*.rpm</div></pre></td></tr></table></figure>
+<ul>
+<li>7.如果需要，添加libcuda.so的软连接</li>
+</ul>
+<p>libcuda.so库文件被安装在<code>/usr/lib{,64}/nvidia</code>目录，如果已运行的项目需要使用libcuda.so文件，可以添加一个软连接到<code>/usr/lib{,64}</code>目录。</p>
+<ul>
+<li>8.执行<a href="http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-installation-actions" target="_blank" rel="external">安装后操作</a></li>
+</ul>
+<p><strong>3.2 包管理器的额外功能</strong></p>
+<p><img src="./meta-packages.png" alt="cuda核心包"></p>
+<p><img src="./meta-packages.png" alt="cuda核心包"></p>
+<h4 id="4-安装后操作"><a href="#4-安装后操作" class="headerlink" title="4. 安装后操作"></a>4. 安装后操作</h4><p><strong>4.1 必须执行的操作</strong></p>
+<p>一些操作行为必须在安装后并且在使用CUDA Toolkit和Driver之前去执行。</p>
+<p>4.1.1 环境设置</p>
+<p><code>PATH</code>环境变量必须包含<code>/usr/local/cuda-8.0/bin</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export PATH=/usr/local/cuda-8.0/bin$&#123;PATH:+:$&#123;PATH&#125;&#125;</div></pre></td></tr></table></figure></p>
+<p><code>注意：</code>在使用runfile方式安装的时候，动态链接库<code>LD_LIBRARY_PATH</code>的环境变量需要包含<code>/usr/local/cuda-8.0/lib64</code>.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64\</div><div class="line">                         $&#123;LD_LIBRARY_PATH:+:$&#123;LD_LIBRARY_PATH&#125;&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>4.2 强烈推荐的操作</strong></p>
+<p>4.2.1 安装可写的示例程序</p>
+<p>为了修改，编译以及运行样品，样品程序必须也可写权限进行安装，安装脚本如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># cuda-install-samples-8.0.sh &lt;dir&gt;</div></pre></td></tr></table></figure></p>
+<p>该脚本会创建一个<code>/usr/local/cuda/samples</code>的只读拷贝，需要将拷贝的内容改为可写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># cuda-install-samples-8.0.sh /export/biaoge/cuda-samples</div><div class="line"></div><div class="line"># tree -L 2 /export/biaoge/cuda-samples/</div><div class="line">/export/biaoge/cuda-samples/</div><div class="line">└── NVIDIA_CUDA-8.0_Samples</div><div class="line">    ├── 0_Simple</div><div class="line">    ├── 1_Utilities</div><div class="line">    ├── 2_Graphics</div><div class="line">    ├── 3_Imaging</div><div class="line">    ├── 4_Finance</div><div class="line">    ├── 5_Simulations</div><div class="line">    ├── 6_Advanced</div><div class="line">    ├── 7_CUDALibraries</div><div class="line">    ├── bin</div><div class="line">    ├── common</div><div class="line">    ├── EULA.txt</div><div class="line">    ├── Makefile</div><div class="line">    └── uninstall_cuda_samples_8.0.pl</div></pre></td></tr></table></figure>
+<p>4.2.2 验证所有的安装</p>
+<p>在继续操作之前，验证一下<code>CUDA Toolkit</code>能够识别到正确的GPU硬件设备是非常重要的。因此这里需要编译一些样品程序来进行检验。</p>
+<p>(1)验证驱动版本<br>如果安装了确定，需要验证下加载驱动的版本是否正确，如果没有安装驱动或者没有用过内核模块来加载，可以暂时跳过该步骤。</p>
+<p>当驱动被加载后，可以通过如下命令查看到驱动的版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># cat /proc/driver/nvidia/version</div><div class="line">NVRM version: NVIDIA UNIX x86_64 Kernel Module  375.39  Tue Jan 31 20:47:00 PST 2017</div><div class="line">GCC version:  gcc version 4.8.5 20150623 (Red Hat 4.8.5-4) (GCC)</div></pre></td></tr></table></figure>
+<p>(2) 编译样品程序<br>CUDA Toolkit的版本可以使用<code>nvcc --version/-V</code>查看，该命令运行编译驱动来编译CUDA程序，底层其实调用了gcc编译器来编译c代码，使用<code>NVIDIA PTX</code>编译器来调用CUDA代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># nvcc -V</div><div class="line">nvcc: NVIDIA (R) Cuda compiler driver</div><div class="line">Copyright (c) 2005-2016 NVIDIA Corporation</div><div class="line">Built on Tue_Jan_10_13:22:03_CST_2017</div><div class="line">Cuda compilation tools, release 8.0, V8.0.61</div></pre></td></tr></table></figure>
+<p>NVIDIA CUDA Toolkit在源文件中包含了一些示例程序，用户可以通过修改<code>~/NVIDIA_CUDA-8.0_Samples</code>并执行<code>make</code>来编译这些示例程序。编译的二进制文件将存放在<code>~/NVIDIA_CUDA-8.0_Samples/bin</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># cd /export/biaoge/cuda-samples/NVIDIA_CUDA-8.0_Samples/1_Utilities/deviceQuery</div><div class="line"></div><div class="line">#编译生成deviceQuery二进制文件，在(3)中需要验证环境</div><div class="line"># make</div><div class="line"></div><div class="line"># cd /export/biaoge/cuda-samples/NVIDIA_CUDA-8.0_Samples/1_Utilities/bandwidthTest</div><div class="line"></div><div class="line">#编译生成bandwidthTest二进制文件，在(3)中用来验证环境</div><div class="line"># make</div><div class="line"></div><div class="line"># ll ../bandwidthTest/bandwidthTest</div><div class="line">-rwxr-xr-x 1 root root 603420 Oct 18 16:05 ../bandwidthTest/bandwidthTest</div><div class="line"># ll ../deviceQuery/deviceQuery</div><div class="line">-rwxr-xr-x 1 root root 582882 Oct 18 16:44 ../deviceQuery/deviceQuery</div></pre></td></tr></table></figure>
+<p>(3) 运行二进制文件</p>
+<p>编译完成之后，在<code>~/NVIDIA_CUDA-8.0_Samples</code>下对应目录下运行<code>deviceQuery</code>.如果CUDA程序被正确安装和配置，<code>deviceQuery</code>的输出应该看起来如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div></pre></td><td class="code"><pre><div class="line"># ./deviceQuery</div><div class="line">./deviceQuery Starting...</div><div class="line"></div><div class="line"> CUDA Device Query (Runtime API) version (CUDART static linking)</div><div class="line"></div><div class="line">Detected 4 CUDA Capable device(s)</div><div class="line"></div><div class="line">Device 0: &quot;Tesla M40 24GB&quot;</div><div class="line">  CUDA Driver Version / Runtime Version          8.0 / 8.0</div><div class="line">  CUDA Capability Major/Minor version number:    5.2</div><div class="line">  Total amount of global memory:                 22940 MBytes (24054136832 bytes)</div><div class="line">  (24) Multiprocessors, (128) CUDA Cores/MP:     3072 CUDA Cores</div><div class="line">  GPU Max Clock rate:                            1112 MHz (1.11 GHz)</div><div class="line">  Memory Clock rate:                             3004 Mhz</div><div class="line">  Memory Bus Width:                              384-bit</div><div class="line">  L2 Cache Size:                                 3145728 bytes</div><div class="line">  Maximum Texture Dimension Size (x,y,z)         1D=(65536), 2D=(65536, 65536), 3D=(4096, 4096, 4096)</div><div class="line">  Maximum Layered 1D Texture Size, (num) layers  1D=(16384), 2048 layers</div><div class="line">  Maximum Layered 2D Texture Size, (num) layers  2D=(16384, 16384), 2048 layers</div><div class="line">  Total amount of constant memory:               65536 bytes</div><div class="line">  Total amount of shared memory per block:       49152 bytes</div><div class="line">  Total number of registers available per block: 65536</div><div class="line">  Warp size:                                     32</div><div class="line">  Maximum number of threads per multiprocessor:  2048</div><div class="line">  Maximum number of threads per block:           1024</div><div class="line">  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)</div><div class="line">  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)</div><div class="line">  Maximum memory pitch:                          2147483647 bytes</div><div class="line">  Texture alignment:                             512 bytes</div><div class="line">  Concurrent copy and kernel execution:          Yes with 2 copy engine(s)</div><div class="line">  Run time limit on kernels:                     No</div><div class="line">  Integrated GPU sharing Host Memory:            No</div><div class="line">  Support host page-locked memory mapping:       Yes</div><div class="line">  Alignment requirement for Surfaces:            Yes</div><div class="line">  Device has ECC support:                        Enabled</div><div class="line">  Device supports Unified Addressing (UVA):      Yes</div><div class="line">  Device PCI Domain ID / Bus ID / location ID:   0 / 4 / 0</div><div class="line">  Compute Mode:</div><div class="line">     &lt; Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) &gt;</div><div class="line"></div><div class="line">Device 1: &quot;Tesla M40&quot;</div><div class="line">  CUDA Driver Version / Runtime Version          8.0 / 8.0</div><div class="line">  CUDA Capability Major/Minor version number:    5.2</div><div class="line">  Total amount of global memory:                 11443 MBytes (11998855168 bytes)</div><div class="line">  (24) Multiprocessors, (128) CUDA Cores/MP:     3072 CUDA Cores</div><div class="line">  GPU Max Clock rate:                            1112 MHz (1.11 GHz)</div><div class="line">  Memory Clock rate:                             3004 Mhz</div><div class="line">  Memory Bus Width:                              384-bit</div><div class="line">  L2 Cache Size:                                 3145728 bytes</div><div class="line">  Maximum Texture Dimension Size (x,y,z)         1D=(65536), 2D=(65536, 65536), 3D=(4096, 4096, 4096)</div><div class="line">  Maximum Layered 1D Texture Size, (num) layers  1D=(16384), 2048 layers</div><div class="line">  Maximum Layered 2D Texture Size, (num) layers  2D=(16384, 16384), 2048 layers</div><div class="line">  Total amount of constant memory:               65536 bytes</div><div class="line">  Total amount of shared memory per block:       49152 bytes</div><div class="line">  Total number of registers available per block: 65536</div><div class="line">  Warp size:                                     32</div><div class="line">  Maximum number of threads per multiprocessor:  2048</div><div class="line">  Maximum number of threads per block:           1024</div><div class="line">  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)</div><div class="line">  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)</div><div class="line">  Maximum memory pitch:                          2147483647 bytes</div><div class="line">  Texture alignment:                             512 bytes</div><div class="line">  Concurrent copy and kernel execution:          Yes with 2 copy engine(s)</div><div class="line">  Run time limit on kernels:                     No</div><div class="line">  Integrated GPU sharing Host Memory:            No</div><div class="line">  Support host page-locked memory mapping:       Yes</div><div class="line">  Alignment requirement for Surfaces:            Yes</div><div class="line">  Device has ECC support:                        Enabled</div><div class="line">  Device supports Unified Addressing (UVA):      Yes</div><div class="line">  Device PCI Domain ID / Bus ID / location ID:   0 / 5 / 0</div><div class="line">  Compute Mode:</div><div class="line">     &lt; Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) &gt;</div><div class="line"></div><div class="line">Device 2: &quot;Tesla M40 24GB&quot;</div><div class="line">  CUDA Driver Version / Runtime Version          8.0 / 8.0</div><div class="line">  CUDA Capability Major/Minor version number:    5.2</div><div class="line">  Total amount of global memory:                 22940 MBytes (24054136832 bytes)</div><div class="line">  (24) Multiprocessors, (128) CUDA Cores/MP:     3072 CUDA Cores</div><div class="line">  GPU Max Clock rate:                            1112 MHz (1.11 GHz)</div><div class="line">  Memory Clock rate:                             3004 Mhz</div><div class="line">  Memory Bus Width:                              384-bit</div><div class="line">  L2 Cache Size:                                 3145728 bytes</div><div class="line">  Maximum Texture Dimension Size (x,y,z)         1D=(65536), 2D=(65536, 65536), 3D=(4096, 4096, 4096)</div><div class="line">  Maximum Layered 1D Texture Size, (num) layers  1D=(16384), 2048 layers</div><div class="line">  Maximum Layered 2D Texture Size, (num) layers  2D=(16384, 16384), 2048 layers</div><div class="line">  Total amount of constant memory:               65536 bytes</div><div class="line">  Total amount of shared memory per block:       49152 bytes</div><div class="line">  Total number of registers available per block: 65536</div><div class="line">  Warp size:                                     32</div><div class="line">  Maximum number of threads per multiprocessor:  2048</div><div class="line">  Maximum number of threads per block:           1024</div><div class="line">  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)</div><div class="line">  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)</div><div class="line">  Maximum memory pitch:                          2147483647 bytes</div><div class="line">  Texture alignment:                             512 bytes</div><div class="line">  Concurrent copy and kernel execution:          Yes with 2 copy engine(s)</div><div class="line">  Run time limit on kernels:                     No</div><div class="line">  Integrated GPU sharing Host Memory:            No</div><div class="line">  Support host page-locked memory mapping:       Yes</div><div class="line">  Alignment requirement for Surfaces:            Yes</div><div class="line">  Device has ECC support:                        Enabled</div><div class="line">  Device supports Unified Addressing (UVA):      Yes</div><div class="line">  Device PCI Domain ID / Bus ID / location ID:   0 / 6 / 0</div><div class="line">  Compute Mode:</div><div class="line">     &lt; Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) &gt;</div><div class="line"></div><div class="line">Device 3: &quot;Tesla M40&quot;</div><div class="line">  CUDA Driver Version / Runtime Version          8.0 / 8.0</div><div class="line">  CUDA Capability Major/Minor version number:    5.2</div><div class="line">  Total amount of global memory:                 11443 MBytes (11998855168 bytes)</div><div class="line">  (24) Multiprocessors, (128) CUDA Cores/MP:     3072 CUDA Cores</div><div class="line">  GPU Max Clock rate:                            1112 MHz (1.11 GHz)</div><div class="line">  Memory Clock rate:                             3004 Mhz</div><div class="line">  Memory Bus Width:                              384-bit</div><div class="line">  L2 Cache Size:                                 3145728 bytes</div><div class="line">  Maximum Texture Dimension Size (x,y,z)         1D=(65536), 2D=(65536, 65536), 3D=(4096, 4096, 4096)</div><div class="line">  Maximum Layered 1D Texture Size, (num) layers  1D=(16384), 2048 layers</div><div class="line">  Maximum Layered 2D Texture Size, (num) layers  2D=(16384, 16384), 2048 layers</div><div class="line">  Total amount of constant memory:               65536 bytes</div><div class="line">  Total amount of shared memory per block:       49152 bytes</div><div class="line">  Total number of registers available per block: 65536</div><div class="line">  Warp size:                                     32</div><div class="line">  Maximum number of threads per multiprocessor:  2048</div><div class="line">  Maximum number of threads per block:           1024</div><div class="line">  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)</div><div class="line">  Max dimension size of a grid size    (x,y,z): (2147483647, 65535, 65535)</div><div class="line">  Maximum memory pitch:                          2147483647 bytes</div><div class="line">  Texture alignment:                             512 bytes</div><div class="line">  Concurrent copy and kernel execution:          Yes with 2 copy engine(s)</div><div class="line">  Run time limit on kernels:                     No</div><div class="line">  Integrated GPU sharing Host Memory:            No</div><div class="line">  Support host page-locked memory mapping:       Yes</div><div class="line">  Alignment requirement for Surfaces:            Yes</div><div class="line">  Device has ECC support:                        Enabled</div><div class="line">  Device supports Unified Addressing (UVA):      Yes</div><div class="line">  Device PCI Domain ID / Bus ID / location ID:   0 / 7 / 0</div><div class="line">  Compute Mode:</div><div class="line">     &lt; Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) &gt;</div><div class="line">&gt; Peer access from Tesla M40 24GB (GPU0) -&gt; Tesla M40 (GPU1) : Yes</div><div class="line">&gt; Peer access from Tesla M40 24GB (GPU0) -&gt; Tesla M40 24GB (GPU2) : Yes</div><div class="line">&gt; Peer access from Tesla M40 24GB (GPU0) -&gt; Tesla M40 (GPU3) : Yes</div><div class="line">&gt; Peer access from Tesla M40 (GPU1) -&gt; Tesla M40 24GB (GPU0) : Yes</div><div class="line">&gt; Peer access from Tesla M40 (GPU1) -&gt; Tesla M40 24GB (GPU2) : Yes</div><div class="line">&gt; Peer access from Tesla M40 (GPU1) -&gt; Tesla M40 (GPU3) : Yes</div><div class="line">&gt; Peer access from Tesla M40 24GB (GPU2) -&gt; Tesla M40 24GB (GPU0) : Yes</div><div class="line">&gt; Peer access from Tesla M40 24GB (GPU2) -&gt; Tesla M40 (GPU1) : Yes</div><div class="line">&gt; Peer access from Tesla M40 24GB (GPU2) -&gt; Tesla M40 (GPU3) : Yes</div><div class="line">&gt; Peer access from Tesla M40 (GPU3) -&gt; Tesla M40 24GB (GPU0) : Yes</div><div class="line">&gt; Peer access from Tesla M40 (GPU3) -&gt; Tesla M40 (GPU1) : Yes</div><div class="line">&gt; Peer access from Tesla M40 (GPU3) -&gt; Tesla M40 24GB (GPU2) : Yes</div><div class="line"></div><div class="line">deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 8.0, CUDA Runtime Version = 8.0, NumDevs = 4, Device0 = Tesla M40 24GB, Device1 = Tesla M40, Device2 = Tesla M40 24GB, Device3 = Tesla M40</div><div class="line">Result = PASS</div></pre></td></tr></table></figure>
+<p><img src="./cuda-sample.png" alt="官方文档中的示例程序"></p>
+<p><code>注意：</code>如果CUDA-capable设备和CUDA 驱动都已经成功安装，但是<code>deviceQuery</code>程序报告没有<code>CUDA-capable</code>设备在线，这个可能是<code>/dev/nvidia*</code>相关文件丢失或者没有相应的权限。</p>
+<p>可以使用<code>setenforce 0</code>关闭SELinux后再进行测试。</p>
+<p>运行<code>bandwidthTest</code>程序来确认系统和CUDA-capable设备可以正常通信，输出结果如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"># ./bandwidthTest</div><div class="line">[CUDA Bandwidth Test] - Starting...</div><div class="line">Running on...</div><div class="line"></div><div class="line"> Device 0: Tesla M40 24GB</div><div class="line"> Quick Mode</div><div class="line"></div><div class="line"> Host to Device Bandwidth, 1 Device(s)</div><div class="line"> PINNED Memory Transfers</div><div class="line">   Transfer Size (Bytes)	Bandwidth(MB/s)</div><div class="line">   33554432			11710.6</div><div class="line"></div><div class="line"> Device to Host Bandwidth, 1 Device(s)</div><div class="line"> PINNED Memory Transfers</div><div class="line">   Transfer Size (Bytes)	Bandwidth(MB/s)</div><div class="line">   33554432			12464.9</div><div class="line"></div><div class="line"> Device to Device Bandwidth, 1 Device(s)</div><div class="line"> PINNED Memory Transfers</div><div class="line">   Transfer Size (Bytes)	Bandwidth(MB/s)</div><div class="line">   33554432			210964.2</div><div class="line"></div><div class="line">Result = PASS</div><div class="line"></div><div class="line">NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.</div></pre></td></tr></table></figure>
+<p><img src="./cuda-sample-1.png" alt="官方文档中的示例程序"></p>
+<p>上图表示测试通过，如果测试没有通过，可以确认下系统上CUDA-capable NVIDIA GPU是否正确安装。</p>
+<p><code>注意：如果上述两个示例程序都可以正常输出，name恭喜您，GPU环境目前已经可用了！</code></p>
+<p>4.2.3  安装Nsight Eclipse plugins</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># /usr/local/cuda-9.0/bin/nsight_ee_plugins_manage.sh install &lt;eclipse-dir&gt;</div></pre></td></tr></table></figure>
+<p><strong>4.3 可选的操作</strong></p>
+<p>在使用CUDA Toolkit中，有很多可选操作但是不是必须的但是可以提供额外的功能。</p>
+<p>4.3.1 安装第三方库文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># yum install freeglut-devel libX11-devel libXi-devel libXmu-devel \</div><div class="line">    make mesa-libGLU-devel</div></pre></td></tr></table></figure></p>
+<p>4.3.2 为cuda-gdb安装源代码<br>使用<code>runfile</code>方式安装后<code>cuda-gdb</code>源代码会自动安装。</p>
+<p>使用RPM或者Deb方式安装，需要为cuda-gbd拷贝一份源代码。<code>cuda-gdb-src</code>包必须被安装。源码包会被以一个tar包的方式安装在<code>/usr/local/cuda-9.0/extras</code>目录。</p>
+<p><a href="http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html" target="_blank" rel="external">原文地址</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          
+            <a href="/tags/GPU/" rel="tag"><i class="fa fa-tag"></i> GPU</a>
+          
+            <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
+          
+            <a href="/tags/NVIDIA/" rel="tag"><i class="fa fa-tag"></i> NVIDIA</a>
+          
+            <a href="/tags/NVIDIA-Docker/" rel="tag"><i class="fa fa-tag"></i> NVIDIA-Docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/14/ITers们-请注意你们的身体/" rel="next" title="ITers们,请注意你们的身体">
+                <i class="fa fa-chevron-left"></i> ITers们,请注意你们的身体
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/26/GPU环境下玩转Docker-二/" rel="prev" title="GPU环境下玩转Docker(二)">
+                GPU环境下玩转Docker(二) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/me.png"
+               alt="Andy Xu" />
+          <p class="site-author-name" itemprop="name">Andy Xu</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个长跑者的运维以及人生经历</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xxbandy" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/9c46ece5b7bd" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-hand-o-up"></i>
+                  
+                    
+                      简书
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://my.oschina.net/xxbAndy/blog" target="_blank" title="开源中国">
+                  
+                    <i class="fa fa-fw fa-heart"></i>
+                  
+                    
+                      开源中国
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://my.oschina.net/xxbAndy" title="开源中国" target="_blank">开源中国</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/9c46ece5b7bd" title="逼格运维说" target="_blank">逼格运维说</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景："><span class="nav-number">1.</span> <span class="nav-text">背景：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、GPU准备"><span class="nav-number">2.</span> <span class="nav-text">一、GPU准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、GPU驱动安装"><span class="nav-number">3.</span> <span class="nav-text">二、GPU驱动安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-系统需求"><span class="nav-number">3.1.</span> <span class="nav-text">1. 系统需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-安装前准备"><span class="nav-number">3.2.</span> <span class="nav-text">2. 安装前准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-安装包管理程序-Package-Manager"><span class="nav-number">3.3.</span> <span class="nav-text">3. 安装包管理程序(Package Manager)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-安装后操作"><span class="nav-number">3.4.</span> <span class="nav-text">4. 安装后操作</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Andy Xu</span>
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+<div class="theme-info">
+<div class="powered-by"></div>
+<span class="post-count">博客全站共11.3k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

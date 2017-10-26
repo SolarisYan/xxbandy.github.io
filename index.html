@@ -325,6 +325,332 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-二/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="逼格运维说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/26/GPU环境下玩转Docker-二/" itemprop="url">GPU环境下玩转Docker(二)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T10:07:46+08:00">
+                2017-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="三、使用NVIDIA驱动Docker容器来识别gpu环境"><a href="#三、使用NVIDIA驱动Docker容器来识别gpu环境" class="headerlink" title="三、使用NVIDIA驱动Docker容器来识别gpu环境"></a>三、使用NVIDIA驱动Docker容器来识别gpu环境</h3><p>使用Docker方式来运行GPU任务计算。英伟达(nvidia)官方提供了一个插件<a href="https://github.com/NVIDIA/nvidia-docker" target="_blank" rel="external">NVIDIA-Docker</a>，封装docker的相关参数来绑定GPU相关信息，以给容器提供gpu环境。下面主要介绍使用<code>nvidia-docker</code>插件运行容器以共享宿主机的GPU资源，后面会捎带的讲解如何使用docker原生的方式来运行GPU容器环境。</p>
+<p><a href="https://devblogs.nvidia.com/parallelforall/nvidia-docker-gpu-server-application-deployment-made-easy/" target="_blank" rel="external">nvidia-docker部署gpu应用</a><br><a href="https://github.com/NVIDIA/nvidia-docker/wiki/Motivation" target="_blank" rel="external">nvidia-docker的动机</a></p>
+<p><a href="https://github.com/NVIDIA/nvidia-docker/wiki/Installation" target="_blank" rel="external">nvidia插件安装指导</a><br><a href="https://github.com/NVIDIA/nvidia-docker/wiki/nvidia-docker" target="_blank" rel="external">nvidia-docker使用指南</a><br><a href="https://github.com/NVIDIA/nvidia-docker/wiki/nvidia-docker-plugin" target="_blank" rel="external">nvidia-docker插件</a></p>
+<p><a href="https://github.com/NVIDIA/nvidia-docker/wiki/NVIDIA-driver" target="_blank" rel="external">nvidia驱动</a><br><a href="https://github.com/NVIDIA/nvidia-docker/wiki/GPU-isolation" target="_blank" rel="external">GPU隔离技术</a><br><a href="https://github.com/NVIDIA/nvidia-docker/wiki/Image-inspection" target="_blank" rel="external">镜像检测</a></p>
+<h4 id="1-快速部署安装"><a href="#1-快速部署安装" class="headerlink" title="1. 快速部署安装"></a>1. 快速部署安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"># 安装 nvidia-docker and nvidia-docker-plugin</div><div class="line">$ wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker-1.0.1-1.x86_64.rpm</div><div class="line">$ rpm -i /tmp/nvidia-docker*.rpm &amp;&amp; rm /tmp/nvidia-docker*.rpm</div><div class="line">$ systemctl start nvidia-docker</div><div class="line"></div><div class="line"># 测试docker容器内部可以识别宿主机的GPU环境</div><div class="line"># nvidia-docker run --rm idockerhub.jd.com/nvidia-docker/cuda8.0-runtime:centos6-17-10-19 nvidia-smi</div><div class="line">Thu Oct 19 08:07:09 2017</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| NVIDIA-SMI 375.39                 Driver Version: 375.39                    |</div><div class="line">|-------------------------------+----------------------+----------------------+</div><div class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</div><div class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</div><div class="line">|===============================+======================+======================|</div><div class="line">|   0  Tesla M40 24GB      On   | 0000:04:00.0     Off |                    0 |</div><div class="line">| N/A   28C    P8    18W / 250W |      0MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   1  Tesla M40           On   | 0000:05:00.0     Off |                    0 |</div><div class="line">| N/A   31C    P8    17W / 250W |      0MiB / 11443MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   2  Tesla M40 24GB      On   | 0000:06:00.0     Off |                    0 |</div><div class="line">| N/A   26C    P8    18W / 250W |      0MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   3  Tesla M40           On   | 0000:07:00.0     Off |                    0 |</div><div class="line">| N/A   27C    P8    16W / 250W |      0MiB / 11443MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line"></div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| Processes:                                                       GPU Memory |</div><div class="line">|  GPU       PID  Type  Process name                               Usage      |</div><div class="line">|=============================================================================|</div><div class="line">|  No running processes found                                                 |</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line"></div><div class="line"># 绑定GPU核心到docker容器内部(可以看到该容器内部其实只绑定了一块宿主机上的第一块GPU卡)实现GPU隔离</div><div class="line"># NV_GPU=0 nvidia-docker run --rm idockerhub.jd.com/nvidia-docker/cuda8.0-runtime:centos6-17-10-19 nvidia-smi</div><div class="line">Wed Oct 25 07:17:03 2017</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| NVIDIA-SMI 375.39                 Driver Version: 375.39                    |</div><div class="line">|-------------------------------+----------------------+----------------------+</div><div class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</div><div class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</div><div class="line">|===============================+======================+======================|</div><div class="line">|   0  Tesla M40 24GB      On   | 0000:04:00.0     Off |                    0 |</div><div class="line">| N/A   23C    P8    17W / 250W |      0MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line"></div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| Processes:                                                       GPU Memory |</div><div class="line">|  GPU       PID  Type  Process name                               Usage      |</div><div class="line">|=============================================================================|</div><div class="line">|  No running processes found                                                 |</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line"></div><div class="line"># NV_GPU=&quot;0,2&quot; nvidia-docker run --rm -ti idockerhub.jd.com/nvidia-docker/cuda8.0-runtime:centos6-17-10-19 nvidia-smi</div><div class="line">Wed Oct 25 08:37:25 2017</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| NVIDIA-SMI 375.39                 Driver Version: 375.39                    |</div><div class="line">|-------------------------------+----------------------+----------------------+</div><div class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</div><div class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</div><div class="line">|===============================+======================+======================|</div><div class="line">|   0  Tesla M40 24GB      On   | 0000:04:00.0     Off |                    0 |</div><div class="line">| N/A   34C    P0    59W / 250W |  21802MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   1  Tesla M40 24GB      On   | 0000:06:00.0     Off |                    0 |</div><div class="line">| N/A   34C    P0    57W / 250W |  21800MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line"></div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| Processes:                                                       GPU Memory |</div><div class="line">|  GPU       PID  Type  Process name                               Usage      |</div><div class="line">|=============================================================================|</div><div class="line">+-----------------------------------------------------------------------------+</div></pre></td></tr></table></figure>
+<p><code>注意1：上述输出的表格中可用看到，使用nvidia-docker工具创建的容器内部其实是可以识别到宿主机的GPU设备的</code></p>
+<p><code>注意2：CPU和GPU其实很类似，无法智能识别需要几块卡设备，只能通过NV_GPU方式来给容器绑定GPU卡(类似于cpu set的方式)；需要管理员动态的调整需要分配的具体GPU卡设备</code></p>
+<h4 id="2-容器内部GPU环境验证"><a href="#2-容器内部GPU环境验证" class="headerlink" title="2. 容器内部GPU环境验证"></a>2. 容器内部GPU环境验证</h4><p>2.1 <strong>使用官方的gpu版本的tensorflow镜像测试GPU设备</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"># nvidia-docker run -it --rm -v /usr/lib64/libcuda.so.1:/usr/local/nvidia/lib64/libcuda.so.1 idockerhub.jd.com/jdjr/tensorflow-gpu:17-10-17 bash</div><div class="line"></div><div class="line">root@6b4ad215279e:/notebooks# python</div><div class="line">Python 2.7.12 (default, Nov 19 2016, 06:48:10)</div><div class="line">[GCC 5.4.0 20160609] on linux2</div><div class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</div><div class="line">&gt;&gt;&gt; import tensorflow as tf</div><div class="line">&gt;&gt;&gt; a = tf.constant([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], shape=[2, 3], name=&apos;a&apos;)</div><div class="line">&gt;&gt;&gt; b = tf.constant([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], shape=[3, 2], name=&apos;b&apos;)</div><div class="line">&gt;&gt;&gt; c = tf.matmul(a, b)</div><div class="line">&gt;&gt;&gt; sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))</div><div class="line">2017-10-19 08:01:39.862500: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-19 08:01:39.862600: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-19 08:01:39.862646: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-19 08:01:39.862676: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-19 08:01:39.862711: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-19 08:01:40.388656: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 0 with properties:</div><div class="line">name: Tesla M40 24GB</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:04:00.0</div><div class="line">Total memory: 22.40GiB</div><div class="line">Free memory: 22.29GiB</div><div class="line">2017-10-19 08:01:40.682810: W tensorflow/stream_executor/cuda/cuda_driver.cc:523] A non-primary context 0x1e2dac0 exists before initializing the StreamExecutor. We haven&apos;t verified StreamExecutor works with that.</div><div class="line">2017-10-19 08:01:40.684222: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 1 with properties:</div><div class="line">name: Tesla M40</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:05:00.0</div><div class="line">Total memory: 11.17GiB</div><div class="line">Free memory: 11.07GiB</div><div class="line">2017-10-19 08:01:40.995170: W tensorflow/stream_executor/cuda/cuda_driver.cc:523] A non-primary context 0x329a280 exists before initializing the StreamExecutor. We haven&apos;t verified StreamExecutor works with that.</div><div class="line">2017-10-19 08:01:40.998560: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 2 with properties:</div><div class="line">name: Tesla M40 24GB</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:06:00.0</div><div class="line">Total memory: 22.40GiB</div><div class="line">Free memory: 22.29GiB</div><div class="line">2017-10-19 08:01:41.289133: W tensorflow/stream_executor/cuda/cuda_driver.cc:523] A non-primary context 0x329dc00 exists before initializing the StreamExecutor. We haven&apos;t verified StreamExecutor works with that.</div><div class="line">2017-10-19 08:01:41.290444: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 3 with properties:</div><div class="line">name: Tesla M40</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:07:00.0</div><div class="line">Total memory: 11.17GiB</div><div class="line">Free memory: 11.07GiB</div><div class="line">2017-10-19 08:01:41.294062: I tensorflow/core/common_runtime/gpu/gpu_device.cc:976] DMA: 0 1 2 3</div><div class="line">2017-10-19 08:01:41.294083: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 0:   Y Y Y Y</div><div class="line">2017-10-19 08:01:41.294093: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 1:   Y Y Y Y</div><div class="line">2017-10-19 08:01:41.294156: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 2:   Y Y Y Y</div><div class="line">2017-10-19 08:01:41.294178: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 3:   Y Y Y Y</div><div class="line">2017-10-19 08:01:41.294215: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:0) -&gt; (device: 0, name: Tesla M40 24GB, pci bus id: 0000:04:00.0)</div><div class="line">2017-10-19 08:01:41.294229: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:1) -&gt; (device: 1, name: Tesla M40, pci bus id: 0000:05:00.0)</div><div class="line">2017-10-19 08:01:41.294239: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:2) -&gt; (device: 2, name: Tesla M40 24GB, pci bus id: 0000:06:00.0)</div><div class="line">2017-10-19 08:01:41.294248: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:3) -&gt; (device: 3, name: Tesla M40, pci bus id: 0000:07:00.0)</div><div class="line">Device mapping:</div><div class="line">/job:localhost/replica:0/task:0/gpu:0 -&gt; device: 0, name: Tesla M40 24GB, pci bus id: 0000:04:00.0</div><div class="line">/job:localhost/replica:0/task:0/gpu:1 -&gt; device: 1, name: Tesla M40, pci bus id: 0000:05:00.0</div><div class="line">/job:localhost/replica:0/task:0/gpu:2 -&gt; device: 2, name: Tesla M40 24GB, pci bus id: 0000:06:00.0</div><div class="line">/job:localhost/replica:0/task:0/gpu:3 -&gt; device: 3, name: Tesla M40, pci bus id: 0000:07:00.0</div><div class="line">2017-10-19 08:01:41.875931: I tensorflow/core/common_runtime/direct_session.cc:300] Device mapping:</div><div class="line">/job:localhost/replica:0/task:0/gpu:0 -&gt; device: 0, name: Tesla M40 24GB, pci bus id: 0000:04:00.0</div><div class="line">/job:localhost/replica:0/task:0/gpu:1 -&gt; device: 1, name: Tesla M40, pci bus id: 0000:05:00.0</div><div class="line">/job:localhost/replica:0/task:0/gpu:2 -&gt; device: 2, name: Tesla M40 24GB, pci bus id: 0000:06:00.0</div><div class="line">/job:localhost/replica:0/task:0/gpu:3 -&gt; device: 3, name: Tesla M40, pci bus id: 0000:07:00.0</div><div class="line"></div><div class="line">&gt;&gt;&gt; print(sess.run(c))</div><div class="line">MatMul: (MatMul): /job:localhost/replica:0/task:0/gpu:0</div><div class="line">2017-10-19 08:01:51.333248: I tensorflow/core/common_runtime/simple_placer.cc:872] MatMul: (MatMul)/job:localhost/replica:0/task:0/gpu:0</div><div class="line">b: (Const): /job:localhost/replica:0/task:0/gpu:0</div><div class="line">2017-10-19 08:01:51.333346: I tensorflow/core/common_runtime/simple_placer.cc:872] b: (Const)/job:localhost/replica:0/task:0/gpu:0</div><div class="line">a: (Const): /job:localhost/replica:0/task:0/gpu:0</div><div class="line">2017-10-19 08:01:51.333408: I tensorflow/core/common_runtime/simple_placer.cc:872] a: (Const)/job:localhost/replica:0/task:0/gpu:0</div><div class="line">[[ 22.  28.]</div><div class="line"> [ 49.  64.]]</div><div class="line">&gt;&gt;&gt;</div></pre></td></tr></table></figure>
+<p><code>注意：由以上完整输出可以看到当前的容器环境内部可以正常识别到GPU设备，并可以进行GPU计算</code></p>
+<p>2.1 <strong>使用TensorFlow-gpu环境</strong></p>
+<p>官方<code>tensorflow/tensorflow:latest-gpu</code>镜像是使用<code>jupyter</code>环境来提供一个可编程的<code>TensorFlow</code>环境。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"># nvidia-docker run -itd -p 8888:8888 -p 6006:6006 idockerhub.jd.com/jdjr/tensorflow-gpu:17-10-17</div><div class="line"># docker logs -f evil_ride</div><div class="line">[I 07:24:37.730 NotebookApp] Writing notebook server cookie secret to /root/.local/share/jupyter/runtime/notebook_cookie_secret</div><div class="line">[W 07:24:37.742 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.</div><div class="line">[I 07:24:37.747 NotebookApp] Serving notebooks from local directory: /notebooks</div><div class="line">[I 07:24:37.747 NotebookApp] 0 active kernels</div><div class="line">[I 07:24:37.747 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:8888/?token=b4f66281d6b1f89bd6fda85c6e88a022ef6d38308e7f284b</div><div class="line">[I 07:24:37.748 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).</div><div class="line">[C 07:24:37.748 NotebookApp]</div><div class="line"></div><div class="line">    Copy/paste this URL into your browser when you connect for the first time,</div><div class="line">    to login with a token:</div><div class="line">        http://localhost:8888/?token=b4f66281d6b1f89bd6fda85c6e88a022ef6d38308e7f284b</div></pre></td></tr></table></figure>
+<p>成功运行后如上述日志显示，直接访问上述链接，或者访问本机的8888端口，并将后面的token作为密码输入后即可登录jupyter环境，使用tensorflow环境。</p>
+<p><img src="./tensorflow-jupyter.png" alt=""></p>
+<p>点击右上角<code>New</code>下面的<code>Python2</code>可进入jupyter的交互式编程环境。并进行GPU简单程序的测试，测试结果如下：<br><img src="./tensorflow-gpu.png" alt=""></p>
+<p>可以看到，使用TensorFlow官方的镜像文件，可以直接使用jupyter进行运行gpu计算任务。该任务运行完毕之后，运行过程中的日志信息如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"># docker logs -f evil_ride</div><div class="line">[I 07:37:01.806 NotebookApp] Adapting to protocol v5.1 for kernel 253b4ef2-b573-4256-a14b-6a840777923d</div><div class="line">2017-10-25 07:37:41.174144: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-25 07:37:41.174295: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-25 07:37:41.174320: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-25 07:37:41.174342: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-25 07:37:41.174366: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn&apos;t compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.</div><div class="line">2017-10-25 07:37:41.719139: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 0 with properties:</div><div class="line">name: Tesla M40 24GB</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:04:00.0</div><div class="line">Total memory: 22.40GiB</div><div class="line">Free memory: 22.29GiB</div><div class="line">2017-10-25 07:37:41.999138: W tensorflow/stream_executor/cuda/cuda_driver.cc:523] A non-primary context 0x1d90ab0 exists before initializing the StreamExecutor. We haven&apos;t verified StreamExecutor works with that.</div><div class="line">2017-10-25 07:37:42.001131: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 1 with properties:</div><div class="line">name: Tesla M40</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:05:00.0</div><div class="line">Total memory: 11.17GiB</div><div class="line">Free memory: 11.07GiB</div><div class="line">2017-10-25 07:37:42.317011: W tensorflow/stream_executor/cuda/cuda_driver.cc:523] A non-primary context 0x3acbf10 exists before initializing the StreamExecutor. We haven&apos;t verified StreamExecutor works with that.</div><div class="line">2017-10-25 07:37:42.318986: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 2 with properties:</div><div class="line">name: Tesla M40 24GB</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:06:00.0</div><div class="line">Total memory: 22.40GiB</div><div class="line">Free memory: 22.29GiB</div><div class="line">2017-10-25 07:37:42.612283: W tensorflow/stream_executor/cuda/cuda_driver.cc:523] A non-primary context 0x3acf890 exists before initializing the StreamExecutor. We haven&apos;t verified StreamExecutor works with that.</div><div class="line">2017-10-25 07:37:42.614320: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 3 with properties:</div><div class="line">name: Tesla M40</div><div class="line">major: 5 minor: 2 memoryClockRate (GHz) 1.112</div><div class="line">pciBusID 0000:07:00.0</div><div class="line">Total memory: 11.17GiB</div><div class="line">Free memory: 11.07GiB</div><div class="line">2017-10-25 07:37:42.619214: I tensorflow/core/common_runtime/gpu/gpu_device.cc:976] DMA: 0 1 2 3</div><div class="line">2017-10-25 07:37:42.619252: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 0:   Y Y Y Y</div><div class="line">2017-10-25 07:37:42.619270: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 1:   Y Y Y Y</div><div class="line">2017-10-25 07:37:42.619287: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 2:   Y Y Y Y</div><div class="line">2017-10-25 07:37:42.619351: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 3:   Y Y Y Y</div><div class="line">2017-10-25 07:37:42.619386: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:0) -&gt; (device: 0, name: Tesla M40 24GB, pci bus id: 0000:04:00.0)</div><div class="line">2017-10-25 07:37:42.619410: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:1) -&gt; (device: 1, name: Tesla M40, pci bus id: 0000:05:00.0)</div><div class="line">2017-10-25 07:37:42.619431: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:2) -&gt; (device: 2, name: Tesla M40 24GB, pci bus id: 0000:06:00.0)</div><div class="line">2017-10-25 07:37:42.619464: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:3) -&gt; (device: 3, name: Tesla M40, pci bus id: 0000:07:00.0)</div><div class="line">2017-10-25 07:37:56.406493: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:0) -&gt; (device: 0, name: Tesla M40 24GB, pci bus id: 0000:04:00.0)</div><div class="line">2017-10-25 07:37:56.406573: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:1) -&gt; (device: 1, name: Tesla M40, pci bus id: 0000:05:00.0)</div><div class="line">2017-10-25 07:37:56.406607: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:2) -&gt; (device: 2, name: Tesla M40 24GB, pci bus id: 0000:06:00.0)</div><div class="line">2017-10-25 07:37:56.406627: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:3) -&gt; (device: 3, name: Tesla M40, pci bus id: 0000:07:00.0)</div><div class="line">[I 07:39:01.292 NotebookApp] Saving file at /Untitled1.ipynb</div></pre></td></tr></table></figure></p>
+<p>由上述日志输出可以看到该任务其实是占用宿主机的4个GPU卡进行任务计算的。</p>
+<p><code>注意：因为jupyter是通过websocket和python环境进行交互的，如果需要使用反向代理之类的工具访问服务，需要反向代理工具支持websocket协议</code>。在实际部署过程中，我们使用Nginx进行反向代理，Nginx默认是在1.3版本开始支持websocket的，如果nginx版本大于1.3只需要对相应的配置文件中增加如下内容即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">upstream tomcat_txxb.wp.com &#123;</div><div class="line">        server 10.0.0.10:8888  weight=10 max_fails=2 fail_timeout=30s;</div><div class="line">                &#125;</div><div class="line">location / &#123;</div><div class="line">        proxy_next_upstream     http_500 http_502 http_503 http_504 error timeout invalid_header;</div><div class="line">        proxy_set_header        Host  $host;</div><div class="line">        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;</div><div class="line">        proxy_pass              http://tomcat_txxb.wp.com;</div><div class="line"></div><div class="line">location ~ /api/kernels/ &#123;</div><div class="line">        proxy_pass            http://tomcat_txxb.wp.com;</div><div class="line">        proxy_set_header      Host $host;</div><div class="line">        # websocket support</div><div class="line">        proxy_http_version    1.1;</div><div class="line">        proxy_set_header      Upgrade &quot;websocket&quot;;</div><div class="line">        proxy_set_header      Connection &quot;Upgrade&quot;;</div><div class="line">        proxy_read_timeout    86400;</div><div class="line">    &#125;</div><div class="line">location ~ /terminals/ &#123;</div><div class="line">        proxy_pass            http://tomcat_txxb.wp.com;</div><div class="line">        proxy_set_header      Host $host;</div><div class="line">        # websocket support</div><div class="line">        proxy_http_version    1.1;</div><div class="line">        proxy_set_header      Upgrade &quot;websocket&quot;;</div><div class="line">        proxy_set_header      Connection &quot;Upgrade&quot;;</div><div class="line">        proxy_read_timeout    86400;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>使用docker原生方式运行GPU容器环境(无非就是指定设备挂载或者将给容器开放特权来操作宿主机硬件)</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># export DEVICES=$(\ls /dev/nvidia* | xargs -I&#123;&#125; echo &apos;--device &#123;&#125;:&#123;&#125;&apos;)</div><div class="line"># docker run  $DEVICES -it --rm -v /usr/lib64/libcuda.so.1:/usr/local/nvidia/lib64/libcuda.so.1 -v /usr/lib64/libnvidia-fatbinaryloader.so.375.39:/usr/local/nvidia/lib64/libnvidia-fatbinaryloader.so.375.39  -v /root/gpu-example/:/tmp idockerhub.jd.com/jdjr/tensorflow-gpu:17-10-17 bash</div><div class="line"></div><div class="line"></div><div class="line"># docker run  --privileged -it --rm -v /usr/lib64/libcuda.so.1:/usr/local/nvidia/lib64/libcuda.so.1 -v /usr/lib64/libnvidia-fatbinaryloader.so.375.39:/usr/local/nvidia/lib64/libnvidia-fatbinaryloader.so.375.39  -v /root/gpu-example/:/tmp idockerhub.jd.com/jdjr/tensorflow-gpu:17-10-17 bash</div></pre></td></tr></table></figure>
+<p><code>注意：当然在上述tensorflow测试过程中，只需要部分的cuda依赖库，在很多其他的业务场景下可能需要其他的依赖库，建议使用如下方式挂载全部库依赖</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># export CUDA_SO=&quot;$(\ls /usr/lib64/libcuda* | xargs -I&#123;&#125; echo &apos;-v  &#123;&#125;:&#123;&#125;&apos;)  $(\ls /usr/lib64/libnvidia* | xargs -I&#123;&#125; echo &apos;-v &#123;&#125;:&#123;&#125;&apos;)&quot;</div><div class="line"># docker run $DEVICES $CUDA_SO --rm idockerhub.jd.com/jdjr/tensorflow-gpu:17-10-17 bash</div></pre></td></tr></table></figure>
+<blockquote>
+<p>思考：其实从nvidia-docker的运行方式和docker原生的运行方式上来看，nvidia其实是使用自己的插件来封装了一些docker的默认参数，比如说上述的GPU设备，以及相关lib库依赖。从<code>nvidia-docker</code>的底层实现上也可以看得出来</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># curl -s http://localhost:3476/docker/cli</div><div class="line">--volume-driver=nvidia-docker --volume=nvidia_driver_375.39:/usr/local/nvidia:ro --device=/dev/nvidiactl --device=/dev/nvidia-uvm --device=/dev/nvidia-uvm-tools --device=/dev/nvidia0 --device=/dev/nvidia1 --device=/dev/nvidia2 --device=/dev/nvidia3</div></pre></td></tr></table></figure>
+<p>也就是说<code>nvidia-docker</code>在创建容器的时候，默认是加入了上述的参数的。也就是docker原生调用过程中使用的<code>-v</code>和<code>--device</code>.其实可以查看<code>nvidia-docker</code>工具生成的容器的相关配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"># docker inspect evil_ride</div><div class="line">&quot;HostConfig&quot;: &#123;</div><div class="line">            &quot;Binds&quot;: [</div><div class="line">                &quot;nvidia_driver_375.39:/usr/local/nvidia:ro&quot;</div><div class="line">            ],</div><div class="line">            ........</div><div class="line">&#125;</div><div class="line"></div><div class="line">&quot;Devices&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidiactl&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidiactl&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia-uvm&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia-uvm&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia-uvm-tools&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia-uvm-tools&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia0&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia0&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia1&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia1&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia2&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia2&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia3&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia3&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line"></div><div class="line"></div><div class="line">        &quot;Mounts&quot;: [</div><div class="line">            &#123;</div><div class="line">                &quot;Name&quot;: &quot;nvidia_driver_375.39&quot;,</div><div class="line">                &quot;Source&quot;: &quot;/var/lib/nvidia-docker/volumes/nvidia_driver/375.39&quot;,</div><div class="line">                &quot;Destination&quot;: &quot;/usr/local/nvidia&quot;,</div><div class="line">                &quot;Driver&quot;: &quot;nvidia-docker&quot;,</div><div class="line">                &quot;Mode&quot;: &quot;ro&quot;,</div><div class="line">                &quot;RW&quot;: false,</div><div class="line">                &quot;Propagation&quot;: &quot;rprivate&quot;</div><div class="line">            &#125;</div><div class="line">        ],</div><div class="line"></div><div class="line"></div><div class="line">        &quot;Env&quot;: [</div><div class="line">                &quot;PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;,</div><div class="line">                &quot;CUDA_VERSION=8.0.61&quot;,</div><div class="line">                &quot;NVIDIA_CUDA_VERSION=8.0.61&quot;,</div><div class="line">                &quot;CUDA_PKG_VERSION=8-0=8.0.61-1&quot;,</div><div class="line">                &quot;LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64&quot;,</div><div class="line">                &quot;NVIDIA_VISIBLE_DEVICES=all&quot;,</div><div class="line">                &quot;NVIDIA_DRIVER_CAPABILITIES=compute,utility&quot;,</div><div class="line">                &quot;LIBRARY_PATH=/usr/local/cuda/lib64/stubs:&quot;,</div><div class="line">                &quot;CUDNN_VERSION=6.0.21&quot;</div><div class="line">            ],</div><div class="line"></div><div class="line"></div><div class="line">        &quot;Labels&quot;: &#123;</div><div class="line">                &quot;com.nvidia.build.id&quot;: &quot;29071360&quot;,</div><div class="line">                &quot;com.nvidia.build.ref&quot;: &quot;836d5387f8888c3924aff7a011f9b2cd9956d3db&quot;,</div><div class="line">                &quot;com.nvidia.cuda.version&quot;: &quot;8.0.61&quot;,</div><div class="line">                &quot;com.nvidia.cudnn.version&quot;: &quot;6.0.21&quot;,</div><div class="line">                &quot;com.nvidia.volumes.needed&quot;: &quot;nvidia_driver&quot;,</div><div class="line">                &quot;maintainer&quot;: &quot;NVIDIA CORPORATION \u003ccudatools@nvidia.com\u003e&quot;</div><div class="line">            &#125;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+    <div>
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="逼格运维说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/26/GPU环境下玩转Docker-一/" itemprop="url">GPU环境下玩转Docker(一)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T10:07:34+08:00">
+                2017-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h3><p>随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。</p>
+<p><a href="http://www.jianshu.com/p/e72a352a2bd7" target="_blank" rel="external">从GPU到GPGPU</a><br><a href="http://www.jianshu.com/p/609e0530a19c" target="_blank" rel="external">CPU与GPU</a></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/26/GPU环境下玩转Docker-一/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+    <div>
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/14/ITers们-请注意你们的身体/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -814,7 +1140,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -836,7 +1162,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -965,7 +1291,7 @@
 
 <div class="theme-info">
 <div class="powered-by"></div>
-<span class="post-count">博客全站共3.1k字</span>
+<span class="post-count">博客全站共11.3k字</span>
 </div>
 
         

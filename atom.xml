@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-10-30T14:26:01.000Z</updated>
+  <updated>2017-10-30T14:32:06.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,11 +20,12 @@
     <link href="http://yoursite.com/2017/10/30/GPU%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%8E%A9%E8%BD%ACDocker-%E4%B8%89/"/>
     <id>http://yoursite.com/2017/10/30/GPU环境下玩转Docker-三/</id>
     <published>2017-10-30T14:08:39.000Z</published>
-    <updated>2017-10-30T14:26:01.000Z</updated>
+    <updated>2017-10-30T14:32:06.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>前言: 在前面两个章节中已经介绍了如何构建GPU的基础环境以及使用Docker方式来优雅的运行GPU应用，单纯的使用Docker这种方式是无法满足大规模的应用调度和管理的，对于集群调度以及容器化管理方面，我们也采用了业界比较知名的容器编排调度管理工具Kubernetes，本篇文章简单介绍GPU业务容器在Kubernetes上的运行。</p>
 </blockquote>
+<a id="more"></a>
 <p><a href="https://xxbandy.github.io/2017/10/26/GPU%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%8E%A9%E8%BD%ACDocker-%E4%B8%80/" target="_blank" rel="external">GPU环境下玩转Docker(一)</a></p>
 <p><a href="https://xxbandy.github.io/2017/10/26/GPU%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%8E%A9%E8%BD%ACDocker-%E4%BA%8C/" target="_blank" rel="external">GPU环境下玩转Docker(二)</a></p>
 <h3 id="使用Kubernetes调度GPU容器"><a href="#使用Kubernetes调度GPU容器" class="headerlink" title="使用Kubernetes调度GPU容器"></a>使用Kubernetes调度GPU容器</h3><h4 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h4><p>k8s当前已经支持GPU的资源调度了，详情可查看中文文档：<a href="https://k8smeetup.github.io/docs/tasks/manage-gpus/scheduling-gpus/" target="_blank" rel="external">k8s调度GPU</a>。<br>这里介绍一个简单的实例。</p>
@@ -54,7 +55,8 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;前言: 在前面两个章节中已经介绍了如何构建GPU的基础环境以及使用Docker方式来优雅的运行GPU应用，单纯的使用Docker这种方式是无法满足大规模的应用调度和管理的，对于集群调度以及容器化管理方面，我们也采用了业界比较知名的容器编排调度管理工
+&lt;p&gt;前言: 在前面两个章节中已经介绍了如何构建GPU的基础环境以及使用Docker方式来优雅的运行GPU应用，单纯的使用Docker这种方式是无法满足大规模的应用调度和管理的，对于集群调度以及容器化管理方面，我们也采用了业界比较知名的容器编排调度管理工具Kubernetes，本篇文章简单介绍GPU业务容器在Kubernetes上的运行。&lt;/p&gt;
+&lt;/blockquote&gt;
     
     </summary>
     
@@ -71,8 +73,8 @@
   
   <entry>
     <title>Manager-your-GPUs.md</title>
-    <link href="http://yoursite.com/2017/10/30/Manager-your-GPUs-md/"/>
-    <id>http://yoursite.com/2017/10/30/Manager-your-GPUs-md/</id>
+    <link href="http://yoursite.com/2017/10/30/Manager-your-GPUs/"/>
+    <id>http://yoursite.com/2017/10/30/Manager-your-GPUs/</id>
     <published>2017-10-30T14:03:27.000Z</published>
     <updated>2017-10-30T14:07:30.000Z</updated>
     

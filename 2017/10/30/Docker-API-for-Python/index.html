@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Docker,Python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="逼格运维说" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="使用Docker API for Python来更好的管理容器！">
+<meta name="keywords" content="Docker,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker API for Python">
+<meta property="og:url" content="http://yoursite.com/2017/10/30/Docker-API-for-Python/index.html">
+<meta property="og:site_name" content="逼格运维说">
+<meta property="og:description" content="使用Docker API for Python来更好的管理容器！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2577135-5d2191eacf61c6dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-10-30T14:40:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker API for Python">
+<meta name="twitter:description" content="使用Docker API for Python来更好的管理容器！">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2577135-5d2191eacf61c6dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/30/Docker-API-for-Python/"/>
+
+
+
+
+
+  <title>Docker API for Python | 逼格运维说</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">逼格运维说</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/30/Docker-API-for-Python/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="逼格运维说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Docker API for Python</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-30T22:37:34+08:00">
+                2017-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>使用Docker API for Python来更好的管理容器！</p>
+</blockquote>
+<a id="more"></a>
+<p><code>客户端初始化的三种方法</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import docker</div><div class="line">docker.api()</div><div class="line">docker.APIClient()</div><div class="line">docker.client()</div><div class="line">docker.DockerClient() 其实就是docker.client()的一个子集</div><div class="line">docker.from_env() 其实也是docker.client()的一个子集</div></pre></td></tr></table></figure></p>
+<h3 id="一、初始化客户端"><a href="#一、初始化客户端" class="headerlink" title="一、初始化客户端"></a>一、初始化客户端</h3><h4 id="1-Docker客户端的初始化工作"><a href="#1-Docker客户端的初始化工作" class="headerlink" title="1.Docker客户端的初始化工作"></a>1.Docker客户端的初始化工作</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; import docker</div><div class="line">&gt;&gt;&gt; client = docker.APIClient(base_url=&apos;unix://var/run/docker.sock’,version=&apos;1.21&apos;,timeout=5)</div><div class="line">&gt;&gt;&gt; client.version()</div><div class="line">&#123;u&apos;ApiVersion&apos;: u&apos;1.21’,</div><div class="line"> u&apos;Arch&apos;: u&apos;amd64&apos;,</div><div class="line"> u&apos;BuildTime&apos;: u&apos;2016-09-27T23:38:15.810178467+00:00&apos;,</div><div class="line"> u&apos;Experimental&apos;: True,</div><div class="line"> u&apos;GitCommit&apos;: u&apos;45bed2c&apos;,</div><div class="line"> u&apos;GoVersion&apos;: u&apos;go1.6.3&apos;,</div><div class="line"> u&apos;KernelVersion&apos;: u&apos;4.4.22-moby&apos;,</div><div class="line"> u&apos;Os&apos;: u&apos;linux&apos;,</div><div class="line"> u&apos;Version&apos;: u&apos;1.12.2-rc1&apos;&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Args:</div><div class="line">   base_url (str): 指定链接路径，可以通过socket或者tcp方式链接</div><div class="line">       ``unix:///var/run/docker.sock`` or ``tcp://127.0.0.1:1234``.</div><div class="line">   version (str): 指定API使用的版本(docker=2.0.0默认的api版本是1.24,最低支持1.21,docker1.9+的api是1.21),因此在使用python的docker模块时一定要注意docker的api以及docker模块的api是否兼容。当然如果设置为 ``auto`` 降回去自动检测server的版本</div><div class="line">   timeout (int): 使用API调用的默认超时时间，默认单位为秒</div><div class="line">   tls (bool or :py:class:`~docker.tls.TLSConfig`): Enable TLS. Pass</div><div class="line">       ``True`` to enable it with default options, or pass a</div><div class="line">       :py:class:`~docker.tls.TLSConfig` object to use custom</div><div class="line">       configuration.</div></pre></td></tr></table></figure>
+<p><strong>查看docker引擎当前版本:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ sudo docker version</div><div class="line">Client:</div><div class="line"> Version:      1.9.1</div><div class="line"> API version:  1.21</div><div class="line"> Go version:   go1.4.3</div><div class="line"> Git commit:   a34a1d5-dirty</div><div class="line"> Built:        Tue Mar 28 15:39:19 UTC 2017</div><div class="line"> OS/Arch:      linux/amd64</div><div class="line"></div><div class="line">Server:</div><div class="line"> Version:      1.9.1</div><div class="line"> API version:  1.21</div><div class="line"> Go version:   go1.4.3</div><div class="line"> Git commit:   a34a1d5-dirty</div><div class="line"> Built:        Tue Mar 28 15:39:19 UTC 2017</div><div class="line"> OS/Arch:      linux/amd64</div></pre></td></tr></table></figure>
+<p><strong>The sdk of docker for python–docker==2.0.0:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.丢弃了python2.6的支持</div><div class="line">2.最低支持API版本为1.12(Engine version 1.9.0+)</div><div class="line">3.`docker.Client`被替换成`docker.APIClient`</div><div class="line">4.`docker.from_env`初始化一个docker客户端实例代替了`APIClient `实例 </div><div class="line">5.从`APIClient.start`中移除了HostConfig参数</div><div class="line">6.开始由之前的docker-py模块变为docker</div><div class="line">7.`docker.ssladapter`替换为`docker.transport.ssladapter`</div></pre></td></tr></table></figure>
+<p>####2.Docker客户端的具体方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">import docker</div><div class="line">C  = docker.DockerClient(base_url=&apos;unix://var/run/docker.sock&apos;,version=&apos;auto&apos;,timeout=10)</div><div class="line"></div><div class="line">##docker相关的方法使用</div><div class="line">使用DockerClient对象，会有以下方法：</div><div class="line">C.api,</div><div class="line">C.containers,</div><div class="line">C.events,</div><div class="line">C.from_env,</div><div class="line">C.images,</div><div class="line">C.info,</div><div class="line">C.login,</div><div class="line">C.networks,</div><div class="line">C.nodes,</div><div class="line">C.ping,</div><div class="line">C.services,</div><div class="line">C.swarm,</div><div class="line">C.version,</div><div class="line">C.volumes,</div><div class="line"></div><div class="line"></div><div class="line">#输出docker的相关信息，相当于docker info</div><div class="line">C.info()</div></pre></td></tr></table></figure>
+<h3 id="二、api方法使用示例"><a href="#二、api方法使用示例" class="headerlink" title="二、api方法使用示例"></a>二、api方法使用示例</h3><h4 id="1-login方法定义"><a href="#1-login方法定义" class="headerlink" title="1. login方法定义"></a>1. login方法定义</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">C.login()</div><div class="line">login(*args, **kwargs) method of docker.client.DockerClient instance</div><div class="line">    Authenticate with a registry. Similar to the ``docker login`` command.</div><div class="line">    </div><div class="line">    Args:</div><div class="line">        username (str): The registry username</div><div class="line">        password (str): The plaintext password</div><div class="line">        email (str): The email for the registry account</div><div class="line">        registry (str): URL to the registry.  E.g.</div><div class="line">            ``https://index.docker.io/v1/``</div><div class="line">        reauth (bool): Whether refresh existing authentication on the</div><div class="line">            Docker server.</div><div class="line">        dockercfg_path (str): Use a custom path for the ``.dockercfg`` file</div><div class="line">    (default ``$HOME/.dockercfg``)</div><div class="line">    </div><div class="line">    Returns:返回的错误日志信息</div><div class="line">        (dict): The response from the login request</div><div class="line"></div><div class="line">          Raises:</div><div class="line">        :py:class:`docker.errors.APIError`</div><div class="line">            If the server returns an error.</div><div class="line"></div><div class="line">##使用login方法登录</div><div class="line">C.login(&apos;xxbandy123&apos;,&apos;nslalla&apos;)</div></pre></td></tr></table></figure>
+<h4 id="2-images-类定义："><a href="#2-images-类定义：" class="headerlink" title="2.images 类定义："></a>2.images 类定义：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">build方法</div><div class="line">get方法：</div><div class="line">get(self, name)</div><div class="line">    Gets an image.</div><div class="line">    </div><div class="line">    Args:</div><div class="line">        name (str): The name of the image.</div><div class="line">    </div><div class="line">    Returns:</div><div class="line">        (:py:class:`Image`): The image.</div><div class="line">    </div><div class="line">    Raises:</div><div class="line">        :py:class:`docker.errors.ImageNotFound` If the image does not</div><div class="line">        exist.</div><div class="line">        :py:class:`docker.errors.APIError`</div><div class="line">            If the server returns an error.</div><div class="line">list方法：</div><div class="line">   list(self, name=None, all=False, filters=None)</div><div class="line">    List images on the server.</div><div class="line">    </div><div class="line">    Args:</div><div class="line">        name (str): Only show images belonging to the repository ``name``</div><div class="line">        all (bool): Show intermediate image layers. By default, these are</div><div class="line">            filtered out.</div><div class="line">        filters (dict): Filters to be processed on the image list.</div><div class="line">            Available filters:</div><div class="line">            - ``dangling`` (bool)</div><div class="line">            - ``label`` (str): format either ``key`` or ``key=value``</div><div class="line">    </div><div class="line">    Returns:</div><div class="line">        (list of :py:class:`Image`): The images.</div><div class="line">    </div><div class="line">    Raises:</div><div class="line">        :py:class:`docker.errors.APIError`</div><div class="line">            If the server returns an error.</div></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">查看默认所有的镜像文件，以image-id进行区分</div><div class="line">In [34]: C.images.list()</div><div class="line">Out[34]: </div><div class="line">[&lt;Image: &apos;busybox:latest&apos;&gt;,</div><div class="line"> &lt;Image: &apos;rancher-server:latest&apos;, &apos;rancher/server:latest&apos;&gt;,</div><div class="line"> &lt;Image: &apos;singleuser:latest&apos;&gt;,</div><div class="line"> &lt;Image: &apos;registry:2&apos;&gt;,</div><div class="line"> &lt;Image: &apos;rancher-agent:latest&apos;, &apos;rancher/agent:v1.0.2&apos;&gt;]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line">load方法：相当于docker load</div><div class="line"></div><div class="line">pull方法：下载镜像文件</div><div class="line"> pull(self, name, **kwargs)</div><div class="line">    Pull an image of the given name and return it. Similar to the</div><div class="line">    ``docker pull`` command.</div><div class="line">    </div><div class="line">    If you want to get the raw pull output, use the</div><div class="line">    :py:meth:`~docker.api.image.ImageApiMixin.pull` method in the</div><div class="line">    low-level API.</div><div class="line">    </div><div class="line">    Args:</div><div class="line">        repository (str): The repository to pull</div><div class="line">        tag (str): The tag to pull</div><div class="line">        insecure_registry (bool): Use an insecure registry</div><div class="line">        auth_config (dict): Override the credentials that</div><div class="line">            :py:meth:`~docker.client.DockerClient.login` has set for</div><div class="line">            this request. ``auth_config`` should contain the ``username``</div><div class="line">            and ``password`` keys to be valid.</div><div class="line">    </div><div class="line">    Returns:</div><div class="line">        (:py:class:`Image`): The image that has been pulled.</div><div class="line"></div><div class="line">需要注意的是：使用pull的时候，会弱匹配所有的tag标签</div><div class="line"></div><div class="line">push方法：上传镜像文件</div><div class="line"></div><div class="line">push(self, repository, tag=None, **kwargs)</div><div class="line">    Push an image or a repository to the registry. Similar to the ``docker</div><div class="line">    push`` command.</div><div class="line">    </div><div class="line">    Args:</div><div class="line">        repository (str): The repository to push to</div><div class="line">        tag (str): An optional tag to push</div><div class="line">        stream (bool): Stream the output as a blocking generator</div><div class="line">        insecure_registry (bool): Use ``http://`` to connect to the</div><div class="line">            registry</div><div class="line">        auth_config (dict): Override the credentials that</div><div class="line">            :py:meth:`~docker.api.daemon.DaemonApiMixin.login` has set for</div><div class="line">            this request. ``auth_config`` should contain the ``username``</div><div class="line">            and ``password`` keys to be valid.</div><div class="line">    </div><div class="line">    Returns:</div><div class="line">        (generator or str): The output from the server.</div><div class="line">    </div><div class="line">    Raises:</div><div class="line">        :py:class:`docker.errors.APIError`</div><div class="line"></div><div class="line">remove方法：docker rmi </div><div class="line"> remove(self, *args, **kwargs)</div><div class="line">    Remove an image. Similar to the ``docker rmi`` command.</div><div class="line">    </div><div class="line">    Args:</div><div class="line">        image (str): The image to remove</div><div class="line">        force (bool): Force removal of the image</div><div class="line">        noprune (bool): Do not delete untagged parents</div><div class="line"></div><div class="line">search方法：</div><div class="line">search(self, *args, **kwargs)</div><div class="line">    Search for images on Docker Hub. Similar to the ``docker search``</div><div class="line">    command.</div><div class="line">    </div><div class="line">    Args:</div><div class="line">        term (str): A term to search for.</div><div class="line">    </div><div class="line">    Returns:</div><div class="line">        (list of dicts): The response of the search.</div></pre></td></tr></table></figure>
+<h4 id="3-docker管理容器相关"><a href="#3-docker管理容器相关" class="headerlink" title="3.docker管理容器相关"></a>3.docker管理容器相关</h4><p>C.containers类，下面有相关的方法：</p>
+<ul>
+<li>client</li>
+<li>create</li>
+<li>get</li>
+<li>list</li>
+<li>model</li>
+<li>run …</li>
+</ul>
+<p>列出当前存活的容器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C.containers.list()</div></pre></td></tr></table></figure></p>
+<p>列出指定容器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C.containers.get(&apos;&apos;)</div></pre></td></tr></table></figure></p>
+<p>创建容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div></pre></td><td class="code"><pre><div class="line">C.containers.create</div><div class="line">create(image, command=None, **kwargs) method of docker.models.containers.ContainerCollection instance</div><div class="line">    Create a container without starting it. Similar to ``docker create``.</div><div class="line">    </div><div class="line">    Takes the same arguments as :py:meth:`run`, except for ``stdout``,</div><div class="line">    ``stderr``, and ``remove``.</div><div class="line">    </div><div class="line">    Returns:</div><div class="line">        A :py:class:`Container` object.</div><div class="line">    </div><div class="line">    Raises:</div><div class="line">        :py:class:`docker.errors.ImageNotFound`</div><div class="line">            If the specified image does not exist.</div><div class="line">        :py:class:`docker.errors.APIError`</div><div class="line">            If the server returns an error.</div><div class="line"></div><div class="line"></div><div class="line">run一个容器：类似于命令行的docker run方法</div><div class="line">run(image, command=None, stdout=True, stderr=False, remove=False, **kwargs) method of docker.models.containers.ContainerCollection instance</div><div class="line">    Run a container. By default, it will wait for the container to finish</div><div class="line">    and return its logs, similar to ``docker run``.</div><div class="line">    </div><div class="line">    如果&apos;detach&apos;参数设置为&apos;True&apos;,他将立即返回一个Container对象，类似于&apos;docker run -d&apos;    </div><div class="line">    实例:</div><div class="line">        运行一个容器并获取输出。</div><div class="line">    </div><div class="line">        &gt;&gt;&gt; import docker</div><div class="line">        &gt;&gt;&gt; client = docker.from_env()</div><div class="line">        &gt;&gt;&gt; client.containers.run(&apos;alpine&apos;, &apos;echo hello world&apos;)</div><div class="line">        b&apos;hello world\n&apos;</div><div class="line">    </div><div class="line">        后台运行一个容器:</div><div class="line">        &gt;&gt;&gt; container = client.containers.run(&apos;bfirsh/reticulate-splines&apos;,</div><div class="line">                                              detach=True)</div><div class="line">        获取该容器的日志信息</div><div class="line">        &gt;&gt;&gt; container.logs()</div><div class="line">        &apos;Reticulating spline 1...\nReticulating spline 2...\n&apos;</div><div class="line"></div><div class="line">   参数介绍:</div><div class="line">        image (str): run一个容器所需要的镜像(str类型)</div><div class="line">        command (str or list): 容器启动默认运行的命令(字符串或者列表类型).</div><div class="line"></div><div class="line">        blkio_weight_device: 设置设备Block IO 权重：``[&#123;&quot;Path&quot;: &quot;device_path&quot;, &quot;Weight&quot;: weight&#125;]``.</div><div class="line">        blkio_weight: 设置block IO 的权重 范围10-1000.</div><div class="line">        cap_add (list of str): 增加内核特性 比如：``[&quot;SYS_ADMIN&quot;, &quot;MKNOD&quot;]``.</div><div class="line">        cap_drop (list of str): 删除内核特性</div><div class="line">        cpu_group (int): 每颗cpu的长度</div><div class="line">        cpu_period (int): 容器在每一个cpu的时间周期内可以得到多少的的cpu时间(ms)</div><div class="line">        cpu_shares (int): 共享cpu权重CPU 相对权重</div><div class="line">        cpuset_cpus (str): 绑定cpu的执行 (``0-3``,``0,1``).</div><div class="line"></div><div class="line">        detach (bool): 后台运行一个容器，布尔类型值.相当于docker run -d选项</div><div class="line"></div><div class="line">        device_read_bps: 从一个设备上限制读速率(bytes/s) `[&#123;&quot;Path&quot;: &quot;device_path&quot;, &quot;Rate&quot;: rate&#125;]`</div><div class="line">        device_read_iops: 从一个设备中限制读取速率(IO/s)</div><div class="line">        device_write_bps: 从一个设备上限制写速率(bytes/s)</div><div class="line">        device_write_iops: 从一个设备中限制读取速率(IO/s)</div><div class="line">        devices (list): 映射主机的设备到容器中``&lt;path_on_host&gt;:&lt;path_in_container&gt;:&lt;cgroup_permissions&gt;``.</div><div class="line">        dns (list): 配置当前的dns-server</div><div class="line">        dns_opt (list): 添加额外的dns参数选项到容器内部，比如resolv.conf文件</div><div class="line">        dns_search (list): 设置dns搜索域</div><div class="line">        domainname (str or list): 设置当前dns搜索域名</div><div class="line"></div><div class="line">        entrypoint (str or list): 为容器设置入口,覆盖镜像中的entrypoint</div><div class="line"></div><div class="line">        environment (dict or list): 内部环境变量[&quot;SOMEVARIABLE=xxx&quot;]``</div><div class="line">        extra_hosts (dict): 在容器内部添加额外的主机名解析(本地hosts文件)</div><div class="line">        group_add (list): 设置容器内部进程运行时额外的组名（gid）</div><div class="line"></div><div class="line">        hostname (str): 容器设置额外的主机名.相当于docker run -h/--hostname 选项</div><div class="line"></div><div class="line">        ipc_mode (str): 为容器设置ipc模式</div><div class="line">        isolation (str): 隔离技术的使用Default: `None`.</div><div class="line">        labels (dict or list): 一个k/v类型的标签存储``&#123;&quot;label1&quot;: &quot;value1&quot;, &quot;label2&quot;: &quot;value2&quot;&#125;``)或一个列表类型的k/v存储``[&quot;label1&quot;, &quot;label2&quot;]``</div><div class="line">        links (dict or list of tuples): 为容器映射一个别名``(name, alias)`` </div><div class="line">        log_config (dict): 容器的日志配置。</div><div class="line">            keys:</div><div class="line">            - ``type`` The logging driver name.</div><div class="line">            - ``config`` A dictionary of configuration for the logging</div><div class="line">              driver.</div><div class="line">        mac_address (str): 绑定mac地址.</div><div class="line"></div><div class="line">        mem_limit (float or str): 内存限制，允许浮点型数据或单位区分的字符串(``100000b``, ``1000k``, ``128m``, ``1g``). 如果一个字符串没有指定单位，默认会使用字节(bytes)</div><div class="line">        mem_limit (str or int): 容器可以使用的最大内存数量(e.g. ``1G``).</div><div class="line"></div><div class="line">        mem_swappiness (int): 调整容器内存的swappiness行为状态，允许的数值为0-100 </div><div class="line">        memswap_limit (str or int): 最大内存限制，容器可用的内存为(memory+swap)</div><div class="line">        networks (list): 设置连接到该容器网络的名称</div><div class="line">        name (str): 为容器设置名字</div><div class="line">        network_disabled (bool): 禁用容器网络</div><div class="line">        network_mode (str): 网络模式 相当于docker run --net=&apos;none&apos;</div><div class="line">    </div><div class="line">            - ``bridge`` 默认使用桥接模式</div><div class="line">            - ``none`` 无网络模式</div><div class="line">            - ``container:&lt;name|id&gt;`` 重用另外一个容器的网络</div><div class="line">            - ``host`` 使用本机的网络栈</div><div class="line"></div><div class="line"></div><div class="line">        oom_kill_disable (bool): 是否启用OOM</div><div class="line">        oom_score_adj (int): 一个整数，以调整OOM的整体性能.</div><div class="line">        pid_mode (str): pid模式，如果设置为&apos;host&apos;,在容器内部将会使用宿主机的host pid</div><div class="line">        pids_limit (int): 调整容器的pid的限制。&apos;-1&apos;表示不限制</div><div class="line"></div><div class="line">        ports (dict): 为容器内部绑定端口 相当于docker run -p </div><div class="line">    		实例：</div><div class="line">              ``&#123;&apos;2222/tcp&apos;: 3333&#125;`` 暴露容器内部的2222端口到本机的3333端</div><div class="line">              ``&#123;&apos;2222/tcp&apos;: None&#125;`` 将容器内部的2222随机映射到本机</div><div class="line">              ``&#123;&apos;1111/tcp&apos;: (&apos;127.0.0.1&apos;, 1111)&#125;``.</div><div class="line">              ``&#123;&apos;1111/tcp&apos;: [1234, 4567]&#125;`` 绑定多个端口</div><div class="line"></div><div class="line"></div><div class="line">		privileged (bool): 给容器额外的特权</div><div class="line"></div><div class="line">        publish_all_ports (bool): 开放所有的端口到本机上 相当于docker run -P </div><div class="line"></div><div class="line">        read_only (bool): 以只读方式挂载容器的根文件系统</div><div class="line">        remove (bool): 当容器退出的时候删除，默认是&apos;False&apos;</div><div class="line">        restart_policy (dict): 当容器退出时重启容器</div><div class="line">            配置参数如下：</div><div class="line">            - ``Name`` One of ``on-failure``, or ``always``.</div><div class="line">            - ``MaximumRetryCount`` 容器失败多少次后进行重启</div><div class="line">            实例:</div><div class="line">            ``&#123;&quot;Name&quot;: &quot;on-failure&quot;, &quot;MaximumRetryCount&quot;: 5&#125;``</div><div class="line">    </div><div class="line">        security_opt (list): 设置安全标签，类似于selinux</div><div class="line">        shm_size (str or int): /dev/shm 的大小(e.g. ``1G``).</div><div class="line"></div><div class="line">        stdin_open (bool): 保持 ``STDIN`` 打开即使没有attach到容器内部相当于docker run -i</div><div class="line"></div><div class="line">        stdout (bool): 当detach=False的时候，从&apos;STDOUT&apos;返回日志。默认为True</div><div class="line">        stdout (bool): 当detach=False的时候，从&apos;STDERR&apos;返回日志，默认为False</div><div class="line">        stop_signal (str): 设置用于停止容器的信号。(e.g. ``SIGINT``).</div><div class="line">        sysctls (dict): 容器内部设置内核参数</div><div class="line">        tmpfs (dict): 挂载临时文件系统 </div><div class="line">                        .. code-block:: python</div><div class="line">    </div><div class="line">                &#123;</div><div class="line">                    &apos;/mnt/vol2&apos;: &apos;&apos;,</div><div class="line">                    &apos;/mnt/vol1&apos;: &apos;size=3G,uid=1000&apos;</div><div class="line">                &#125;</div><div class="line">    </div><div class="line">        tty (bool): 分配一个tty 相当于docker run -t</div><div class="line"></div><div class="line">        ulimits (list): 在容器内部设置ulimits值，一个字典类型的列表</div><div class="line">        user (str or int): 设置容器启动的用户名以及id</div><div class="line"></div><div class="line">        userns_mode (str): 为容器设置用户的命名空间模式，当用户的namespace的remapping参数被启用的时候，支持参数有&apos;host&apos;</div><div class="line">            values are: ``host``</div><div class="line">        volume_driver (str): 数据卷挂载驱动名</div><div class="line">        volumes (dict or list): 一个字典配置，将外部数据卷挂载到容器内部，key是主机或者数据卷的名字，value是带有key的字典：</div><div class="line">        		实例：</div><div class="line">                &#123;&apos;/home/user1/&apos;: &#123;&apos;bind&apos;: &apos;/mnt/vol2&apos;, &apos;mode&apos;: &apos;rw&apos;&#125;,</div><div class="line">                 &apos;/var/www&apos;: &#123;&apos;bind&apos;: &apos;/mnt/vol1&apos;, &apos;mode&apos;: &apos;ro&apos;&#125;&#125;</div><div class="line">    </div><div class="line">        volumes_from (list): 获取容器名或者id标识。</div><div class="line">        working_dir (str): 容器默认的工作目录</div><div class="line">    </div><div class="line">    返回参数:</div><div class="line">        容器的日志，包含 ``STDOUT``, ``STDERR``</div><div class="line">        If ``detach`` is ``True``, a :py:class:`Container` object is</div><div class="line">        returned instead.</div><div class="line">    </div><div class="line">    异常信息:</div><div class="line">    	如果容器以非0状态退出，或者`detach`参数为`False`</div><div class="line">        :py:class:`docker.errors.ContainerError`</div><div class="line">        如果指定的镜像不存在</div><div class="line">        :py:class:`docker.errors.ImageNotFound`</div><div class="line">        如果是服务返回一个错误</div><div class="line">        :py:class:`docker.errors.APIError`</div><div class="line">            If the server returns an error.</div></pre></td></tr></table></figure>
+<p>示例：<br>一个完整的创建容器的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Command line:</div><div class="line">$ docker run -itd -P --cpuset_cpus=&apos;0,1&apos; --cpu_shares=2 --cpu_period=10000 --hostname=xxbandy --mem_limit=512m --net=none --oom_kill_disable=True -P -u admin busybox /bin/sh</div><div class="line"></div><div class="line">Python API:</div><div class="line">c1 = C.containers.run(&apos;busybox&apos;,command=&apos;/bin/sh&apos;,name=&apos;xxb-test&apos;,detach=True,tty=True,stdin_open=True,cpuset_cpus=&apos;0,1&apos;,cpu_shares=2,cpu_period=10000,hostname=&apos;xxbandy&apos;,mem_limit=&apos;512m&apos;,network_mode=&apos;none&apos;,oom_kill_disable=True,publish_all_ports=True,user=&apos;root&apos;)</div><div class="line"></div><div class="line">查看容器相关信息：</div><div class="line">容器id，64位的字符</div><div class="line">In [20]: c1.id</div><div class="line">Out[20]: &apos;499db0824206d61d09db2f36c70aa84bdb1a4b6d508b001a618d2010a23fea7e&apos;</div><div class="line"></div><div class="line"></div><div class="line">c1.logs </div><div class="line">c1.name      获取容器名信息</div><div class="line">c1.reload</div><div class="line">c1.remove    删除容器信息，相当于docker rm 参数：c1.remove(v=True,link=True,force=True)</div><div class="line">c2.rename	 重命名容器名，相当于docker renmame oldname newname</div><div class="line">c1.resize	 设置tty session信息</div><div class="line">c1.restart   重启容器信息</div><div class="line">c1.start     启动容器信息</div><div class="line">c1.stats     容器状态</div><div class="line"></div><div class="line">c1.update    动态调整容器内部信息（blkio_weight，cpu_period，cpu_quota，cpu_shares，cpuset_cpus，cpuset_mems，mem_limit，mem_reservation）</div><div class="line">    Args:</div><div class="line">        blkio_weight (int): 块IO权重比例（10-100）</div><div class="line">        cpu_period (int): 限制cpu公平调度周期</div><div class="line">        cpu_quota (int): 限制cpu公平调度配额</div><div class="line">        cpu_shares (int): 设置cpu共享权重</div><div class="line">        cpuset_cpus (str): 指定cpu执行(0-3, 0,1)</div><div class="line">        cpuset_mems (str): 指定cpu内存的执行(0-3, 0,1)</div><div class="line">        mem_limit (int or str): 内存限制</div><div class="line">        mem_reservation (int or str): 内存软限制</div><div class="line">        memswap_limit (int or str): swap限制总的可使用内存限制(memory + swap)，-1表示关闭swap</div><div class="line">        kernel_memory (int or str): 内核内存限制</div><div class="line">        restart_policy (dict): 重启策略</div></pre></td></tr></table></figure>
+<p><code>注意:</code>update方法在docker1.10之后才增加了改功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">查看容器相关信息：</div><div class="line">容器id，64位的字符</div><div class="line">In [20]: c1.id</div><div class="line">Out[20]: &apos;499db0824206d61d09db2f36c70aa84bdb1a4b6d508b001a618d2010a23fea7e&apos;</div><div class="line"></div><div class="line">可以在/sys/fs/cgroup/memory/docker目录下面查看到每个容器的相关cgroup配置信息。</div><div class="line">查看内存信息：</div><div class="line"># grep hierarchical memory.stat     分别显示容器的内存限制和swap限制</div><div class="line">hierarchical_memory_limit 536870912</div><div class="line">hierarchical_memsw_limit 1073741824</div><div class="line"></div><div class="line">#cat memory.limit_in_bytes</div><div class="line">536870912</div><div class="line"></div><div class="line">可以在/sys/fs/cgroup/cpuset/docker目录下面查看到容器cpu的相关配置</div><div class="line"># cat cpuset.cpus       显示当前绑定的cpu信息</div><div class="line">0-1</div><div class="line">使用docker update动态调整内存信息:</div><div class="line">docker update -m 1024M xuxuebiao-test</div><div class="line"></div><div class="line"># cat memory.limit_in_bytes </div><div class="line">1073741824</div><div class="line"># grep hierarchical_memory_limit memory.stat </div><div class="line">hierarchical_memory_limit 1073741824</div></pre></td></tr></table></figure>
+<p>个人博客：<a href="https://my.oschina.net/xxbAndy/blog" target="_blank" rel="external">https://my.oschina.net/xxbAndy/blog</a><br>微信公众号：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577135-5d2191eacf61c6dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="wechat.png"></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          
+            <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/30/GPU环境下玩转Docker-三/" rel="next" title="GPU环境下玩转Docker(三)">
+                <i class="fa fa-chevron-left"></i> GPU环境下玩转Docker(三)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/30/玩转Docker运维管理/" rel="prev" title="玩转Docker运维管理">
+                玩转Docker运维管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/me.png"
+               alt="Andy Xu" />
+          <p class="site-author-name" itemprop="name">Andy Xu</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个长跑者的运维以及人生经历</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xxbandy" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/9c46ece5b7bd" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-hand-o-up"></i>
+                  
+                    
+                      简书
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://my.oschina.net/xxbAndy/blog" target="_blank" title="开源中国">
+                  
+                    <i class="fa fa-fw fa-heart"></i>
+                  
+                    
+                      开源中国
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://my.oschina.net/xxbAndy" title="开源中国" target="_blank">开源中国</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/9c46ece5b7bd" title="逼格运维说" target="_blank">逼格运维说</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、初始化客户端"><span class="nav-number">1.</span> <span class="nav-text">一、初始化客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Docker客户端的初始化工作"><span class="nav-number">1.1.</span> <span class="nav-text">1.Docker客户端的初始化工作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、api方法使用示例"><span class="nav-number">2.</span> <span class="nav-text">二、api方法使用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-login方法定义"><span class="nav-number">2.1.</span> <span class="nav-text">1. login方法定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-images-类定义："><span class="nav-number">2.2.</span> <span class="nav-text">2.images 类定义：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-docker管理容器相关"><span class="nav-number">2.3.</span> <span class="nav-text">3.docker管理容器相关</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Andy Xu</span>
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+<div class="theme-info">
+<div class="powered-by"></div>
+<span class="post-count">博客全站共21.2k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

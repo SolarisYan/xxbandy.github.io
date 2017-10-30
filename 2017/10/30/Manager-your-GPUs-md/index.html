@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Ansible,Etcd-Cluster," />
+  <meta name="keywords" content="GPU,NVIDIA," />
 
 
 
@@ -97,18 +97,18 @@
 
 
 
-<meta name="description" content="本篇文章记录一下使用ansible-playbooks进行快速构建一个可用的etcd集群。在阅读并实践本文章之前，请确保您有一个可用的ansible环境。">
-<meta name="keywords" content="Ansible,Etcd-Cluster">
+<meta name="description" content="使用nvidia-smi管理你的GPU卡nvidia-smi命令是NVIDIA系统管理接口，之前提到使用nvidia-docker实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。">
+<meta name="keywords" content="GPU,NVIDIA">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ansible-Etcd-cluster">
-<meta property="og:url" content="http://yoursite.com/2017/08/26/Ansible-Etcd-cluster/index.html">
+<meta property="og:title" content="Manager-your-GPUs.md">
+<meta property="og:url" content="http://yoursite.com/2017/10/30/Manager-your-GPUs-md/index.html">
 <meta property="og:site_name" content="逼格运维说">
-<meta property="og:description" content="本篇文章记录一下使用ansible-playbooks进行快速构建一个可用的etcd集群。在阅读并实践本文章之前，请确保您有一个可用的ansible环境。">
+<meta property="og:description" content="使用nvidia-smi管理你的GPU卡nvidia-smi命令是NVIDIA系统管理接口，之前提到使用nvidia-docker实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-29T15:45:55.000Z">
+<meta property="og:updated_time" content="2017-10-30T14:07:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ansible-Etcd-cluster">
-<meta name="twitter:description" content="本篇文章记录一下使用ansible-playbooks进行快速构建一个可用的etcd集群。在阅读并实践本文章之前，请确保您有一个可用的ansible环境。">
+<meta name="twitter:title" content="Manager-your-GPUs.md">
+<meta name="twitter:description" content="使用nvidia-smi管理你的GPU卡nvidia-smi命令是NVIDIA系统管理接口，之前提到使用nvidia-docker实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。">
 
 
 
@@ -138,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/26/Ansible-Etcd-cluster/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/30/Manager-your-GPUs-md/"/>
 
 
 
 
 
-  <title>Ansible-Etcd-cluster | 逼格运维说</title>
+  <title>Manager-your-GPUs.md | 逼格运维说</title>
   
 
 
@@ -326,7 +326,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/26/Ansible-Etcd-cluster/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/30/Manager-your-GPUs-md/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Andy Xu">
@@ -343,7 +343,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Ansible-Etcd-cluster</h1>
+          <h1 class="post-title" itemprop="name headline">Manager-your-GPUs.md</h1>
         
 
         <div class="post-meta">
@@ -355,8 +355,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-26T15:51:12+08:00">
-                2017-08-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-30T22:03:27+08:00">
+                2017-10-30
               </time>
             
 
@@ -378,8 +378,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Ansible/" itemprop="url" rel="index">
-                    <span itemprop="name">Ansible</span>
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
                   </a>
                 </span>
 
@@ -415,64 +415,41 @@
       
 
       
-        <blockquote>
-<p>本篇文章记录一下使用<code>ansible-playbooks</code>进行快速构建一个可用的etcd集群。在阅读并实践本文章之前，请确保您有一个可用的<code>ansible</code>环境。</p>
-</blockquote>
+        <h2 id="使用nvidia-smi管理你的GPU卡"><a href="#使用nvidia-smi管理你的GPU卡" class="headerlink" title="使用nvidia-smi管理你的GPU卡"></a>使用nvidia-smi管理你的GPU卡</h2><p><code>nvidia-smi</code>命令是NVIDIA系统管理接口，之前提到使用<code>nvidia-docker</code>实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。</p>
 <a id="more"></a>
-<h3 id="一、集群规划"><a href="#一、集群规划" class="headerlink" title="一、集群规划"></a>一、集群规划</h3><p><code>注意:本文档基于centos7+的操作系统上进行构建，在rhel7+系列也可用使用，其他发行版本可酌情参考</code></p>
-<table>
-<thead>
-<tr>
-<th>etcd_name</th>
-<th>节点</th>
-<th>端口</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>etcd1</td>
-<td>10.0.0.77</td>
-<td>2379/2380</td>
-</tr>
-<tr>
-<td>etcd2</td>
-<td>10.0.0.78</td>
-<td>2379/2380</td>
-</tr>
-<tr>
-<td>etcd3</td>
-<td>10.0.0.79</td>
-<td>2379/2380</td>
-</tr>
-</tbody>
-</table>
-<p>以上节点详情信息用来规划集群规模以及名称角色，配置文件中<code>ETCD_INITIAL_CLUSTER</code>选项中的<code>etcd_name</code>和地址需要和主机规划中一致</p>
-<h3 id="二、etcd集群部署"><a href="#二、etcd集群部署" class="headerlink" title="二、etcd集群部署"></a>二、etcd集群部署</h3><blockquote>
-<p>环境前提：已经配置过ansible相关的环境，并且可以免密登录</p>
-</blockquote>
-<p><strong>1.etcd集群相关的配置文件</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div></pre></td><td class="code"><pre><div class="line">$ tree . </div><div class="line">.</div><div class="line">├──etcd-install.yml   #ansible-playbook 脚本</div><div class="line">├──etcd.conf.j2       #etcd主配置文件</div><div class="line">├──etcd.service       #systemd服务启动文件</div><div class="line">├──host               #etcd集群主机列表</div><div class="line"></div><div class="line"># ansible-playbooks 脚本</div><div class="line">$ cat etcd-install.yml</div><div class="line">---</div><div class="line">- hosts: &quot;&#123;&#123; host &#125;&#125;&quot;</div><div class="line">  remote_user: root</div><div class="line">  vars:</div><div class="line">    hostip: &quot;&#123;&#123; ansible_all_ipv4_addresses[0] &#125;&#125;&quot;</div><div class="line">    ipv6: &quot;&#123;&#123; ansible_all_ipv6_addresses[0].split(&apos;:&apos;)[-1] &#125;&#125;&quot;</div><div class="line">    packagedir: /tmp/</div><div class="line">    serverdir: /export/servers/</div><div class="line">    download: https://github.com/coreos/etcd/releases/</div><div class="line">    etcd_version: etcd-v3.1.5-linux-amd64</div><div class="line">  tasks:</div><div class="line">  - name: &quot;test ping&quot;</div><div class="line">    ping:</div><div class="line">  - name: &quot;init env&quot;</div><div class="line">    shell: &quot;mkdir -p /export/servers /etc/etcd/ /export/Data/etcd/ &quot;</div><div class="line"></div><div class="line"></div><div class="line">  - name: &quot;wget &#123;&#123; etcd_version &#125;&#125;&quot;</div><div class="line">    get_url:</div><div class="line">     url: &quot;&#123;&#123; item.url &#125;&#125;&quot;</div><div class="line">     dest: &quot;&#123;&#123; item.dest &#125;&#125;&quot;</div><div class="line">     mode: 0644</div><div class="line">     owner: root</div><div class="line">     group: root</div><div class="line">    with_items:</div><div class="line">        - &#123; url: &quot;&#123;&#123; download &#125;&#125;&#123;&#123; etcd_version &#125;&#125;.tar.gz&quot; , dest: &quot;&#123;&#123; packagedir &#125;&#125;&quot; &#125;</div><div class="line"></div><div class="line">  - name: &quot;untar the &#123;&#123; etcd_version &#125;&#125;&quot;</div><div class="line">    unarchive:</div><div class="line">     src: &quot;&#123;&#123; item.src &#125;&#125;&quot;</div><div class="line">     dest: &quot;&#123;&#123; item.dest &#125;&#125;&quot;</div><div class="line">     owner: root</div><div class="line">     group: root</div><div class="line">     remote_src: yes</div><div class="line">    with_items:</div><div class="line">      - &#123; src: &quot;&#123;&#123; packagedir &#125;&#125;&#123;&#123; etcd_version &#125;&#125;.tar.gz&quot;, dest: &quot;&#123;&#123; serverdir &#125;&#125;&quot; &#125;</div><div class="line"></div><div class="line">  - name: &quot;copy the etcd execfile&quot;</div><div class="line">    shell: &quot;cp -rp &#123;&#123; serverdir &#125;&#125;&#123;&#123; etcd_version &#125;&#125;/etcd* /usr/bin/&quot;</div><div class="line"></div><div class="line">  - name: &quot;init the es configuration!&quot;</div><div class="line">    template:</div><div class="line">      src: &quot;&#123;&#123; item.src &#125;&#125;&quot;</div><div class="line">      dest: &quot;&#123;&#123; item.dest &#125;&#125;&quot;</div><div class="line">      mode: 0755</div><div class="line">      owner: root</div><div class="line">      group: root</div><div class="line">    with_items:</div><div class="line">      #dest后面的引号与大括号中间一定不能有空格,还有后面引号的空格也要取消掉,不然文件会有空格</div><div class="line">      - &#123; src: &quot;etcd.conf.j2&quot;, dest: &quot;/etc/etcd/etcd.conf&quot; &#125;</div><div class="line">      - &#123; src: &quot;etcd.service&quot;, dest: &quot;/etc/systemd/system/&quot; &#125;</div><div class="line"></div><div class="line"># etcd主配置文件模板，这里采用jinja2模板引擎</div><div class="line">$ cat etcd.conf.j2</div><div class="line"># [member]</div><div class="line">BASE_DIR=&quot;/export&quot;</div><div class="line"># 由于etcd_name变量比较特殊，需要和ETCD_INITIAL_CLUSTER中的值一一对应，暂时写为etcd1,配置下发后需要将该值替换成对应节点的名称</div><div class="line">ETCD_NAME=&quot;etcd1&quot;</div><div class="line">ETCD_DATA_DIR=&quot;/export/Data/etcd&quot;</div><div class="line">ETCD_LISTEN_PEER_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2380&quot;</div><div class="line">ETCD_LISTEN_CLIENT_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2379&quot;</div><div class="line"></div><div class="line">#[cluster]</div><div class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2380&quot;</div><div class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;etcd-cluster&quot;</div><div class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2379&quot;</div><div class="line"></div><div class="line">#[initial-cluster]</div><div class="line"># 需要按照etcd集群规划节点来填写</div><div class="line">ETCD_INITIAL_CLUSTER=&quot;etcd1=http://10.0.0.77:2380,etcd2=http://10.0.0.78:2380,etcd3=http://10.0.0.79:2380&quot;</div><div class="line"></div><div class="line"></div><div class="line"># systemd 启动脚本</div><div class="line">$ cat etcd.service</div><div class="line">[Unit]</div><div class="line">Description=Etcd Server</div><div class="line">After=network.target</div><div class="line">After=network-online.target</div><div class="line">Wants=network-online.target</div><div class="line">Documentation=https://github.com/coreos</div><div class="line"></div><div class="line">[Service]</div><div class="line">Type=notify</div><div class="line"># 数据目录，需要提前进行创建</div><div class="line">WorkingDirectory=/export/Data/etcd/</div><div class="line">EnvironmentFile=-/etc/etcd/etcd.conf</div><div class="line">ExecStart=/usr/bin/etcd \</div><div class="line">  --name $&#123;ETCD_NAME&#125; \</div><div class="line">  --initial-advertise-peer-urls $&#123;ETCD_INITIAL_ADVERTISE_PEER_URLS&#125; \</div><div class="line">  --listen-peer-urls $&#123;ETCD_LISTEN_PEER_URLS&#125; \</div><div class="line">  --listen-client-urls $&#123;ETCD_LISTEN_CLIENT_URLS&#125;,http://127.0.0.1:2379 \</div><div class="line">  --advertise-client-urls $&#123;ETCD_ADVERTISE_CLIENT_URLS&#125; \</div><div class="line">  --initial-cluster-token $&#123;ETCD_INITIAL_CLUSTER_TOKEN&#125; \</div><div class="line">  --initial-cluster $&#123;ETCD_INITIAL_CLUSTER&#125; \</div><div class="line">  --initial-cluster-state new \</div><div class="line">  --data-dir=$&#123;ETCD_DATA_DIR&#125;</div><div class="line">Restart=on-failure</div><div class="line">RestartSec=5</div><div class="line">LimitNOFILE=65536</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div><div class="line"></div><div class="line">$ cat hosts</div><div class="line">[etcd]</div><div class="line">10.0.0.77</div><div class="line">10.0.0.78</div><div class="line">10.0.0.79</div></pre></td></tr></table></figure></p>
-<p><strong>2.使用ansible-playbooks进行部署etcd集群</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ansible-playbook -i host -e host=etcd etcd-install.yml</div></pre></td></tr></table></figure>
-<p>等待正确执行完成之后，三个节点的etcd就已经安装好了，由于是集群，所以各个节点上的配置还是有专属的部分，暂时没有想到如何进行一次性安装启动，将安装、修改配置、启动作为三部分操作.</p>
-<p><strong>3.登录每个节点进行修改etcd_name</strong></p>
-<p>修改每个节点上的<code>/etc/etcd/etcd.conf</code>文件:<br><code>注意：需要将各个节点ip和etcd_name对应起来(etcd1-&gt;77 etcd2-&gt;78 etcd-&gt;79)</code></p>
-<p>77节点上的配置如下(其他两个节点修改对应的etcd_name)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ETCD_NAME=&quot;etcd1&quot;</div><div class="line">ETCD_INITIAL_CLUSTER=&quot;etcd1=http://10.0.0.77:2380,etcd2=http://10.0.0.78:2380,etcd3=http://10.0.0.79:2380&quot;</div></pre></td></tr></table></figure>
-<p><strong>4.检测配置文件并进行启动集群</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ansible -i host all -m shell -a &apos;systemctl daemon-reload &amp;&amp; systemctl start etcd &amp;&amp; systemctl enable etcd&apos;</div></pre></td></tr></table></figure>
-<p><code>注意：由于etcd采用集群模式，在启动第一个实例的时候会一直监听其他实例，这个时候需要尽快启动其他实例，以完成集群发现，否则第一个实例会在一定时间内挂掉</code></p>
-<p><strong>5.集群状态监测</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ etcdctl cluster-health</div><div class="line">member 4d946fabd2e1eb9f is healthy: got healthy result from http://10.0.0.79:2379</div><div class="line">member 805150a1f1a44604 is healthy: got healthy result from http://10.0.0.77:2379</div><div class="line">member 81ddc2f4095fe8a1 is healthy: got healthy result from http://10.0.0.78:2379</div><div class="line">cluster is healthy</div><div class="line"></div><div class="line">$ etcdctl member list</div><div class="line">4d946fabd2e1eb9f: name=etcd3 peerURLs=http://10.0.0.79:2380 clientURLs=http://10.0.0.79:2379 isLeader=true</div><div class="line">805150a1f1a44604: name=etcd1 peerURLs=http://10.0.0.77:2380 clientURLs=http://10.0.0.77:2379 isLeader=false</div><div class="line">81ddc2f4095fe8a1: name=etcd2 peerURLs=http://10.0.0.78:2380 clientURLs=http://10.0.0.78:2379 isLeader=false</div></pre></td></tr></table></figure>
-<p>如此，可以发现我们的etcd集群已经迅速运行起来了！</p>
-<h3 id="三、etcd集群的基本使用"><a href="#三、etcd集群的基本使用" class="headerlink" title="三、etcd集群的基本使用"></a>三、etcd集群的基本使用</h3><p><code>注意1:</code>由于是集群模式，所以可用在任何一个节点进行写入操作，用户也可用使用etcd的http接口进行使用<br><code>注意2:</code>etcd v2和v3的API是完全不同的两个存储实现，所以用户在使用的时候需要注意<code>在etcd v2版本中是采用set存数据的，v3版本中采用put方式</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">指定API版本</div><div class="line"># export ETCDCTL_API=3</div><div class="line"># etcdctl  put foo &quot;Hello World!&quot;</div><div class="line"># etcdctl get foo</div><div class="line">以json格式输出</div><div class="line"># etcdctl --write-out=&quot;json&quot; get foo</div></pre></td></tr></table></figure>
-<p><strong>通过前缀获取数据</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">etcdctl --endpoints=$ENDPOINTS put web1 value1</div><div class="line">etcdctl --endpoints=$ENDPOINTS put web2 value2</div><div class="line">etcdctl --endpoints=$ENDPOINTS put web3 value3</div><div class="line"></div><div class="line">etcdctl --endpoints=$ENDPOINTS get web --prefix</div><div class="line">web1</div><div class="line">value1</div><div class="line">web2</div><div class="line">value2</div><div class="line">web3</div><div class="line">value3</div></pre></td></tr></table></figure>
-<p><strong>删除数据</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">etcdctl --endpoints=$ENDPOINTS put key myvalue</div><div class="line">etcdctl --endpoints=$ENDPOINTS del key</div><div class="line"></div><div class="line">etcdctl --endpoints=$ENDPOINTS put k1 value1</div><div class="line">etcdctl --endpoints=$ENDPOINTS put k2 value2</div><div class="line">etcdctl --endpoints=$ENDPOINTS del k --prefix</div></pre></td></tr></table></figure>
-<p><strong>集群状态信息</strong></p>
-<p><code>v3 的API才有这个功能</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">etcdctl --write-out=table  --endpoints=$&#123;HOST_1&#125;:2379,$&#123;HOST_2&#125;:2379,$&#123;HOST_3&#125;:2379 endpoint status</div><div class="line">+-------------------+------------------+---------+---------+-----------+-----------+------------+</div><div class="line">|     ENDPOINT      |        ID        | VERSION | DB SIZE | IS LEADER | RAFT TERM | RAFT INDEX |</div><div class="line">+-------------------+------------------+---------+---------+-----------+-----------+------------+</div><div class="line">| 10.0.0.77:2379 | 805150a1f1a44604 | 3.1.5   | 1.2 MB  | false     |       639 |     188421 |</div><div class="line">| 10.0.0.78:2379 | 81ddc2f4095fe8a1 | 3.1.5   | 1.2 MB  | false     |       639 |     188421 |</div><div class="line">| 10.0.0.79:2379 | 4d946fabd2e1eb9f | 3.1.5   | 1.2 MB  | true      |       639 |     188421 |</div><div class="line">+-------------------+------------------+---------+---------+-----------+-----------+------------+</div></pre></td></tr></table></figure></p>
-<!--more-->
+<h3 id="开启持久模式"><a href="#开启持久模式" class="headerlink" title="开启持久模式"></a>开启持久模式</h3><p>在Linux上，你需要将GPUs设置为持久模式<code>persistence mode</code>来保证你的<code>NVIDIA</code>驱动即使没有应用正在运行也是出于加载状态的。这个在你有一些短生命周期的job类型应用运行时是非常有用的。持久模式比较耗电，但是它会防止每次启动GPU应用程序时发生的相当长的延迟。当然如果你使用设定了时钟频率或功率限制的GPUs的话(当驱动不加载的话，这些设置会丢失)，持久模式将是非常有必要的。通过如下命令设置持久模式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvidia-smi -pm 1</div></pre></td></tr></table></figure></p>
+<p>在Windows上，改接口不支持设置持久模式，但是可以设置为<code>TCC</code>模式。</p>
+<h3 id="查看GPU状态"><a href="#查看GPU状态" class="headerlink" title="查看GPU状态"></a>查看GPU状态</h3><p>1.GPU设备概要信息<br>由以下输出可以看到驱动版本为：<code>375.39</code>,以及GPU基本信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">sh-4.2# nvidia-smi</div><div class="line">Wed Oct 18 11:58:03 2017</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| NVIDIA-SMI 375.39                 Driver Version: 375.39                    |</div><div class="line">|-------------------------------+----------------------+----------------------+</div><div class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</div><div class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</div><div class="line">|===============================+======================+======================|</div><div class="line">|   0  Tesla M40 24GB      On   | 0000:04:00.0     Off |                    0 |</div><div class="line">| N/A   23C    P8    17W / 250W |      0MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   1  Tesla M40           On   | 0000:05:00.0     Off |                    0 |</div><div class="line">| N/A   26C    P8    17W / 250W |      0MiB / 11443MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   2  Tesla M40 24GB      On   | 0000:06:00.0     Off |                    0 |</div><div class="line">| N/A   22C    P8    17W / 250W |      0MiB / 22939MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line">|   3  Tesla M40           On   | 0000:07:00.0     Off |                    0 |</div><div class="line">| N/A   23C    P8    16W / 250W |      0MiB / 11443MiB |      0%      Default |</div><div class="line">+-------------------------------+----------------------+----------------------+</div><div class="line"></div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line">| Processes:                                                       GPU Memory |</div><div class="line">|  GPU       PID  Type  Process name                               Usage      |</div><div class="line">|=============================================================================|</div><div class="line">|  No running processes found                                                 |</div><div class="line">+-----------------------------------------------------------------------------+</div><div class="line"></div><div class="line"># Temp 标识GPU设备的温度</div><div class="line"># Memory-Usage 表示内存使用率</div><div class="line"># GPU-Util 表示GPU使用率</div></pre></td></tr></table></figure></p>
+<p>2.查看当前系统可用的GPU设备列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi -L</div><div class="line">GPU 0: Tesla M40 24GB (UUID: GPU-eb4e4871-504d-feb7-ba59-xxxxxxxxxx)</div><div class="line">GPU 1: Tesla M40 (UUID: GPU-6c2cb0c9-acba-1dab-6525-xxxxxxxxxx)</div><div class="line">GPU 2: Tesla M40 24GB (UUID: GPU-85551fe5-68ea-15b3-76c1-6fe1sas2w    1)</div><div class="line">GPU 3: Tesla M40 (UUID: GPU-8fe0a30b-7faa-0537-e3a5-53ba5c8a61wesd)</div></pre></td></tr></table></figure>
+<p>3.查看GPU以及单元信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi -q</div></pre></td></tr></table></figure></p>
+<p>4.查看每一个GPU指定详细信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># nvidia-smi --query-gpu=index,name,uuid,serial --format=csv</div><div class="line">index, name, uuid, serial</div><div class="line">0, Tesla M40 24GB, GPU-eb4e4871-504d-feb7-ba59-xxxxxxxx, xxxxxxxxxx</div><div class="line">1, Tesla M40, GPU-6c2cb0c9-acba-1dab-6525-xxxxxxxx, xxxxxxxxxx</div><div class="line">2, Tesla M40 24GB, GPU-85551fe5-68ea-15b3-76c1-xxxxxxxx, xxxxxxxxxx</div><div class="line">3, Tesla M40, GPU-8fe0a30b-7faa-0537-e3a5-xxxxxxxx, xxxxxxxxxx</div></pre></td></tr></table></figure></p>
+<p>5.指定GPU查看相关信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># nvidia-smi --query-gpu=index,name,uuid,serial --format=csv --id=0</div><div class="line">index, name, uuid, serial</div><div class="line">0, Tesla M40 24GB, GPU-eb4e4871-504d-feb7-ba59-d15a66d6faa7, 0322816142509</div></pre></td></tr></table></figure></p>
+<h3 id="监控和管理GPU-Boost"><a href="#监控和管理GPU-Boost" class="headerlink" title="监控和管理GPU Boost"></a>监控和管理GPU Boost</h3><p>管理员和用户可以使用这种方式来观察GPUs的状态。<br>以下显示了每个GPU的可用时钟频率(Tesla M40)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi -q -d SUPPORTED_CLOCKS</div><div class="line">GPU 0000:07:00.0</div><div class="line">    Supported Clocks</div><div class="line">        Memory                      : 3004 MHz</div><div class="line">            Graphics                : 1114 MHz</div><div class="line">            Graphics                : 1088 MHz</div><div class="line">            Graphics                : 1063 MHz</div><div class="line">            Graphics                : 1038 MHz</div><div class="line">            Graphics                : 1013 MHz</div><div class="line">            Graphics                : 987 MHz</div><div class="line">            Graphics                : 962 MHz</div><div class="line">            Graphics                : 949 MHz</div><div class="line">            Graphics                : 924 MHz</div><div class="line">            Graphics                : 899 MHz</div><div class="line">            Graphics                : 873 MHz</div><div class="line">            Graphics                : 848 MHz</div><div class="line">            Graphics                : 823 MHz</div><div class="line">            Graphics                : 797 MHz</div><div class="line">            Graphics                : 772 MHz</div><div class="line">            Graphics                : 747 MHz</div><div class="line">            Graphics                : 721 MHz</div><div class="line">            Graphics                : 696 MHz</div><div class="line">            Graphics                : 671 MHz</div><div class="line">            Graphics                : 645 MHz</div><div class="line">            Graphics                : 620 MHz</div><div class="line">            Graphics                : 595 MHz</div><div class="line">            Graphics                : 557 MHz</div><div class="line">            Graphics                : 532 MHz</div><div class="line">        Memory                      : 405 MHz</div><div class="line">            Graphics                : 324 MHz</div></pre></td></tr></table></figure>
+<p>以上显示中只有两个内存时钟(memory clock)被支持：3004 MHz和405 MHz.运行在前者的内存，有24个支持GPU时钟频率。后者只有一个GPU频率，且是空闲状态的。在Tesla K80上，GPU Boost会自动管理这些频率，来让他们运行的尽可能快。而在其他一些模块中，比如Tesla K40，必须由管理员来指定GPU时钟频率。</p>
+<p>查看当前GPU的时钟频率，默认的时钟加速和最小的时钟频率<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi -q -d CLOCK</div><div class="line"></div><div class="line">GPU 0000:07:00.0</div><div class="line">    Clocks</div><div class="line">        Graphics                    : 949 MHz</div><div class="line">        SM                          : 949 MHz</div><div class="line">        Memory                      : 3004 MHz</div><div class="line">        Video                       : 873 MHz</div><div class="line">    Applications Clocks</div><div class="line">        Graphics                    : 947 MHz</div><div class="line">        Memory                      : 3004 MHz</div><div class="line">    Default Applications Clocks</div><div class="line">        Graphics                    : 947 MHz</div><div class="line">        Memory                      : 3004 MHz</div><div class="line">    Max Clocks</div><div class="line">        Graphics                    : 1114 MHz</div><div class="line">        SM                          : 1114 MHz</div><div class="line">        Memory                      : 3004 MHz</div><div class="line">        Video                       : 1024 MHz</div><div class="line">    SM Clock Samples</div><div class="line">        Duration                    : 10989718.85 sec</div><div class="line">        Number of Samples           : 46</div><div class="line">        Max                         : 1063 MHz</div><div class="line">        Min                         : 324 MHz</div><div class="line">        Avg                         : 948 MHz</div><div class="line">    Memory Clock Samples</div><div class="line">        Duration                    : 10989718.85 sec</div><div class="line">        Number of Samples           : 46</div><div class="line">        Max                         : 3004 MHz</div><div class="line">        Min                         : 405 MHz</div><div class="line">        Avg                         : 3003 MHz</div><div class="line">    Clock Policy</div><div class="line">        Auto Boost                  : On</div><div class="line">        Auto Boost Default          : On</div></pre></td></tr></table></figure></p>
+<p>理想状态中，你想让所有的时钟都一直运行在比较高的速度，但是对于所有的应用来说是不可能的。可以使用PERFORMANCE参数来查看每个GPU卡当前的状态以及时钟慢下来的原因。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi -q -d PERFORMANCE/performance</div><div class="line">GPU 0000:07:00.0</div><div class="line">    Performance State               : P0</div><div class="line">    Clocks Throttle Reasons</div><div class="line">        Idle                        : Not Active</div><div class="line">        Applications Clocks Setting : Active</div><div class="line">        SW Power Cap                : Not Active</div><div class="line">        HW Slowdown                 : Not Active</div><div class="line">        Sync Boost                  : Not Active</div><div class="line">        Unknown                     : Not Active</div></pre></td></tr></table></figure>
+<p>如果任何一个GPU时钟都以比较慢速度运行的话，那么上面的<code>Clocks Throttle Reasons</code>中的一个或多个将会被标记为active状态。最需要关注的是<code>HW Slowdown</code>和<code>Unknown</code>是否是active状态，如果那样的话很可能是电源或者冷却系统的问题。其余的需要关注设备卡是否是空闲的或者是由管理员手动设置为<code>slower</code>模式。</p>
+<p>使用<code>nvidia-smi</code>还可以去监控其他相关指标，-d参数支持<code>MEMORY UTILIZATION ECC TEMPERATURE POWER CLOCK COMPUTE PIDS PERFORMANCE SUPPORTED_CLOCKS PAGE_RETIREMENT ACCOUNTING</code></p>
+<p>查看每块GPU卡的内存使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi -q -d memory</div><div class="line"></div><div class="line">GPU 0000:06:00.0</div><div class="line">    FB Memory Usage</div><div class="line">        Total                       : 22939 MiB</div><div class="line">        Used                        : 21800 MiB</div><div class="line">        Free                        : 1139 MiB</div><div class="line">    BAR1 Memory Usage</div><div class="line">        Total                       : 32768 MiB</div><div class="line">        Used                        : 2 MiB</div><div class="line">        Free                        : 32766 MiB</div><div class="line"></div><div class="line">GPU 0000:07:00.0</div><div class="line">    FB Memory Usage</div><div class="line">        Total                       : 11443 MiB</div><div class="line">        Used                        : 10876 MiB</div><div class="line">        Free                        : 567 MiB</div><div class="line">    BAR1 Memory Usage</div><div class="line">        Total                       : 16384 MiB</div><div class="line">        Used                        : 2 MiB</div><div class="line">        Free                        : 16382 MiB</div></pre></td></tr></table></figure>
+<p>指定GPU卡查看相关指标：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi -i 0 -q -d MEMORY,UTILIZATION,POWER,CLOCK,COMPUTE</div></pre></td></tr></table></figure></p>
+<h3 id="查看系统的拓扑结构"><a href="#查看系统的拓扑结构" class="headerlink" title="查看系统的拓扑结构"></a>查看系统的拓扑结构</h3><p>要适当的利用更先进的NVIDIA GPU优势(例如GPU Direct)，因此系统的拓扑结构的正确配置是非常重要的。拓扑结构涉及到<code>PCI-Express</code>(GPUs, InfiniBand HCAs, storage controllers, etc)设备如何连接到其他设备，以及如何连接到系统CPU的。如果配置不正确，可能某些特定的功能性能会比较低甚至不能正常工作。为了解决如上问题，<code>nvidia-smi</code>最近的版本包含了一个可用查看系统拓扑的命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># 显示GPU拓扑(-m参数可以看到GPU交流矩阵以及CPU亲和性绑定)</div><div class="line">$  nvidia-smi topo -m</div><div class="line">	GPU0	GPU1	GPU2	GPU3	CPU Affinity</div><div class="line">GPU0	 X 	PIX	PIX	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU1	PIX	 X 	PIX	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU2	PIX	PIX	 X 	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU3	PIX	PIX	PIX	 X 	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line"></div><div class="line">Legend:</div><div class="line"></div><div class="line">  X   = Self</div><div class="line">  SOC  = Connection traversing PCIe as well as the SMP link between CPU sockets(e.g. QPI)</div><div class="line">  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)</div><div class="line">  PXB  = Connection traversing multiple PCIe switches (without traversing the PCIe Host Bridge)</div><div class="line">  PIX  = Connection traversing a single PCIe switch</div><div class="line">  NV#  = Connection traversing a bonded set of # NVLinks</div></pre></td></tr></table></figure>
+<p>以上配置显示我们有四块GOU卡，并且都链接在服务器的第一颗CPU上(物理机2颗6核cpu并开启超线程)。该工具建议推荐我们将job运行在偶数标记的cpu上。并且以上四块GPU卡都是互相通过PCIe switch直连的。</p>
+<p>一个可用的GPU矩阵表示如下：</p>
+<ul>
+<li>X = 表示GPU本身</li>
+<li>SOC = 表示贯穿PCIe总线和CPU sockets之间的SMP链接。</li>
+<li>PHB = 贯穿PCIe总线和PCIe Host Bridge</li>
+<li>PXB = 贯穿多个PCIe switch(不通过PCIe Host Bridge)</li>
+<li>PIX = 链接单个PCIe switch</li>
+<li>NV# = 贯穿一组NVLinks设备</li>
+</ul>
+<p><code>划重点啦：其实由上面的GPU拓扑可以看出来，我们系统上的4块设备是两两互相直连的架构！</code></p>
+<p><a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/" target="_blank" rel="external">nvidia-smi命令使用帮助</a></p>
 
       
     </div>
@@ -501,9 +478,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Ansible/" rel="tag"><i class="fa fa-tag"></i> Ansible</a>
+            <a href="/tags/GPU/" rel="tag"><i class="fa fa-tag"></i> GPU</a>
           
-            <a href="/tags/Etcd-Cluster/" rel="tag"><i class="fa fa-tag"></i> Etcd-Cluster</a>
+            <a href="/tags/NVIDIA/" rel="tag"><i class="fa fa-tag"></i> NVIDIA</a>
           
         </div>
       
@@ -516,14 +493,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/10/26/GPU环境下玩转Docker-二/" rel="next" title="GPU环境下玩转Docker(二)">
+                <i class="fa fa-chevron-left"></i> GPU环境下玩转Docker(二)
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/08/26/Dockerfile-etcd/" rel="prev" title="Dockerfile-etcd">
-                Dockerfile-etcd <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/30/GPU环境下玩转Docker-三/" rel="prev" title="GPU环境下玩转Docker(三)">
+                GPU环境下玩转Docker(三) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -720,7 +701,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、集群规划"><span class="nav-number">1.</span> <span class="nav-text">一、集群规划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、etcd集群部署"><span class="nav-number">2.</span> <span class="nav-text">二、etcd集群部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、etcd集群的基本使用"><span class="nav-number">3.</span> <span class="nav-text">三、etcd集群的基本使用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用nvidia-smi管理你的GPU卡"><span class="nav-number">1.</span> <span class="nav-text">使用nvidia-smi管理你的GPU卡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开启持久模式"><span class="nav-number">1.1.</span> <span class="nav-text">开启持久模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看GPU状态"><span class="nav-number">1.2.</span> <span class="nav-text">查看GPU状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监控和管理GPU-Boost"><span class="nav-number">1.3.</span> <span class="nav-text">监控和管理GPU Boost</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看系统的拓扑结构"><span class="nav-number">1.4.</span> <span class="nav-text">查看系统的拓扑结构</span></a></li></ol></li></ol></div>
             
 
           </div>

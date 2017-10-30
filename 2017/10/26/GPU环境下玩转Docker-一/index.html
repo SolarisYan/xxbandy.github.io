@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Docker,GPU,AI,NVIDIA,NVIDIA-Docker," />
+  <meta name="keywords" content="Docker,GPU,NVIDIA,AI,NVIDIA-Docker," />
 
 
 
@@ -98,7 +98,7 @@
 
 
 <meta name="description" content="背景：随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。 从GPU到GPGP">
-<meta name="keywords" content="Docker,GPU,AI,NVIDIA,NVIDIA-Docker">
+<meta name="keywords" content="Docker,GPU,NVIDIA,AI,NVIDIA-Docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GPU环境下玩转Docker(一)">
 <meta property="og:url" content="http://yoursite.com/2017/10/26/GPU环境下玩转Docker-一/index.html">
@@ -111,7 +111,7 @@
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/meta-packages.png">
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/cuda-sample.png">
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/cuda-sample-1.png">
-<meta property="og:updated_time" content="2017-10-26T03:07:03.000Z">
+<meta property="og:updated_time" content="2017-10-30T14:27:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GPU环境下玩转Docker(一)">
 <meta name="twitter:description" content="背景：随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。 从GPU到GPGP">
@@ -425,12 +425,12 @@
         <h3 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h3><p>随着大数据、人工智能以及机器学习等技术的发展，CPU计算资源已经不能满足很多计算场景，而随着硬件技术的发展，越来越多的人工智能以及机器学习领域开始使用GPU进行计算任务。而GPU环境以及具体的应用方式又给真正做人工智能相关的同学造成了很多困扰，本系列文章将分为三篇，将介绍如何搭建部署GPU环境，使用Docker进行管理GPU容器，使用Kubernetes来调度GPU容器。</p>
 <p><a href="http://www.jianshu.com/p/e72a352a2bd7" target="_blank" rel="external">从GPU到GPGPU</a><br><a href="http://www.jianshu.com/p/609e0530a19c" target="_blank" rel="external">CPU与GPU</a></p>
 <a id="more"></a>
-<h3 id="一、GPU准备"><a href="#一、GPU准备" class="headerlink" title="一、GPU准备"></a>一、GPU准备</h3><p><a href="http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#redhat-installation" target="_blank" rel="external">CUDA安装部署</a></p>
+<h3 id="GPU准备"><a href="#GPU准备" class="headerlink" title="GPU准备"></a>GPU准备</h3><p><a href="http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#redhat-installation" target="_blank" rel="external">CUDA安装部署</a></p>
 <p><a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=CentOS&amp;target_version=7&amp;target_type=rpmlocal" target="_blank" rel="external">CUDA Toolkit下载页面</a></p>
 <p><a href="http://www.nvidia.cn/page/home.html" target="_blank" rel="external">英伟达中文官网</a></p>
-<h3 id="二、GPU驱动安装"><a href="#二、GPU驱动安装" class="headerlink" title="二、GPU驱动安装"></a>二、GPU驱动安装</h3><p><code>注意：由于GPU需要在宿主机上安装相关驱动才能够被用户态的程序所识别，所以需要先安装CUDA</code></p>
+<h3 id="GPU驱动安装"><a href="#GPU驱动安装" class="headerlink" title="GPU驱动安装"></a>GPU驱动安装</h3><p><code>注意：由于GPU需要在宿主机上安装相关驱动才能够被用户态的程序所识别，所以需要先安装CUDA</code></p>
 <p>参考上述的<code>CUDA安装部署</code></p>
-<h4 id="1-系统需求"><a href="#1-系统需求" class="headerlink" title="1. 系统需求"></a>1. 系统需求</h4><p>想要在系统上使用<code>CUDA</code>，必须安装如下依赖：</p>
+<h4 id="系统需求"><a href="#系统需求" class="headerlink" title="系统需求"></a>系统需求</h4><p>想要在系统上使用<code>CUDA</code>，必须安装如下依赖：</p>
 <ul>
 <li>CUDA-capable CPU</li>
 <li>一个特定版本的gcc编译器以及相关工具链</li>
@@ -543,7 +543,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="2-安装前准备"><a href="#2-安装前准备" class="headerlink" title="2. 安装前准备"></a>2. 安装前准备</h4><p>在安装CUDA Toolkit和驱动之前，需要在GPU主机上执行相关的操作：</p>
+<h4 id="安装前准备"><a href="#安装前准备" class="headerlink" title="安装前准备"></a>安装前准备</h4><p>在安装CUDA Toolkit和驱动之前，需要在GPU主机上执行相关的操作：</p>
 <ul>
 <li>检测系统中有CUDA-capable GPU卡</li>
 <li>检测系统是否是上述列表中支持的linux发行版本</li>
@@ -574,7 +574,8 @@
 <p><strong>2.5 选择安装方式</strong></p>
 <p>官方有两种方式去安装： distribution-specific packages (RPM and Deb packages)和distribution-independent package (runfile packages)。其中前者对接了linux发行版原生的包管理系统，是强烈建议的一种安装方式。</p>
 <p><strong>2.6 下载NVIDIA CUDA Toolkit</strong></p>
-<p><a href="http://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">下载地址</a><br>根据当前系统的基础状况来选择相对应的版本。<br><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/nvidia-toolkit.png" alt="NVIDIA CUDA Toolkit"><br>可以看到安装类型支持两种方式<code>runfile</code>和<code>rpm</code>,其中rpm方式又分为<code>local</code>和<code>network</code>方式，由于我们的宿主机不能直接访问外网，先使用rpm（local）方式进行安装下载。</p>
+<p><a href="http://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">下载地址</a><br>根据当前系统的基础状况来选择相对应的版本。<br><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/nvidia-toolkit.png" alt="NVIDIA CUDA Toolkit"></p>
+<p>可以看到安装类型支持两种方式<code>runfile</code>和<code>rpm</code>,其中rpm方式又分为<code>local</code>和<code>network</code>方式，由于我们的宿主机不能直接访问外网，先使用rpm（local）方式进行安装下载。</p>
 <p>下载完成之后需要使用<code>md5sum</code>进行文件验证，以保证最终的包一致性。官方提供的checksums文件被损坏，暂时无法检验。</p>
 <p><strong>2.7 处理安装冲突的一些方法</strong></p>
 <p>在安装CUDA之前，任何可能冲突的安装包都需要被卸载。<br>以下为相关细节。</p>
@@ -583,7 +584,7 @@
 <p>卸载runfile方式的Toolkit :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/local/cuda-X.Y/bin/uninstall_cuda_X.Y.pl</div></pre></td></tr></table></figure></p>
 <p>卸载runfile方式的Driver：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/bin/nvidia-uninstall</div></pre></td></tr></table></figure></p>
 <p>卸载RPM/Deb方式安装的包：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ yum remove &lt;package_name&gt;                      # Redhat/CentOS</div><div class="line">$ dnf remove &lt;package_name&gt;                      # Fedora</div><div class="line">$ zypper remove &lt;package_name&gt;                   # OpenSUSE/SLES</div><div class="line">$ apt-get --purge remove &lt;package_name&gt;          # Ubuntu</div></pre></td></tr></table></figure></p>
-<h4 id="3-安装包管理程序-Package-Manager"><a href="#3-安装包管理程序-Package-Manager" class="headerlink" title="3. 安装包管理程序(Package Manager)"></a>3. 安装包管理程序(Package Manager)</h4><p><a href="http://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html#redhat-x86_64" target="_blank" rel="external">快速安装指南</a></p>
+<h4 id="安装包管理程序-Package-Manager"><a href="#安装包管理程序-Package-Manager" class="headerlink" title="安装包管理程序(Package Manager)"></a>安装包管理程序(Package Manager)</h4><p><a href="http://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html#redhat-x86_64" target="_blank" rel="external">快速安装指南</a></p>
 <p><strong>3.1 在Redhat/CentOS上安装</strong></p>
 <ul>
 <li>1.执行2中的操作</li>
@@ -613,7 +614,7 @@
 </ul>
 <p><strong>3.2 包管理器的额外功能</strong></p>
 <p><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/meta-packages.png" alt="cuda核心包"></p>
-<h4 id="4-安装后操作"><a href="#4-安装后操作" class="headerlink" title="4. 安装后操作"></a>4. 安装后操作</h4><p><strong>4.1 必须执行的操作</strong></p>
+<h4 id="安装后操作"><a href="#安装后操作" class="headerlink" title="安装后操作"></a>安装后操作</h4><p><strong>4.1 必须执行的操作</strong></p>
 <p>一些操作行为必须在安装后并且在使用CUDA Toolkit和Driver之前去执行。</p>
 <p>4.1.1 环境设置</p>
 <p><code>PATH</code>环境变量必须包含<code>/usr/local/cuda-8.0/bin</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export PATH=/usr/local/cuda-8.0/bin$&#123;PATH:+:$&#123;PATH&#125;&#125;</div></pre></td></tr></table></figure></p>
@@ -683,9 +684,9 @@
           
             <a href="/tags/GPU/" rel="tag"><i class="fa fa-tag"></i> GPU</a>
           
-            <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
-          
             <a href="/tags/NVIDIA/" rel="tag"><i class="fa fa-tag"></i> NVIDIA</a>
+          
+            <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
           
             <a href="/tags/NVIDIA-Docker/" rel="tag"><i class="fa fa-tag"></i> NVIDIA-Docker</a>
           
@@ -791,7 +792,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -908,7 +909,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景："><span class="nav-number">1.</span> <span class="nav-text">背景：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、GPU准备"><span class="nav-number">2.</span> <span class="nav-text">一、GPU准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、GPU驱动安装"><span class="nav-number">3.</span> <span class="nav-text">二、GPU驱动安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-系统需求"><span class="nav-number">3.1.</span> <span class="nav-text">1. 系统需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-安装前准备"><span class="nav-number">3.2.</span> <span class="nav-text">2. 安装前准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-安装包管理程序-Package-Manager"><span class="nav-number">3.3.</span> <span class="nav-text">3. 安装包管理程序(Package Manager)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-安装后操作"><span class="nav-number">3.4.</span> <span class="nav-text">4. 安装后操作</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景："><span class="nav-number">1.</span> <span class="nav-text">背景：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU准备"><span class="nav-number">2.</span> <span class="nav-text">GPU准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU驱动安装"><span class="nav-number">3.</span> <span class="nav-text">GPU驱动安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#系统需求"><span class="nav-number">3.1.</span> <span class="nav-text">系统需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装前准备"><span class="nav-number">3.2.</span> <span class="nav-text">安装前准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装包管理程序-Package-Manager"><span class="nav-number">3.3.</span> <span class="nav-text">安装包管理程序(Package Manager)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装后操作"><span class="nav-number">3.4.</span> <span class="nav-text">安装后操作</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -958,7 +959,7 @@
 
 <div class="theme-info">
 <div class="powered-by"></div>
-<span class="post-count">博客全站共11.4k字</span>
+<span class="post-count">博客全站共14.6k字</span>
 </div>
 
         

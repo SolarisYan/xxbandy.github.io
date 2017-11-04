@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Docker,Etcd-Cluster,systemd," />
 
 
 
@@ -97,16 +97,18 @@
 
 
 
-<meta name="description" content="一个长跑者的运维以及人生经历">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BG运维说">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="使用Docker image来快速创建etcd集群本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
+<meta name="keywords" content="Docker,Etcd-Cluster,systemd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Docker镜像快速启动Etcd集群">
+<meta property="og:url" content="http://yoursite.com/2017/11/03/使用Docker镜像快速启动Etcd集群/index.html">
 <meta property="og:site_name" content="BG运维说">
-<meta property="og:description" content="一个长跑者的运维以及人生经历">
+<meta property="og:description" content="使用Docker image来快速创建etcd集群本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-04T01:33:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BG运维说">
-<meta name="twitter:description" content="一个长跑者的运维以及人生经历">
+<meta name="twitter:title" content="使用Docker镜像快速启动Etcd集群">
+<meta name="twitter:description" content="使用Docker image来快速创建etcd集群本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
 
 
 
@@ -136,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/03/使用Docker镜像快速启动Etcd集群/"/>
 
 
 
 
 
-  <title>归档 | BG运维说</title>
+  <title>使用Docker镜像快速启动Etcd集群 | BG运维说</title>
   
 
 
@@ -161,7 +163,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
     <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
 
@@ -310,407 +312,197 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/03/使用Docker镜像快速启动Etcd集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BG运维说">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">使用Docker镜像快速启动Etcd集群</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-03T09:11:57+08:00">
+                2017-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 10 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/03/使用Docker镜像快速启动Etcd集群/" itemprop="url">
-              
-                <span itemprop="name">使用Docker镜像快速启动Etcd集群</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-03T09:11:57+08:00"
-              content="2017-11-03" >
-          11-03
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/玩转Docker运维管理/" itemprop="url">
-              
-                <span itemprop="name">玩转Docker运维管理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:41:34+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/Docker-API-for-Python/" itemprop="url">
-              
-                <span itemprop="name">Docker API for Python</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:37:34+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h3 id="使用Docker-image来快速创建etcd集群"><a href="#使用Docker-image来快速创建etcd集群" class="headerlink" title="使用Docker image来快速创建etcd集群"></a>使用Docker image来快速创建etcd集群</h3><p>本篇文章上接<a href="https://xxbandy.github.io/2017/08/26/Dockerfile-etcd/" target="_blank" rel="external">自构建etcd镜像</a>来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。</p>
+<a id="more"></a>
+<h3 id="核心配置文件"><a href="#核心配置文件" class="headerlink" title="核心配置文件"></a>核心配置文件</h3><p>测试集群使用3节点的etcd集群进行搭建测试，以下为node1节点配置示例，其他两个节点类似，仅需要修改<code>NAME</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"># cat /etc/etcd/etcd.conf</div><div class="line">NAME=&quot;etcd-1&quot;</div><div class="line">DATADIR=&quot;/export/etcd_data&quot;</div><div class="line">MYHOST=&quot;http://10.0.0.1&quot;</div><div class="line">PORT=&quot;2379&quot;</div><div class="line">CLUSTER_PORT=&quot;2380&quot;</div><div class="line">CLUSTER=&quot;etcd-1=http://10.0.0.1:2380,etcd-2=http://10.0.0.2:2380,etcd-3=http://10.0.0.3:2380&quot;</div><div class="line">CLUSTER_TOKEN=&quot;my-etcd-token&quot;</div><div class="line">CLUSTER_STATE=&quot;new&quot;</div><div class="line"></div><div class="line"># cat /etc/systemd/system/etcd-node.service</div><div class="line">[Unit]</div><div class="line">Description=etcd node</div><div class="line">After=docker.service</div><div class="line">Requires=docker.service</div><div class="line"></div><div class="line">[Service]</div><div class="line">User=root</div><div class="line">EnvironmentFile=-/etc/etcd/etcd.conf</div><div class="line">PermissionsStartOnly=true</div><div class="line">ExecStart=/usr/bin/docker run -itd --net=host   --name=etcd-node -e NAME=$&#123;NAME&#125; -e DATADIR=$&#123;DATADIR&#125; -e MYHOST=$&#123;MYHOST&#125; -e PORT=$&#123;PORT&#125; -e CLUSTER_PORT$=$&#123;CLUSTER_PORT&#125; -e CLUSTER=$&#123;CLUSTER&#125; -e CLUSTER_TOKEN=$&#123;CLUSTER_TOKEN&#125; -e CLUSTER_STATE=$&#123;CLUSTER_STATE&#125; xxbandy123/etcd:3.0.10</div><div class="line"></div><div class="line">#ExecStop=/usr/bin/docker rm -f etcd-node</div><div class="line">#Restart=always</div><div class="line">#RestartSec=10</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure></p>
+<p><code>注意1</code>:需要分别修改每个节点上/etc/etcd/etcd.conf配置文件中的NAME和MYHOST、CLUSTER三个变量<br><code>注意2</code>:在编写systemctl服务管理配置的时候，一定不要设置重启策略并且设置<code>ExecStop</code>,因为初始化集群时需要多个节点同时进行启动并互相发现，当重启某个实例的时候，重新选举注册时，就会发现该节点已经存在与集群中，因此无法正常加入集群，而导致实例启动失败。正常的做法应该是某个实例异常后，先在集群内部摘除该节点，其后将该节点按照当前状态加入到集群后根据相关信息再次启动实例<br><a href="https://segmentfault.com/a/1190000003976539" target="_blank" rel="external">etcd运维</a></p>
+<h3 id="启动验证"><a href="#启动验证" class="headerlink" title="启动验证"></a>启动验证</h3><p>分别启动三个docker实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">systemctl daemon-reload</div><div class="line">systemctl start etcd-node</div><div class="line"></div><div class="line"># etcdctl cluster-health</div><div class="line">2017-11-03 09:15:49.006358 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">2017-11-03 09:15:49.007093 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">member 911c5e15a35cdb8f is healthy: got healthy result from http://10.0.0.1:2379</div><div class="line">member b01d138087dbe547 is healthy: got healthy result from http://10.0.0.3:2379</div><div class="line">member c22c1c7b5a4c9f9b is healthy: got healthy result from http://10.0.0.2:2379</div><div class="line">cluster is healthy</div></pre></td></tr></table></figure>
+<h3 id="集群维护"><a href="#集群维护" class="headerlink" title="集群维护"></a>集群维护</h3><p>模拟集群某个节点宕机，并恢复集群</p>
+<h4 id="查看当前集群状态信息以及可用性"><a href="#查看当前集群状态信息以及可用性" class="headerlink" title="查看当前集群状态信息以及可用性"></a>查看当前集群状态信息以及可用性</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">etcdctl member list</div><div class="line">2017-11-04 09:04:14.150103 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">9923f8b86d3ce7a6: name=etcd-1 peerURLs=http://10.0.0.1:2380 clientURLs=http://172.25.44.6:2379 isLeader=false</div><div class="line">b01d138087dbe547: name=etcd-3 peerURLs=http://10.0.0.3:2380 clientURLs=http://172.25.47.78:2379 isLeader=false</div><div class="line">c22c1c7b5a4c9f9b: name=etcd-2 peerURLs=http://10.0.0.2:2380 clientURLs=http://172.25.47.77:2379 isLeader=true</div><div class="line">[root@hc-25-44-6 pe]# etcdctl set bgops biaoge</div><div class="line">2017-11-04 09:04:40.234434 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">biaoge</div><div class="line"></div><div class="line"># etcdctl get bgops</div><div class="line">2017-11-04 09:05:22.059435 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">biaoge</div></pre></td></tr></table></figure>
+<h4 id="删除node2节点上的容器实例"><a href="#删除node2节点上的容器实例" class="headerlink" title="删除node2节点上的容器实例"></a>删除node2节点上的容器实例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># docker rm -f -v etcd-node</div><div class="line"># etcdctl cluster-health</div><div class="line">member 9923f8b86d3ce7a6 is healthy: got healthy result from http://10.0.0.1:2379</div><div class="line">member b01d138087dbe547 is healthy: got healthy result from http://10.0.0.3:2379</div><div class="line">failed to check the health of member c22c1c7b5a4c9f9b on http://10.0.0.2:2379: Get http://172.25.47.77:2379/health: dial tcp 172.25.47.77:2379: getsockopt: connection refused</div><div class="line">member c22c1c7b5a4c9f9b is unreachable: [http://10.0.0.2:2379] are all unreachable</div><div class="line">cluster is healthy</div><div class="line"></div><div class="line"># etcdctl get bgops</div><div class="line">2017-11-04 09:10:40.658013 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">biaoge</div></pre></td></tr></table></figure>
+<p>如上显示，其中node2节点的已经失联，而由于当前etcd集群是3实例集群，因此集群整体仍然是健康状态，并且能够正常使用</p>
+<h4 id="恢复node2节点实例到集群中"><a href="#恢复node2节点实例到集群中" class="headerlink" title="恢复node2节点实例到集群中"></a>恢复node2节点实例到集群中</h4><p>注意：如果单纯的去按照原始配置启动node2上的实例的话，会提示无法加入集群(因为实例id已经注册上去了c22c1c7b5a4c9f9b)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># docker logs etcd-node</div><div class="line"> ....</div><div class="line">2017-11-04 01:12:25.307452 C | etcdmain: member c22c1c7b5a4c9f9b has already been bootstrapped</div></pre></td></tr></table></figure></p>
+<p>正确的恢复姿势<br>1.在集群中移除异常节点<br>2.在集群中增加集群节点(异常节点也作为新节点加入集群)<br>3.根据集群反馈信息进行异常节点重启<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># etcdctl member remove c22c1c7b5a4c9f9b</div><div class="line">2017-11-04 09:15:48.488427 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">Removed member c22c1c7b5a4c9f9b from cluster</div><div class="line"></div><div class="line"># etcdctl member add etcd-2 http://10.0.0.2:2380</div><div class="line">2017-11-04 09:16:50.704247 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">Added member named etcd-2 with ID 51e807366fadaded to cluster</div><div class="line"></div><div class="line">ETCD_NAME=&quot;etcd-2&quot;</div><div class="line">ETCD_INITIAL_CLUSTER=&quot;etcd-2=http://10.0.0.2:2380,etcd-1=http://10.0.0.1:2380,etcd-3=http://10.0.0.3:2380&quot;</div><div class="line">ETCD_INITIAL_CLUSTER_STATE=&quot;existing&quot;</div></pre></td></tr></table></figure></p>
+<p>根据反馈信息进行异常节点恢复(给出了name,cluster,state三个参数)<br>由于我们是根据原有集群进行恢复节点，所以需要修改node2节点的状态,并启动实例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># grep STATE  /etc/etcd/etcd.conf</div><div class="line">CLUSTER_STATE=&quot;existing&quot;</div><div class="line"># systemctl restart  etcd-node</div><div class="line"># docker ps</div><div class="line">CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS               NAMES</div><div class="line">9fb8b1544642        xxbandy123/etcd:3.0.10   &quot;/docker-entrypoint.s&quot;   33 seconds ago      Up 32 seconds                           etcd-node</div><div class="line"></div><div class="line"># etcdctl cluster-health</div><div class="line">2017-11-04 09:23:44.053605 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">2017-11-04 09:23:44.054497 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">member 51e807366fadaded is healthy: got healthy result from http://10.0.0.2:2379</div><div class="line">member 9923f8b86d3ce7a6 is healthy: got healthy result from http://10.0.0.1:2379</div><div class="line">member b01d138087dbe547 is healthy: got healthy result from http://10.0.0.3:2379</div><div class="line">cluster is healthy</div><div class="line"># etcdctl get bgops</div><div class="line">2017-11-04 09:23:38.541355 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">biaoge</div></pre></td></tr></table></figure></p>
+<p>至此，node2节点成功恢复到etcd集群中，并可以提供正常服务</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/GPU环境下玩转Docker-三/" itemprop="url">
-              
-                <span itemprop="name">GPU环境下玩转Docker(三)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:08:39+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/Manager-your-GPUs/" itemprop="url">
-              
-                <span itemprop="name">Manager-your-GPUs.md</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:03:27+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/26/GPU环境下玩转Docker-二/" itemprop="url">
-              
-                <span itemprop="name">GPU环境下玩转Docker(二)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-26T10:07:46+08:00"
-              content="2017-10-26" >
-          10-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/26/GPU环境下玩转Docker-一/" itemprop="url">
-              
-                <span itemprop="name">GPU环境下玩转Docker(一)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-26T10:07:34+08:00"
-              content="2017-10-26" >
-          10-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/09/14/ITers们-请注意你们的身体/" itemprop="url">
-              
-                <span itemprop="name">ITers们,请注意你们的身体</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-09-14T03:05:39+08:00"
-              content="2017-09-14" >
-          09-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/26/Dockerfile-etcd/" itemprop="url">
-              
-                <span itemprop="name">Dockerfile-etcd</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-26T17:56:15+08:00"
-              content="2017-08-26" >
-          08-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/26/Ansible-Etcd-cluster/" itemprop="url">
-              
-                <span itemprop="name">Ansible-Etcd-cluster</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-26T15:51:12+08:00"
-              content="2017-08-26" >
-          08-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          
+            <a href="/tags/Etcd-Cluster/" rel="tag"><i class="fa fa-tag"></i> Etcd-Cluster</a>
+          
+            <a href="/tags/systemd/" rel="tag"><i class="fa fa-tag"></i> systemd</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/30/玩转Docker运维管理/" rel="next" title="玩转Docker运维管理">
+                <i class="fa fa-chevron-left"></i> 玩转Docker运维管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -718,6 +510,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -738,8 +534,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/me.png"
@@ -863,6 +668,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Docker-image来快速创建etcd集群"><span class="nav-number">1.</span> <span class="nav-text">使用Docker image来快速创建etcd集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心配置文件"><span class="nav-number">2.</span> <span class="nav-text">核心配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动验证"><span class="nav-number">3.</span> <span class="nav-text">启动验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群维护"><span class="nav-number">4.</span> <span class="nav-text">集群维护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看当前集群状态信息以及可用性"><span class="nav-number">4.1.</span> <span class="nav-text">查看当前集群状态信息以及可用性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除node2节点上的容器实例"><span class="nav-number">4.2.</span> <span class="nav-text">删除node2节点上的容器实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复node2节点实例到集群中"><span class="nav-number">4.3.</span> <span class="nav-text">恢复node2节点实例到集群中</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1000,11 +821,6 @@
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
 
 
   

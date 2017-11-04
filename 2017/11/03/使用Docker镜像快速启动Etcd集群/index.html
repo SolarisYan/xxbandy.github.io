@@ -97,18 +97,18 @@
 
 
 
-<meta name="description" content="使用Docker image来快速创建etcd集群本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
+<meta name="description" content="本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
 <meta name="keywords" content="Docker,Etcd-Cluster,systemd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Docker镜像快速启动Etcd集群">
 <meta property="og:url" content="http://yoursite.com/2017/11/03/使用Docker镜像快速启动Etcd集群/index.html">
 <meta property="og:site_name" content="BG运维说">
-<meta property="og:description" content="使用Docker image来快速创建etcd集群本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
+<meta property="og:description" content="本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-04T01:33:00.000Z">
+<meta property="og:updated_time" content="2017-11-04T01:34:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Docker镜像快速启动Etcd集群">
-<meta name="twitter:description" content="使用Docker image来快速创建etcd集群本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
+<meta name="twitter:description" content="本篇文章上接自构建etcd镜像来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。">
 
 
 
@@ -415,7 +415,7 @@
       
 
       
-        <h3 id="使用Docker-image来快速创建etcd集群"><a href="#使用Docker-image来快速创建etcd集群" class="headerlink" title="使用Docker image来快速创建etcd集群"></a>使用Docker image来快速创建etcd集群</h3><p>本篇文章上接<a href="https://xxbandy.github.io/2017/08/26/Dockerfile-etcd/" target="_blank" rel="external">自构建etcd镜像</a>来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。</p>
+        <p>本篇文章上接<a href="https://xxbandy.github.io/2017/08/26/Dockerfile-etcd/" target="_blank" rel="external">自构建etcd镜像</a>来使用systemd工具利用自构建的etcd镜像快速的搭建一套高可用的etcd集群。</p>
 <a id="more"></a>
 <h3 id="核心配置文件"><a href="#核心配置文件" class="headerlink" title="核心配置文件"></a>核心配置文件</h3><p>测试集群使用3节点的etcd集群进行搭建测试，以下为node1节点配置示例，其他两个节点类似，仅需要修改<code>NAME</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"># cat /etc/etcd/etcd.conf</div><div class="line">NAME=&quot;etcd-1&quot;</div><div class="line">DATADIR=&quot;/export/etcd_data&quot;</div><div class="line">MYHOST=&quot;http://10.0.0.1&quot;</div><div class="line">PORT=&quot;2379&quot;</div><div class="line">CLUSTER_PORT=&quot;2380&quot;</div><div class="line">CLUSTER=&quot;etcd-1=http://10.0.0.1:2380,etcd-2=http://10.0.0.2:2380,etcd-3=http://10.0.0.3:2380&quot;</div><div class="line">CLUSTER_TOKEN=&quot;my-etcd-token&quot;</div><div class="line">CLUSTER_STATE=&quot;new&quot;</div><div class="line"></div><div class="line"># cat /etc/systemd/system/etcd-node.service</div><div class="line">[Unit]</div><div class="line">Description=etcd node</div><div class="line">After=docker.service</div><div class="line">Requires=docker.service</div><div class="line"></div><div class="line">[Service]</div><div class="line">User=root</div><div class="line">EnvironmentFile=-/etc/etcd/etcd.conf</div><div class="line">PermissionsStartOnly=true</div><div class="line">ExecStart=/usr/bin/docker run -itd --net=host   --name=etcd-node -e NAME=$&#123;NAME&#125; -e DATADIR=$&#123;DATADIR&#125; -e MYHOST=$&#123;MYHOST&#125; -e PORT=$&#123;PORT&#125; -e CLUSTER_PORT$=$&#123;CLUSTER_PORT&#125; -e CLUSTER=$&#123;CLUSTER&#125; -e CLUSTER_TOKEN=$&#123;CLUSTER_TOKEN&#125; -e CLUSTER_STATE=$&#123;CLUSTER_STATE&#125; xxbandy123/etcd:3.0.10</div><div class="line"></div><div class="line">#ExecStop=/usr/bin/docker rm -f etcd-node</div><div class="line">#Restart=always</div><div class="line">#RestartSec=10</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure></p>
 <p><code>注意1</code>:需要分别修改每个节点上/etc/etcd/etcd.conf配置文件中的NAME和MYHOST、CLUSTER三个变量<br><code>注意2</code>:在编写systemctl服务管理配置的时候，一定不要设置重启策略并且设置<code>ExecStop</code>,因为初始化集群时需要多个节点同时进行启动并互相发现，当重启某个实例的时候，重新选举注册时，就会发现该节点已经存在与集群中，因此无法正常加入集群，而导致实例启动失败。正常的做法应该是某个实例异常后，先在集群内部摘除该节点，其后将该节点按照当前状态加入到集群后根据相关信息再次启动实例<br><a href="https://segmentfault.com/a/1190000003976539" target="_blank" rel="external">etcd运维</a></p>
@@ -678,7 +678,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Docker-image来快速创建etcd集群"><span class="nav-number">1.</span> <span class="nav-text">使用Docker image来快速创建etcd集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心配置文件"><span class="nav-number">2.</span> <span class="nav-text">核心配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动验证"><span class="nav-number">3.</span> <span class="nav-text">启动验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群维护"><span class="nav-number">4.</span> <span class="nav-text">集群维护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看当前集群状态信息以及可用性"><span class="nav-number">4.1.</span> <span class="nav-text">查看当前集群状态信息以及可用性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除node2节点上的容器实例"><span class="nav-number">4.2.</span> <span class="nav-text">删除node2节点上的容器实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复node2节点实例到集群中"><span class="nav-number">4.3.</span> <span class="nav-text">恢复node2节点实例到集群中</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#核心配置文件"><span class="nav-number">1.</span> <span class="nav-text">核心配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动验证"><span class="nav-number">2.</span> <span class="nav-text">启动验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群维护"><span class="nav-number">3.</span> <span class="nav-text">集群维护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看当前集群状态信息以及可用性"><span class="nav-number">3.1.</span> <span class="nav-text">查看当前集群状态信息以及可用性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除node2节点上的容器实例"><span class="nav-number">3.2.</span> <span class="nav-text">删除node2节点上的容器实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复node2节点实例到集群中"><span class="nav-number">3.3.</span> <span class="nav-text">恢复node2节点实例到集群中</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-11-05T13:02:51.000Z</updated>
+  <updated>2017-11-05T15:16:50.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>容器生态技术</title>
+    <link href="http://yoursite.com/2017/11/05/%E5%AE%B9%E5%99%A8%E7%94%9F%E6%80%81%E6%8A%80%E6%9C%AF/"/>
+    <id>http://yoursite.com/2017/11/05/容器生态技术/</id>
+    <published>2017-11-05T14:30:59.000Z</published>
+    <updated>2017-11-05T15:16:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>2017年可谓是容器云领域发展最火的一年，同时也是Kubernetes崛起的一年，那么随着容器行业的大发展，基于以Docker和Kubernetes为核心的容器生态系统也慢慢在将自己的软件体系进行解耦拆分，以实现核心功能的最优化实现。很明显的一点就是Docker在不断的拆分自己的项目，不再试图将所有容器相关技术都囊括在自己碗里，而Kubernetes则一直保持开放的态度，对接不同的第三方生态体系，也使得K8S在整个容器界内获得了良好的口碑。那么想要从事容器相关领域的技术研究或者工作，个人建议也可以将整个容器生态技术拆分，对某个要点进行深入探索，这样能够让自己更加了解容器的生态技术，也更容易在容器云生态中贡献自己的力量。</p>
+<a id="more"></a>
+<p>容器云生态图谱<br><img src="http://oyep1jupk.bkt.clouddn.com/container/tech/%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF%E7%94%9F%E6%80%81%E5%9B%BE%E8%B0%B1.png" alt=""></p>
+<h4 id="容器引擎"><a href="#容器引擎" class="headerlink" title="容器引擎"></a>容器引擎</h4><p><a href="https://www.docker.com/" target="_blank" rel="external">Docker</a><br><a href="https://github.com/moby/moby" target="_blank" rel="external">Moby</a></p>
+<p><a href="https://github.com/rkt/rkt" target="_blank" rel="external">Rkt</a></p>
+<p><a href="https://github.com/lxc/lxc" target="_blank" rel="external">Lxc</a><br><a href="https://github.com/lxc/lxd" target="_blank" rel="external">Lxd</a></p>
+<p><a href="https://github.com/opencontainers/runc" target="_blank" rel="external">OCI</a><br><a href="https://www.opencontainers.org/" target="_blank" rel="external">OCI官网</a></p>
+<p><a href="https://github.com/hyperhq/hyperd" target="_blank" rel="external">Hyperd</a><br><a href="http://www.hypercontainer.io" target="_blank" rel="external">Hyper官网</a></p>
+<h4 id="编排调度"><a href="#编排调度" class="headerlink" title="编排调度"></a>编排调度</h4><p><a href="https://github.com/kubernetes/kubernetes" target="_blank" rel="external">Kubernetes</a><br><a href="http://kubernetes.io" target="_blank" rel="external">k8s官网</a><br><a href="k8smeetup.github.io">k8s官网翻译</a><br><a href="https://www.kubernetes.org.cn/" target="_blank" rel="external">k8s中文站</a></p>
+<p><a href="https://github.com/apache/mesos" target="_blank" rel="external">Mesos</a><br><a href="https://github.com/mesosphere/marathon" target="_blank" rel="external">Marathon</a></p>
+<p><a href="https://github.com/docker/swarm" target="_blank" rel="external">Swarm</a></p>
+<p><a href="https://github.com/rancher/rancher" target="_blank" rel="external">Rancher</a></p>
+<h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><h5 id="CNI"><a href="#CNI" class="headerlink" title="CNI"></a>CNI</h5><p><a href="https://github.com/containernetworking/cni" target="_blank" rel="external">CNI</a></p>
+<p><a href="https://github.com/projectcalico/calico" target="_blank" rel="external">Calico</a><br><a href="https://www.projectcalico.org/" target="_blank" rel="external">Calico官网</a></p>
+<p><a href="https://github.com/weaveworks/weave" target="_blank" rel="external">Weave</a><br><a href="https://www.weave.works" target="_blank" rel="external">Weave官网</a></p>
+<p><a href="https://github.com/contiv/netplugin" target="_blank" rel="external">Contiv</a><br><a href="http://contiv.io" target="_blank" rel="external">Contiv官网</a></p>
+<p><a href="https://github.com/openvswitch/ovs" target="_blank" rel="external">ovs</a><br><a href="http://openvswitch.org/" target="_blank" rel="external">ovs官网</a></p>
+<h5 id="CNM"><a href="#CNM" class="headerlink" title="CNM"></a>CNM</h5><p><a href="https://github.com/docker/libnetwork" target="_blank" rel="external">libnetwork</a></p>
+<p><a href="https://github.com/projectcalico/libnetwork-plugin" target="_blank" rel="external">Calico-libnetwork</a></p>
+<p><a href="https://github.com/contiv/netplugin" target="_blank" rel="external">Contiv</a></p>
+<p><a href="https://github.com/weaveworks/weave" target="_blank" rel="external">Weave</a></p>
+<h4 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h4><p><a href="https://github.com/ceph/ceph" target="_blank" rel="external">Ceph</a></p>
+<p><a href="https://github.com/gluster/glusterfs" target="_blank" rel="external">GlusterFS</a></p>
+<p><a href="https://github.com/ipdcode/containerfs" target="_blank" rel="external">ContainerFS</a></p>
+<p><a href="https://github.com/coreos/torus" target="_blank" rel="external">Torus</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;2017年可谓是容器云领域发展最火的一年，同时也是Kubernetes崛起的一年，那么随着容器行业的大发展，基于以Docker和Kubernetes为核心的容器生态系统也慢慢在将自己的软件体系进行解耦拆分，以实现核心功能的最优化实现。很明显的一点就是Docker在不断的拆分自己的项目，不再试图将所有容器相关技术都囊括在自己碗里，而Kubernetes则一直保持开放的态度，对接不同的第三方生态体系，也使得K8S在整个容器界内获得了良好的口碑。那么想要从事容器相关领域的技术研究或者工作，个人建议也可以将整个容器生态技术拆分，对某个要点进行深入探索，这样能够让自己更加了解容器的生态技术，也更容易在容器云生态中贡献自己的力量。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
+    
+      <category term="Kubernetes" scheme="http://yoursite.com/tags/Kubernetes/"/>
+    
+      <category term="容器生态" scheme="http://yoursite.com/tags/%E5%AE%B9%E5%99%A8%E7%94%9F%E6%80%81/"/>
+    
+  </entry>
   
   <entry>
     <title>我的越野元年</title>
@@ -700,9 +751,9 @@
     
       <category term="GPU" scheme="http://yoursite.com/tags/GPU/"/>
     
-      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
       <category term="NVIDIA" scheme="http://yoursite.com/tags/NVIDIA/"/>
+    
+      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
     
       <category term="NVIDIA-Docker" scheme="http://yoursite.com/tags/NVIDIA-Docker/"/>
     

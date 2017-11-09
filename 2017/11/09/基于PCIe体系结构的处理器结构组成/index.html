@@ -107,7 +107,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/%E5%9F%BA%E4%BA%8EPCIe%E7%9A%84%E9%80%9A%E7%94%A8%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84.jpg">
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png">
-<meta property="og:updated_time" content="2017-11-09T13:30:00.000Z">
+<meta property="og:updated_time" content="2017-11-09T14:15:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于PCIe体系结构的处理器结构组成">
 <meta name="twitter:description" content="PCIe体系结构的组成部件PCIe总线作为处理器系统的局部总线，其作用与PCI总线类似，主要目的是为了连接处理器系统中的外部设备，当然PCIe总线也可以连接其他处理器系统。在大多数处理器系统中，都使用了RC、Switch和PCIe-to-PCI桥这些基本模块连接PCIe和PCI设备。在PCIe总线中，基于PCIe总线的设备，也被称为EP(Endpoint)。">
@@ -431,7 +431,7 @@
 <p>上面的GPU拓扑可以看出来GPU0和GPU1以及GPU2和GPU3分别处于一个<code>switch</code>上，GPU0和GPU1(GPU2和GPU3)可以通过<code>switch</code>相互通信，而GPU0和GPU2(GPU3)通信均需要经过一个<code>PCIe Host Bridge</code></p>
 <p>个人理解：SOC相当于是PCI总线直连的，PHB相当于是通过PCIe桥转换的PCI总线去连接的。</p>
 <p><strong>参考文章</strong></p>
-<p><a href="https://www.mianbaoban.cn/blog/post/193694" target="_blank" rel="external"></a><br><a href="http://www.ssdfans.com/%E8%80%81%E7%94%B7%E5%AD%A9%E8%AF%BBpcie%E4%B9%8B%E4%BA%8C%EF%BC%9Apcie%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84/" target="_blank" rel="external"></a></p>
+<p><a href="https://www.mianbaoban.cn/blog/post/193694" target="_blank" rel="external">PCIe体系结构组成部件</a><br><a href="http://www.ssdfans.com/%E8%80%81%E7%94%B7%E5%AD%A9%E8%AF%BBpcie%E4%B9%8B%E4%BA%8C%EF%BC%9Apcie%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84/" target="_blank" rel="external">PCIe拓扑结构</a></p>
 
       
     </div>

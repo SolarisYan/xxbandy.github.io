@@ -105,10 +105,12 @@
 <meta property="og:site_name" content="BG运维说">
 <meta property="og:description" content="使用nvidia-smi管理你的GPU卡nvidia-smi命令是NVIDIA系统管理接口，之前提到使用nvidia-docker实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-30T14:07:30.000Z">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png">
+<meta property="og:updated_time" content="2017-11-09T13:32:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Manager-your-GPUs.md">
 <meta name="twitter:description" content="使用nvidia-smi管理你的GPU卡nvidia-smi命令是NVIDIA系统管理接口，之前提到使用nvidia-docker实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。">
+<meta name="twitter:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png">
 
 
 
@@ -448,7 +450,7 @@
 <li>PIX = 链接单个PCIe switch</li>
 <li>NV# = 贯穿一组NVLinks设备</li>
 </ul>
-<p><code>划重点啦：其实由上面的GPU拓扑可以看出来，我们系统上的4块设备是两两互相直连的架构！</code></p>
+<p><code>划重点啦：其实由上面的GPU拓扑可以看出来，我们系统上的4块设备是两两互相直连的架构！因为4块卡是通过一个PCIe switch来互相通信的。大体结构如图：</code><br><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png" alt=""></p>
 <p><a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/" target="_blank" rel="external">nvidia-smi命令使用帮助</a></p>
 
       
@@ -584,7 +586,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -595,7 +597,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -606,7 +608,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -751,7 +753,7 @@
 
 <div class="theme-info">
 <div class="powered-by"></div>
-<span class="post-count">博客全站共24.6k字</span>
+<span class="post-count">博客全站共35.0k字</span>
 </div>
 
         

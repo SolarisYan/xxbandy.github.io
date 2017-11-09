@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Docker,Overlayfs,Storage Driver," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="BG运维说" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="overlayfs 基本概念一种联合文件系统，设计简单，速度更快。overlayfs在linux主机上只有两层，一个目录在下层，用来保存镜像(docker)，另外一个目录在上层，用来存储容器信息。在overlayfs中，底层的目录叫做lowerdir，顶层的目录称之为upperdir，对外提供统一的文件系统为merged。当需要修改一个文件时，使用CoW将文件从只读的Lower复制到可写的Uppe">
+<meta name="keywords" content="Docker,Overlayfs,Storage Driver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Overlayfs技术探究以及Docker环境中的使用">
+<meta property="og:url" content="http://yoursite.com/2017/11/09/Overlayfs技术探究以及Docker环境中的使用/index.html">
+<meta property="og:site_name" content="BG运维说">
+<meta property="og:description" content="overlayfs 基本概念一种联合文件系统，设计简单，速度更快。overlayfs在linux主机上只有两层，一个目录在下层，用来保存镜像(docker)，另外一个目录在上层，用来存储容器信息。在overlayfs中，底层的目录叫做lowerdir，顶层的目录称之为upperdir，对外提供统一的文件系统为merged。当需要修改一个文件时，使用CoW将文件从只读的Lower复制到可写的Uppe">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2577135-efb7ae4b8b44c1c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-11-09T13:44:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Overlayfs技术探究以及Docker环境中的使用">
+<meta name="twitter:description" content="overlayfs 基本概念一种联合文件系统，设计简单，速度更快。overlayfs在linux主机上只有两层，一个目录在下层，用来保存镜像(docker)，另外一个目录在上层，用来存储容器信息。在overlayfs中，底层的目录叫做lowerdir，顶层的目录称之为upperdir，对外提供统一的文件系统为merged。当需要修改一个文件时，使用CoW将文件从只读的Lower复制到可写的Uppe">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2577135-efb7ae4b8b44c1c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/09/Overlayfs技术探究以及Docker环境中的使用/"/>
+
+
+
+
+
+  <title>Overlayfs技术探究以及Docker环境中的使用 | BG运维说</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BG运维说</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/09/Overlayfs技术探究以及Docker环境中的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BG运维说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Overlayfs技术探究以及Docker环境中的使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-09T21:36:58+08:00">
+                2017-11-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="overlayfs-基本概念"><a href="#overlayfs-基本概念" class="headerlink" title="overlayfs 基本概念"></a>overlayfs 基本概念</h3><p>一种联合文件系统，设计简单，速度更快。overlayfs在linux主机上只有两层，一个目录在下层，用来保存镜像(docker)，另外一个目录在上层，用来存储容器信息。在overlayfs中，底层的目录叫做lowerdir，顶层的目录称之为upperdir，对外提供统一的文件系统为merged。<br>当需要修改一个文件时，使用CoW将文件从只读的Lower复制到可写的Upper进行修改，结果也保存在Upper层。在Docker中，底下的只读层就是image，可写层就是Container。<br><a id="more"></a></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2577135-efb7ae4b8b44c1c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="overlayfs存储架构"><br><code>可以看到镜像层和容器层可以保存相同的文件，容器层的文件会覆盖镜像层的文件</code></p>
+<ul>
+<li>在overlayfs中每个镜像层都会在<code>/var/lib/docker/overlay</code>有对应的目录，使用硬链接与底层数据进行关联。</li>
+</ul>
+<h3 id="优势劣势"><a href="#优势劣势" class="headerlink" title="优势劣势"></a>优势劣势</h3><ul>
+<li><strong>1.OverlayFS支持页缓存共享，多个容器访问同一个文件能共享一个页缓存，以此提高内存使用</strong></li>
+<li><strong>2.OverlayFS消耗inode，随着镜像和容器增加，inode会遇到瓶颈。Overlay2能解决这个问题。在Overlay下，为了解决inode问题，可以考虑将/var/lib/docker挂在单独的文件系统上，或者增加系统inode设置。</strong></li>
+</ul>
+<h3 id="overlay中的读写"><a href="#overlay中的读写" class="headerlink" title="overlay中的读写"></a>overlay中的读写</h3><h4 id="在容器中读取文件"><a href="#在容器中读取文件" class="headerlink" title="在容器中读取文件"></a>在容器中读取文件</h4><ul>
+<li><p>(1)目标文件不在容器层内，overlay会从镜像层读取文件，此时，对容器性能的影响很小。</p>
+</li>
+<li><p>(2)目标文件在容器层内，overlay直接从容器层读取。</p>
+</li>
+<li>(3)目标文件在容器层和镜像层同时存在，overlay读入容器层中的文件，此时容器层的文件会覆盖镜像层的文件。</li>
+</ul>
+<h4 id="在容器中修改文件"><a href="#在容器中修改文件" class="headerlink" title="在容器中修改文件"></a>在容器中修改文件</h4><p>在容器中第一次修改文件，此时文件不在容器层中。overlay会把文件从镜像层复制到容器层，所有该文件中的修改都保存在容器层中。</p>
+<p><code>注意：</code>overlay工作文件系统层(devicemapper工作再块层面)，因此复制文件会复制整个文件，因此在频繁读写会很消耗资源</p>
+<ul>
+<li><p>(1)只是在第一次修改文件时，需要把文件从镜像层复制到容器层，后续操作都是在容器层中完成。</p>
+</li>
+<li><p>(2)overlayfs只有两层，lowerdir和upperdir，因此在很深的目录树中，搜索文件会相对比较快</p>
+</li>
+</ul>
+<h4 id="在容器中删除文件和目录"><a href="#在容器中删除文件和目录" class="headerlink" title="在容器中删除文件和目录"></a>在容器中删除文件和目录</h4><p>在容器中删除文件时，overlay存储驱动在容器层中新建一个without文件，该文件用语隐藏镜像层中的目标文件。在容器层删除目录时，overlay存储驱动在容器层新建一个opaque目录，该目录用于隐藏镜像层中的目标目录。<br>需要明白的一点是，任何存储驱动都不会删除底层image中的目标文件和目录的。</p>
+<h4 id="overlayfs的原理测试"><a href="#overlayfs的原理测试" class="headerlink" title="overlayfs的原理测试"></a>overlayfs的原理测试</h4><p>overlayfs挂载后系统文件的page cache是全部共享的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"># mkdir low upper work</div><div class="line"># ls</div><div class="line">low  upper  work</div><div class="line"># echo &apos;abs&apos; &gt; low/11.txt</div><div class="line"># echo &apos;xuxuebiao&apos; &gt; upper/22.txt</div><div class="line"># mkdir merged</div><div class="line"># mount -t overlay overlay -olowerdir=./low,upperdir=./upper,workdir=./work ./merged</div><div class="line"># ls</div><div class="line">low  merged  upper  work</div><div class="line"># cd merged/</div><div class="line"># ls</div><div class="line">11.txt  22.txt</div><div class="line"># ll</div><div class="line">total 8</div><div class="line">-rw-r--r--. 1 root root  4 Mar 27 18:57 11.txt</div><div class="line">-rw-r--r--. 1 root root 10 Mar 27 18:58 22.txt</div><div class="line"></div><div class="line"># tree</div><div class="line">.</div><div class="line">├── low</div><div class="line">│   └── 11.txt</div><div class="line">├── merged</div><div class="line">│   ├── 11.txt</div><div class="line">│   └── 22.txt</div><div class="line">├── upper</div><div class="line">│   └── 22.txt</div><div class="line">└── work</div><div class="line">    └── work</div><div class="line"></div><div class="line">5 directories, 4 files</div><div class="line">可以看到，merged目录中时low和upper目录联合的结果</div><div class="line"></div><div class="line"></div><div class="line">分别修改文件：</div><div class="line"># cat 11.txt</div><div class="line">abs</div><div class="line"># cat 22.txt</div><div class="line">xuxuebiao</div><div class="line"># vim 11.txt</div><div class="line"># cat 11.txt</div><div class="line">Hello ,overlayfs!</div><div class="line"># cat ../low/11.txt</div><div class="line">abs</div><div class="line"># cat ../upper/</div><div class="line">11.txt   11.txt~  22.txt</div><div class="line"># cat ../upper/11.txt</div><div class="line">Hello ,overlayfs!</div><div class="line"># cat ../upper/11.txt~</div><div class="line">cat: ../upper/11.txt~: No such device or address</div><div class="line"># cat ../upper/11.txt</div><div class="line">11.txt   11.txt~</div><div class="line"># cat ../upper/11.txt~</div><div class="line">cat: ../upper/11.txt~: No such device or address</div><div class="line"></div><div class="line">可以看到low目录下的文件没有变化，但是upper里面的文件内容已经改变，并且有了一个11.txt~文件</div><div class="line"></div><div class="line"></div><div class="line"># ls -i ../upper/11.txt 11.txt</div><div class="line">143902921 11.txt  143902921 ../upper/11.txt</div><div class="line">可以看到upper和merged目录中的两个文件11.txt的inode其实是一致的，其实是硬链接</div><div class="line"></div><div class="line"># ls -i ../low/11.txt 11.txt</div><div class="line">143902921 11.txt  143902918 ../low/11.txt</div><div class="line">merged目录文件和low目录文件对比</div><div class="line"></div><div class="line"></div><div class="line">删除文件测试：</div><div class="line"># rm 11.txt</div><div class="line">rm: remove regular file ‘11.txt’? y</div><div class="line"># ls</div><div class="line">ls: cannot access 11.txt: No such file or directory</div><div class="line">ls: cannot access 11.txt~: No such file or directory</div><div class="line">11.txt  11.txt~  22.txt</div><div class="line"></div><div class="line"># cat ../upper/11.txt~</div><div class="line">cat: ../upper/11.txt~: No such device or address</div><div class="line"># ls -l ../upper/11.txt</div><div class="line">c---------. 1 root root 0, 0 Mar 27 19:08 ../upper/11.txt</div><div class="line"></div><div class="line">删除文件后发现文件无法访问，底层变成了一个大小为0，且没有任何人有权限的一个空文件。</div><div class="line">overlayfs用这种删除标记的方式标识文件被删除，（如果upper中没有该文件的话，则底层low中的同名文件又恢复出来显示了，因此需要有这个空文件来标识删除，并且覆盖底层的文件）</div></pre></td></tr></table></figure>
+<h3 id="overlayfs在docker中的使用"><a href="#overlayfs在docker中的使用" class="headerlink" title="overlayfs在docker中的使用"></a>overlayfs在docker中的使用</h3><blockquote>
+<p>首先，overlayfs是在高版本的内核上才支持的存储驱动，因此不管使用的官方内核，还是自己patch的内核，首先需要检查overlayfs是否被加载</p>
+</blockquote>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA4OTMxODQwNA==&amp;mid=2650978252&amp;idx=1&amp;sn=4e5040d70d5656d9b937eb7e9dbc672a&amp;mpshare=1&amp;scene=1&amp;srcid=0327J9rVlXF0m4VU4b0raAJQ&amp;key=7601aed56c2d62eb663f9c44acf41d0f3071fe13b7a35bd0e12641eef7aa201e53e5b9c680e04104a3c41e77eb9d2507aa4613cfac95837e6ae6a7e52710866fd11284eb8814fcf5ab872552099d0a8c&amp;ascene=0&amp;uin=MjUxNzI2NjE2Mg%3D%3D&amp;devicetype=iMac+MacBookAir7%2C2+OSX+OSX+10.10.5+build(14F1021" target="_blank" rel="external">overlayfs</a>&amp;version=11020201&amp;pass_ticket=gNSbIAbFM0u3hxIEr27nbXmZMTLnAbzlRuhwjwSUx8jm0iwFbqx9VvM799FvRrSB)</p>
+<p>并且同样重要的是，对于aufs和overlay的实现，用来读取或执行共享库的共享内存也在所有运行的容器之间共享，大大的减少了通用库如’libc’的内存占用。这是一个分层策略的巨大优势，同时也是Docker的graphdriver是引擎中相当重要的一部分的原因之一。graphdriver的功能作用。</p>
+<ul>
+<li>1.检查overlay是否被加载</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">查看overlay是否被加载</div><div class="line">$ lsmod | grep overlay</div><div class="line">查看内核是否支持overlay模块</div><div class="line">$ modinfo overlayfs</div><div class="line">加载内核模块</div><div class="line">$ modprobe overlayfs</div></pre></td></tr></table></figure>
+<ul>
+<li>2.docker启动参数修改</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">检测overlayfs释放被识别，成功启动后修改参数到默认的配置文件中</div><div class="line">$ docker daemon(dockerd) -s overlay(--storage-driver=overlay) </div><div class="line"></div><div class="line">修改配置文件</div><div class="line">$ cat /etc/sysconfig/docker.conf</div><div class="line">DOCKER_OPTS=&quot;--storage-driver=overlay&quot;</div><div class="line"></div><div class="line">模拟配置:</div><div class="line">other_args=&quot;-s overlay --graph=/export/lib/docker -H unix:///var/run/docker.sock --bip 10.0.0.1/24 -H 0.0.0.0:5256  --api-enable-cors=true&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li>3.检验overlayfs是否成功启动</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ sudo /etc/init.d/docker restart</div><div class="line">成功启动，查看存储信息：</div><div class="line">$ sudo docker info</div><div class="line">Containers: 11</div><div class="line">Images: 5</div><div class="line">Server Version: 1.9.1</div><div class="line">Storage Driver: overlay</div><div class="line"> Backing Filesystem: extfs</div><div class="line">Execution Driver: native-0.2</div><div class="line">Logging Driver: json-file</div><div class="line">Kernel Version: 2.6.32-431.wy38.el6.x86_64</div><div class="line">Operating System: &lt;unknown&gt;</div><div class="line">CPUs: 32</div><div class="line">Total Memory: 126 GiB</div><div class="line">Name: －－－－－</div><div class="line">ID: 2IER:NO5S:4NKX:ULDJ:THGQ:GBNR:NIN6:SCXG:SMFX:PG72:JAQF:GRZW</div><div class="line"></div><div class="line">可用看到相关存储驱动是overlay，文件系统是extfs</div></pre></td></tr></table></figure>
+<ul>
+<li>4.overlay在docker上面的使用</li>
+</ul>
+<p><code>默认docker会将容器以及镜像相关的文件存储在/var/lib/docker/overlay目录下</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">sh-4.1# docker  images</div><div class="line">REPOSITORY                        TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</div><div class="line">xxbandy123/centos6.8-sshd   latest              42c75e16533e        12 weeks ago        402 MB</div><div class="line">sh-4.1# pwd  （这里我们是配置了存储路径）</div><div class="line">/export/lib/docker/overlay</div><div class="line"></div><div class="line">sh-4.1# ll -t</div><div class="line">total 28</div><div class="line">drwx------ 4 root root 4096 Mar 31 10:37 8ab8690b0769d07cc0b546112cfc40068d99298ed7e1857272c98a522cede527</div><div class="line">drwx------ 4 root root 4096 Mar 31 10:37 8ab8690b0769d07cc0b546112cfc40068d99298ed7e1857272c98a522cede527-init</div><div class="line">drwx------ 3 root root 4096 Mar 31 10:35 42c75e16533e2ef46ffd22a21318d354b3f3e520709230e9848ebaca8f1f514e</div><div class="line">drwx------ 3 root root 4096 Mar 31 10:35 b46ba152cc17054229bc0099e7fda8b34958d518ce687c0d378b4832c4d8c91e</div><div class="line">drwx------ 3 root root 4096 Mar 31 10:35 9016bb11dc9b4a3ee23fbef484cf5b3c9b80491e87d67092febec45759baeb4f</div><div class="line">drwx------ 3 root root 4096 Mar 31 10:35 ea80c789cb2b3bcc1d12b9b3226c8482a06f28e94a4a49f8e201b5e9cdbdf0cc</div><div class="line">drwx------ 3 root root 4096 Mar 31 10:35 e444e2175366cd3507bc9278d9a68a7b7ca5759b364bfe960fc12a87f219e847</div><div class="line"></div><div class="line">可用看到我们现在有一个image，id为42c75e16533e,overlay会把该镜像的所有父镜像存储到本地(image的分层缓存)，该image共5层。</div><div class="line">sh-4.1# docker  inspect 42c75e16533e | grep b46ba152cc1</div><div class="line">    &quot;Parent&quot;: &quot;b46ba152cc17054229bc0099e7fda8b34958d518ce687c0d378b4832c4d8c91e&quot;,</div><div class="line">sh-4.1# docker  inspect b46ba152cc1 | grep 9016bb11dc9b4a</div><div class="line">    &quot;Parent&quot;: &quot;9016bb11dc9b4a3ee23fbef484cf5b3c9b80491e87d67092febec45759baeb4f&quot;,</div><div class="line">sh-4.1# docker  inspect 9016bb11dc9b4a | grep ea80c789cb2</div><div class="line">    &quot;Parent&quot;: &quot;ea80c789cb2b3bcc1d12b9b3226c8482a06f28e94a4a49f8e201b5e9cdbdf0cc&quot;,</div><div class="line">sh-4.1# docker  inspect ea80c789cb2 | grep e444e2175366cd35</div><div class="line">    &quot;Parent&quot;: &quot;e444e2175366cd3507bc9278d9a68a7b7ca5759b364bfe960fc12a87f219e847&quot;,</div><div class="line">sh-4.1# docker  inspect e444e2175366cd35 | grep Parent</div><div class="line">    &quot;Parent&quot;: &quot;&quot;,</div><div class="line">sh-4.1#</div><div class="line"></div><div class="line"></div><div class="line">由下面示例可以看到容器id 8ab8690b07，实际上是使用image 42c75e16533e 启动起来的一个container，并给出了container 的LowerDir:`/export/lib/docker/overlay/42c75e16533e2ef46ffd22a21318d354b3f3e520709230e9848ebaca8f1f514e/root`</div><div class="line"></div><div class="line">sh-4.1# docker inspect 8ab8690b07 | grep Parent</div><div class="line">        &quot;CgroupParent&quot;: &quot;&quot;,</div><div class="line">sh-4.1# docker inspect 8ab8690b07 | grep 42c75e1653</div><div class="line">    &quot;Image&quot;: &quot;42c75e16533e2ef46ffd22a21318d354b3f3e520709230e9848ebaca8f1f514e&quot;,</div><div class="line">            &quot;LowerDir&quot;: &quot;/export/lib/docker/overlay/42c75e16533e2ef46ffd22a21318d354b3f3e520709230e9848ebaca8f1f514e/root&quot;,</div><div class="line">        &quot;Image&quot;: &quot;42c75e16533e&quot;,</div><div class="line">sh-4.1#</div><div class="line"></div><div class="line">查看容器内部的存储结构：</div><div class="line">sh-4.1# ls 8ab8690b0769d07cc0b546112cfc40068d99298ed7e1857272c98a522cede527/</div><div class="line">lower-id  merged/   upper/</div><div class="line">容器的存储里面默认会存放三个文件，lower-id纪录的是image的id，也就是上面提到的LowerDir,其次存在merged和upper目录，分别为容器层，和容器最终看到的merged层。overlayfs中的lower,upper,merged三者的关系看文首。</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          
+            <a href="/tags/Overlayfs/" rel="tag"><i class="fa fa-tag"></i> Overlayfs</a>
+          
+            <a href="/tags/Storage-Driver/" rel="tag"><i class="fa fa-tag"></i> Storage Driver</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/09/基于PCIe体系结构的处理器结构组成/" rel="next" title="基于PCIe体系结构的处理器结构组成">
+                <i class="fa fa-chevron-left"></i> 基于PCIe体系结构的处理器结构组成
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/09/Dockerfile最佳实践/" rel="prev" title="Dockerfile最佳实践">
+                Dockerfile最佳实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/me.png"
+               alt="Andy Xu" />
+          <p class="site-author-name" itemprop="name">Andy Xu</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个长跑者的运维以及人生经历</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xxbandy" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/9c46ece5b7bd" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-hand-o-up"></i>
+                  
+                    
+                      简书
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://my.oschina.net/xxbAndy/blog" target="_blank" title="开源中国">
+                  
+                    <i class="fa fa-fw fa-heart"></i>
+                  
+                    
+                      开源中国
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://my.oschina.net/xxbAndy" title="开源中国" target="_blank">开源中国</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/9c46ece5b7bd" title="逼格运维说" target="_blank">逼格运维说</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#overlayfs-基本概念"><span class="nav-number">1.</span> <span class="nav-text">overlayfs 基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优势劣势"><span class="nav-number">2.</span> <span class="nav-text">优势劣势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#overlay中的读写"><span class="nav-number">3.</span> <span class="nav-text">overlay中的读写</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在容器中读取文件"><span class="nav-number">3.1.</span> <span class="nav-text">在容器中读取文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在容器中修改文件"><span class="nav-number">3.2.</span> <span class="nav-text">在容器中修改文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在容器中删除文件和目录"><span class="nav-number">3.3.</span> <span class="nav-text">在容器中删除文件和目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#overlayfs的原理测试"><span class="nav-number">3.4.</span> <span class="nav-text">overlayfs的原理测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#overlayfs在docker中的使用"><span class="nav-number">4.</span> <span class="nav-text">overlayfs在docker中的使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Andy Xu</span>
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+<div class="theme-info">
+<div class="powered-by"></div>
+<span class="post-count">博客全站共35.0k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

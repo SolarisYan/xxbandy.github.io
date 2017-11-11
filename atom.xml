@@ -63,7 +63,7 @@
     <link href="http://yoursite.com/2017/11/09/%E5%A6%82%E4%BD%95%E6%9B%B4%E5%8A%A0%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8Docker/"/>
     <id>http://yoursite.com/2017/11/09/如何更加优雅的使用Docker/</id>
     <published>2017-11-09T13:45:25.000Z</published>
-    <updated>2017-11-09T14:22:33.000Z</updated>
+    <updated>2017-11-11T07:38:38.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。</p>

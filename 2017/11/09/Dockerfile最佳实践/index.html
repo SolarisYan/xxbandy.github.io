@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Docker,Dockerfile,最佳实践," />
+  <meta name="keywords" content="Dockerfile,Docker,最佳实践," />
 
 
 
@@ -98,14 +98,14 @@
 
 
 <meta name="description" content="在生产环境中一般我们会对基本的环境进行自构建，从而利用images的分层特性去层层构建上层的业务镜像。  1.默认情况下我们会首先构建一个基本的base镜像，这个镜像可能包含了linux具体的发行版本，以及基本的软件包，比如wget，vi等。在该层面上，镜像的改动会很少，频次也会很低。  2.其次我们可以在base镜像之上构建新的平台镜像，比如说ssh，java，tomcat等。在基础环境层，相比">
-<meta name="keywords" content="Docker,Dockerfile,最佳实践">
+<meta name="keywords" content="Dockerfile,Docker,最佳实践">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Dockerfile最佳实践">
 <meta property="og:url" content="http://yoursite.com/2017/11/09/Dockerfile最佳实践/index.html">
 <meta property="og:site_name" content="BG运维说">
 <meta property="og:description" content="在生产环境中一般我们会对基本的环境进行自构建，从而利用images的分层特性去层层构建上层的业务镜像。  1.默认情况下我们会首先构建一个基本的base镜像，这个镜像可能包含了linux具体的发行版本，以及基本的软件包，比如wget，vi等。在该层面上，镜像的改动会很少，频次也会很低。  2.其次我们可以在base镜像之上构建新的平台镜像，比如说ssh，java，tomcat等。在基础环境层，相比">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-09T14:41:53.000Z">
+<meta property="og:updated_time" content="2017-12-10T13:09:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dockerfile最佳实践">
 <meta name="twitter:description" content="在生产环境中一般我们会对基本的环境进行自构建，从而利用images的分层特性去层层构建上层的业务镜像。  1.默认情况下我们会首先构建一个基本的base镜像，这个镜像可能包含了linux具体的发行版本，以及基本的软件包，比如wget，vi等。在该层面上，镜像的改动会很少，频次也会很低。  2.其次我们可以在base镜像之上构建新的平台镜像，比如说ssh，java，tomcat等。在基础环境层，相比">
@@ -421,9 +421,9 @@
 <p>2.其次我们可以在base镜像之上构建新的平台镜像，比如说ssh，java，tomcat等。在基础环境层，相比较上一层来说修改频次稍微会有点大，因为可能涉及到基本软件的版本调整或者参数调整。</p>
 <p>3.然后在可以在基本的平台镜像之上构建业务镜像，业务镜像是可以直接启动应用程序的，也就是需要启动服务进程的。该层镜像就是直接和业务代码融合的镜像，随着业务的更新，镜像也会频繁的改动上线。</p>
 </blockquote>
-<!--mome-->
 <p><strong><code>问题：如果我们构建业务镜像中默认需要启动多个服务，比如需要启动sshd和tomcat或者是一个nginx，那么就不能通过构建镜像的时候去使用CMD命令，因为CMD命令会继承上层images的CMD命令，从而导致上层的CMD命令失效。那么想要既继承上层的sshd，又需要启动业务进程，普通的方式可以采用脚本定义，并在业务镜像层进行RUN脚本。</code></strong></p>
 <p><strong>所以比较好的方法：使用supervisord来管理images中的多个服务进程。可以在基本镜像层进行构建supervisord镜像，然后在上层业务层通过配置supervisord.conf来管理对个进程，实现一个容器中启动多个服务进程。</strong></p>
+<!--mome-->
 <h3 id="构建无需启动服务的pass层镜像"><a href="#构建无需启动服务的pass层镜像" class="headerlink" title="构建无需启动服务的pass层镜像"></a>构建无需启动服务的pass层镜像</h3><p>该环节是提供给用户基本的软件运行环境，用户可以通过bash登录去启动业务程序。而根据业务的变化特征，以及基础服务的抽象程度，我们可以将该层的image镜像分成以下三个image进行叠加。</p>
 <h4 id="构建符合实际业务场景的base镜像"><a href="#构建符合实际业务场景的base镜像" class="headerlink" title="构建符合实际业务场景的base镜像"></a>构建符合实际业务场景的base镜像</h4><p><code>注意：</code>给image中打入sshd服务的主要原因还是想尽可能的满足用户当前的使用习惯，同时又能够充分利用docker image的特性</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">FROM centos6.8-base</div><div class="line">MAINTAINER xuxuebiao</div><div class="line">RUN ssh-keygen -q -N &quot;&quot; -t dsa -f /etc/ssh/ssh_host_dsa_key ;\</div><div class="line">    ssh-keygen -q -N &quot;&quot; -t rsa -f /etc/ssh/ssh_host_rsa_key ;\</div><div class="line">    sed -ri &apos;s/session    required     pam_loginuid.so/#session    required     pam_loginuid.so/g&apos; /etc/pam.d/sshd ;\</div><div class="line">    mkdir -p /root/.ssh &amp;&amp; chown root.root /root &amp;&amp; chmod 700 /root/.ssh ;\</div><div class="line">    sed -ri &apos;s/#Port 22/Port 52568/g&apos; /etc/ssh/sshd_config ;\</div><div class="line">    echo &apos;root:redhat&apos; | chpasswd</div><div class="line">EXPOSE 52568</div><div class="line">ENV LANG=zh_CN.UTF-8;\</div><div class="line">    LC_ALL=zh_CN.UTF-8;\</div><div class="line">    TZ &quot;Asia/Shanghai&quot;;\</div><div class="line">    TERM xterm</div><div class="line">CMD /usr/sbin/sshd -D</div></pre></td></tr></table></figure>
@@ -489,9 +489,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
-          
             <a href="/tags/Dockerfile/" rel="tag"><i class="fa fa-tag"></i> Dockerfile</a>
+          
+            <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
           
             <a href="/tags/最佳实践/" rel="tag"><i class="fa fa-tag"></i> 最佳实践</a>
           
@@ -597,7 +597,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -608,7 +608,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -619,7 +619,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -668,6 +668,17 @@
                   
                     
                       开源中国
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lijiaocn.com" target="_blank" title="lijiaocn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      lijiaocn
                     
                 </a>
               </span>
@@ -764,7 +775,7 @@
 
 <div class="theme-info">
 <div class="powered-by"></div>
-<span class="post-count">博客全站共35.2k字</span>
+<span class="post-count">博客全站共37.9k字</span>
 </div>
 
         

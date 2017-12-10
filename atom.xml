@@ -134,12 +134,12 @@
     <link href="http://yoursite.com/2017/11/09/%E5%A6%82%E4%BD%95%E6%9B%B4%E5%8A%A0%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8Docker/"/>
     <id>http://yoursite.com/2017/11/09/如何更加优雅的使用Docker/</id>
     <published>2017-11-09T13:45:25.000Z</published>
-    <updated>2017-11-11T07:38:38.000Z</updated>
+    <updated>2017-12-10T13:12:40.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。</p>
 </blockquote>
-<!--mome-->
+<a id="more"></a>
 <h3 id="创建容器时传入环境变量"><a href="#创建容器时传入环境变量" class="headerlink" title="创建容器时传入环境变量"></a>创建容器时传入环境变量</h3><p>在实际应用场景中，不论是从安全还是可配置方面去考虑，很多参数是比较适合用环境变量加载进去的，比如数据库的连接信息，时区，还有字体支持等等，在创建容器的时候其实都可以使用-e 指定key/value进行传递环境变量进去。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">sh-4.2# docker run -itd --name test-env -e TZ=&apos;Asia/Shanghai&apos; 172.25.46.9:5001/centos6.8-jdjr-test-app </div><div class="line">ee20b44301e27c16eae63dab243d293054178dd5f819c23d44bd9e534208bb42</div><div class="line">sh-4.2# docker exec -it test-env date</div><div class="line">2017年 01月 17日 星期二 10:35:17 CST</div><div class="line">sh-4.2# date</div><div class="line">Tue Jan 17 10:35:21 CST 2017</div><div class="line">可以看到加了时区环境变量的容器已经和宿主机在同一个时区(CST)，并且时间和宿主机基本同步</div><div class="line"></div><div class="line">sh-4.2# docker run -itd --name test  172.25.46.9:5001/centos6.8-jdjr-test-app</div><div class="line">d6a02874b999ff4eea79e3b302148b42043af01c89a5d31e5d858e0806f9077a</div><div class="line">sh-4.2# docker exec -it test date</div><div class="line">2017年 01月 20日 星期五 01:43:48 Asia</div><div class="line">默认没有加时区环境变量的容器还是Asia</div></pre></td></tr></table></figure>
 <h3 id="调整宿主机和容器的时间差异"><a href="#调整宿主机和容器的时间差异" class="headerlink" title="调整宿主机和容器的时间差异"></a>调整宿主机和容器的时间差异</h3><p>首先我们需要弄清几个概念：在类unix系统中有硬件时钟与系统时钟，硬件时钟是指主机板上的时钟设备，也就是通常可在BIOS画面设定的时钟，系统时钟则是指kernel中的时钟。unix以及linux系统时间是从格林威治时间到当前的秒数，即1970年1月1日凌晨零点零分零秒到当前的时间，全球都一样，这是绝对值；而时区则是由于地理位置差异、行政区划导致各地显示时间的差异，为了克服时间上的混乱，规定将全球划分为24个时区，我们国家属于东八区标识为CST。</p>
@@ -184,7 +184,8 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许
+&lt;p&gt;在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。&lt;/p&gt;
+&lt;/blockquote&gt;
     
     </summary>
     
@@ -200,7 +201,7 @@
     <link href="http://yoursite.com/2017/11/09/Dockerfile%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/"/>
     <id>http://yoursite.com/2017/11/09/Dockerfile最佳实践/</id>
     <published>2017-11-09T13:40:51.000Z</published>
-    <updated>2017-12-10T13:09:31.000Z</updated>
+    <updated>2017-12-10T13:12:56.000Z</updated>
     
     <content type="html"><![CDATA[<p><strong>在生产环境中一般我们会对基本的环境进行自构建，从而利用images的分层特性去层层构建上层的业务镜像。</strong></p>
 <blockquote>
@@ -208,9 +209,9 @@
 <p>2.其次我们可以在base镜像之上构建新的平台镜像，比如说ssh，java，tomcat等。在基础环境层，相比较上一层来说修改频次稍微会有点大，因为可能涉及到基本软件的版本调整或者参数调整。</p>
 <p>3.然后在可以在基本的平台镜像之上构建业务镜像，业务镜像是可以直接启动应用程序的，也就是需要启动服务进程的。该层镜像就是直接和业务代码融合的镜像，随着业务的更新，镜像也会频繁的改动上线。</p>
 </blockquote>
+<a id="more"></a>
 <p><strong><code>问题：如果我们构建业务镜像中默认需要启动多个服务，比如需要启动sshd和tomcat或者是一个nginx，那么就不能通过构建镜像的时候去使用CMD命令，因为CMD命令会继承上层images的CMD命令，从而导致上层的CMD命令失效。那么想要既继承上层的sshd，又需要启动业务进程，普通的方式可以采用脚本定义，并在业务镜像层进行RUN脚本。</code></strong></p>
 <p><strong>所以比较好的方法：使用supervisord来管理images中的多个服务进程。可以在基本镜像层进行构建supervisord镜像，然后在上层业务层通过配置supervisord.conf来管理对个进程，实现一个容器中启动多个服务进程。</strong></p>
-<!--mome-->
 <h3 id="构建无需启动服务的pass层镜像"><a href="#构建无需启动服务的pass层镜像" class="headerlink" title="构建无需启动服务的pass层镜像"></a>构建无需启动服务的pass层镜像</h3><p>该环节是提供给用户基本的软件运行环境，用户可以通过bash登录去启动业务程序。而根据业务的变化特征，以及基础服务的抽象程度，我们可以将该层的image镜像分成以下三个image进行叠加。</p>
 <h4 id="构建符合实际业务场景的base镜像"><a href="#构建符合实际业务场景的base镜像" class="headerlink" title="构建符合实际业务场景的base镜像"></a>构建符合实际业务场景的base镜像</h4><p><code>注意：</code>给image中打入sshd服务的主要原因还是想尽可能的满足用户当前的使用习惯，同时又能够充分利用docker image的特性</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">FROM centos6.8-base</div><div class="line">MAINTAINER xuxuebiao</div><div class="line">RUN ssh-keygen -q -N &quot;&quot; -t dsa -f /etc/ssh/ssh_host_dsa_key ;\</div><div class="line">    ssh-keygen -q -N &quot;&quot; -t rsa -f /etc/ssh/ssh_host_rsa_key ;\</div><div class="line">    sed -ri &apos;s/session    required     pam_loginuid.so/#session    required     pam_loginuid.so/g&apos; /etc/pam.d/sshd ;\</div><div class="line">    mkdir -p /root/.ssh &amp;&amp; chown root.root /root &amp;&amp; chmod 700 /root/.ssh ;\</div><div class="line">    sed -ri &apos;s/#Port 22/Port 52568/g&apos; /etc/ssh/sshd_config ;\</div><div class="line">    echo &apos;root:redhat&apos; | chpasswd</div><div class="line">EXPOSE 52568</div><div class="line">ENV LANG=zh_CN.UTF-8;\</div><div class="line">    LC_ALL=zh_CN.UTF-8;\</div><div class="line">    TZ &quot;Asia/Shanghai&quot;;\</div><div class="line">    TERM xterm</div><div class="line">CMD /usr/sbin/sshd -D</div></pre></td></tr></table></figure>
@@ -254,7 +255,10 @@
     
       &lt;p&gt;&lt;strong&gt;在生产环境中一般我们会对基本的环境进行自构建，从而利用images的分层特性去层层构建上层的业务镜像。&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;1.默认情况下我们会首先构建一个基本的base镜像，这个镜像可能包含了linux具体的发行版本，
+&lt;p&gt;1.默认情况下我们会首先构建一个基本的base镜像，这个镜像可能包含了linux具体的发行版本，以及基本的软件包，比如wget，vi等。在该层面上，镜像的改动会很少，频次也会很低。 &lt;/p&gt;
+&lt;p&gt;2.其次我们可以在base镜像之上构建新的平台镜像，比如说ssh，java，tomcat等。在基础环境层，相比较上一层来说修改频次稍微会有点大，因为可能涉及到基本软件的版本调整或者参数调整。&lt;/p&gt;
+&lt;p&gt;3.然后在可以在基本的平台镜像之上构建业务镜像，业务镜像是可以直接启动应用程序的，也就是需要启动服务进程的。该层镜像就是直接和业务代码融合的镜像，随着业务的更新，镜像也会频繁的改动上线。&lt;/p&gt;
+&lt;/blockquote&gt;
     
     </summary>
     

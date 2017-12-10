@@ -97,19 +97,19 @@
 
 
 
-<meta name="description" content="在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。   创建容器时传入环境变量在实际应用场景中，不论是从安全还是可配置方面去考虑，很多参数是">
+<meta name="description" content="在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。">
 <meta name="keywords" content="Docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何更加优雅的使用Docker">
 <meta property="og:url" content="http://yoursite.com/2017/11/09/如何更加优雅的使用Docker/index.html">
 <meta property="og:site_name" content="BG运维说">
-<meta property="og:description" content="在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。   创建容器时传入环境变量在实际应用场景中，不论是从安全还是可配置方面去考虑，很多参数是">
+<meta property="og:description" content="在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2577135-5d2191eacf61c6dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-11-11T07:38:38.000Z">
+<meta property="og:updated_time" content="2017-12-10T13:12:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何更加优雅的使用Docker">
-<meta name="twitter:description" content="在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。   创建容器时传入环境变量在实际应用场景中，不论是从安全还是可配置方面去考虑，很多参数是">
+<meta name="twitter:description" content="在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。">
 <meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2577135-5d2191eacf61c6dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
@@ -420,7 +420,7 @@
         <blockquote>
 <p>在使用docker过程中，我们经常发现管理维护是一个很复杂过程，因为我们在使用docker commands的过程中，我们只会去使用我们认为简单并且熟悉的命令，然而docker本身其实是提供给我们很多便捷且人性化的工具的，如果掌握这些使用技巧，也许你的维护管理工作将会事半功倍，并且给人看起来会很牛逼的样子。</p>
 </blockquote>
-<!--mome-->
+<a id="more"></a>
 <h3 id="创建容器时传入环境变量"><a href="#创建容器时传入环境变量" class="headerlink" title="创建容器时传入环境变量"></a>创建容器时传入环境变量</h3><p>在实际应用场景中，不论是从安全还是可配置方面去考虑，很多参数是比较适合用环境变量加载进去的，比如数据库的连接信息，时区，还有字体支持等等，在创建容器的时候其实都可以使用-e 指定key/value进行传递环境变量进去。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">sh-4.2# docker run -itd --name test-env -e TZ=&apos;Asia/Shanghai&apos; 172.25.46.9:5001/centos6.8-jdjr-test-app </div><div class="line">ee20b44301e27c16eae63dab243d293054178dd5f819c23d44bd9e534208bb42</div><div class="line">sh-4.2# docker exec -it test-env date</div><div class="line">2017年 01月 17日 星期二 10:35:17 CST</div><div class="line">sh-4.2# date</div><div class="line">Tue Jan 17 10:35:21 CST 2017</div><div class="line">可以看到加了时区环境变量的容器已经和宿主机在同一个时区(CST)，并且时间和宿主机基本同步</div><div class="line"></div><div class="line">sh-4.2# docker run -itd --name test  172.25.46.9:5001/centos6.8-jdjr-test-app</div><div class="line">d6a02874b999ff4eea79e3b302148b42043af01c89a5d31e5d858e0806f9077a</div><div class="line">sh-4.2# docker exec -it test date</div><div class="line">2017年 01月 20日 星期五 01:43:48 Asia</div><div class="line">默认没有加时区环境变量的容器还是Asia</div></pre></td></tr></table></figure>
 <h3 id="调整宿主机和容器的时间差异"><a href="#调整宿主机和容器的时间差异" class="headerlink" title="调整宿主机和容器的时间差异"></a>调整宿主机和容器的时间差异</h3><p>首先我们需要弄清几个概念：在类unix系统中有硬件时钟与系统时钟，硬件时钟是指主机板上的时钟设备，也就是通常可在BIOS画面设定的时钟，系统时钟则是指kernel中的时钟。unix以及linux系统时间是从格林威治时间到当前的秒数，即1970年1月1日凌晨零点零分零秒到当前的时间，全球都一样，这是绝对值；而时区则是由于地理位置差异、行政区划导致各地显示时间的差异，为了克服时间上的混乱，规定将全球划分为24个时区，我们国家属于东八区标识为CST。</p>

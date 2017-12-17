@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Golang,I/O," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="BG运维说" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="最近在使用Golang进行文件读写的过程中，遇到几个细节问题导致程序写入数据时有一定脏数据的残留，最后发现是使用os.OpenFile在进行文件操作的时候没有使用正确的flag造成的。因此专门去学习了下Golang中读写文件的几种方式方法,在此记录下一些简单的操作，防止以后遗忘。">
+<meta name="keywords" content="Golang,I&#x2F;O">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang读写文件操作">
+<meta property="og:url" content="http://yoursite.com/2017/12/17/Golang读写文件操作/index.html">
+<meta property="og:site_name" content="BG运维说">
+<meta property="og:description" content="最近在使用Golang进行文件读写的过程中，遇到几个细节问题导致程序写入数据时有一定脏数据的残留，最后发现是使用os.OpenFile在进行文件操作的时候没有使用正确的flag造成的。因此专门去学习了下Golang中读写文件的几种方式方法,在此记录下一些简单的操作，防止以后遗忘。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-17T15:33:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang读写文件操作">
+<meta name="twitter:description" content="最近在使用Golang进行文件读写的过程中，遇到几个细节问题导致程序写入数据时有一定脏数据的残留，最后发现是使用os.OpenFile在进行文件操作的时候没有使用正确的flag造成的。因此专门去学习了下Golang中读写文件的几种方式方法,在此记录下一些简单的操作，防止以后遗忘。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/17/Golang读写文件操作/"/>
+
+
+
+
+
+  <title>Golang读写文件操作 | BG运维说</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BG运维说</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/17/Golang读写文件操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BG运维说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Golang读写文件操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-17T23:25:25+08:00">
+                2017-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Golang/" itemprop="url" rel="index">
+                    <span itemprop="name">Golang</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在使用Golang进行文件读写的过程中，遇到几个细节问题导致程序写入数据时有一定脏数据的残留，最后发现是使用os.OpenFile在进行文件操作的时候没有使用正确的flag造成的。因此专门去学习了下Golang中读写文件的几种方式方法,在此记录下一些简单的操作，防止以后遗忘。</p>
+<a id="more"></a>
+<h3 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h3><p>使用golang语言去读取一个文件默认会有多种方式，这里主要介绍以下几种。</p>
+<h4 id="使用ioutil直接读取"><a href="#使用ioutil直接读取" class="headerlink" title="使用ioutil直接读取"></a>使用<code>ioutil</code>直接读取</h4><p>需要引入<code>io/ioutil</code>包，该包默认拥有以下函数供用户调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">func NopCloser(r io.Reader) io.ReadCloser</div><div class="line">func ReadAll(r io.Reader) ([]byte, error)</div><div class="line">func ReadDir(dirname string) ([]os.FileInfo, error)</div><div class="line">func ReadFile(filename string) ([]byte, error)</div><div class="line">func TempDir(dir, prefix string) (name string, err error)</div><div class="line">func TempFile(dir, prefix string) (f *os.File, err error)</div><div class="line">func WriteFile(filename string, data []byte, perm os.FileMode) error</div></pre></td></tr></table></figure>
+<p>读文件，我们可以看以下三个函数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//从一个io.Reader类型中读取内容直到返回错误或者EOF时返回读取的数据，当err == nil时，数据成功读取到[]byte中</div><div class="line">//ReadAll函数被定义为从源中读取数据直到EOF，它是不会去从返回数据中去判断EOF来作为读取成功的依据</div><div class="line">func ReadAll(r io.Reader) ([]byte, error)</div><div class="line"></div><div class="line">//读取一个目录，并返回一个当前目录下的文件对象列表和错误信息</div><div class="line">func ReadDir(dirname string) ([]os.FileInfo, error)</div><div class="line"></div><div class="line">//读取文件内容，并返回[]byte数据和错误信息。err == nil时，读取成功</div><div class="line">func ReadFile(filename string) ([]byte, error)</div></pre></td></tr></table></figure></p>
+<p>读取文件示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ cat readfile.go</div><div class="line">package main</div><div class="line">import (</div><div class="line">    &quot;fmt&quot;</div><div class="line">    &quot;io/ioutil&quot;</div><div class="line">    &quot;strings&quot;</div><div class="line">)</div><div class="line">func main() &#123;</div><div class="line">   Ioutil(&quot;mytestfile.txt&quot;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">func Ioutil(name string) &#123;</div><div class="line">    if contents,err := ioutil.ReadFile(name);err == nil &#123;</div><div class="line">        //因为contents是[]byte类型，直接转换成string类型后会多一行空格,需要使用strings.Replace替换换行符</div><div class="line">        result := strings.Replace(string(contents),&quot;\n&quot;,&quot;&quot;,1)</div><div class="line">        fmt.Println(result)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">$ go run readfile.go</div><div class="line">xxbandy.github.io @by Andy_xu</div></pre></td></tr></table></figure></p>
+<h4 id="借助os-Open进行读取文件"><a href="#借助os-Open进行读取文件" class="headerlink" title="借助os.Open进行读取文件"></a>借助<code>os.Open</code>进行读取文件</h4><p>由于<code>os.Open</code>是打开一个文件并返回一个文件对象，因此其实可以结合<code>ioutil.ReadAll(r io.Reader)</code>来进行读取。<br><code>io.Reader</code>其实是一个包含<code>Read</code>方法的接口类型，而文件对象本身是实现了了<code>Read</code>方法的。</p>
+<p>我们先来看下<code>os.Open</code>家族的相关函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//打开一个需要被读取的文件，如果成功读取，返回的文件对象将可用被读取，该函数默认的权限为O_RDONLY，也就是只对文件有只读权限。如果有错误，将返回*PathError类型</div><div class="line">func Open(name string) (*File, error)</div><div class="line"></div><div class="line">//大部分用户会选择该函数来代替Open or Create函数。该函数主要用来指定参数(os.O_APPEND|os.O_CREATE|os.O_WRONLY)以及文件权限(0666)来打开文件，如果打开成功返回的文件对象将被用作I/O操作</div><div class="line">func OpenFile(name string, flag int, perm FileMode) (*File, error)</div></pre></td></tr></table></figure>
+<p>使用<code>os.Open</code>家族函数和<code>ioutil.ReadAll()</code>读取文件示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">func OsIoutil(name string) &#123;</div><div class="line">      if fileObj,err := os.Open(name);err == nil &#123;</div><div class="line">      //if fileObj,err := os.OpenFile(name,os.O_RDONLY,0644); err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        if contents,err := ioutil.ReadAll(fileObj); err == nil &#123;</div><div class="line">            result := strings.Replace(string(contents),&quot;\n&quot;,&quot;&quot;,1)</div><div class="line">            fmt.Println(&quot;Use os.Open family functions and ioutil.ReadAll to read a file contents:&quot;,result)</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 在main函数中调用OsIoutil(name)函数就可以读取文件内容了</div><div class="line">$ go run readfile.go</div><div class="line">Use os.Open family functions and ioutil.ReadAll to read a file contents: xxbandy.github.io @by Andy_xu</div></pre></td></tr></table></figure></p>
+<p>然而上述方式会比较繁琐一些，因为使用了<code>os</code>的同时借助了<code>ioutil</code>,但是在读取大文件的时候还是比较有优势的。不过读取小文件可以直接使用文件对象的一些方法。</p>
+<p>不论是上边说的<code>os.Open</code>还是<code>os.OpenFile</code>他们最终都返回了一个<code>*File</code>文件对象，而该文件对象默认是有很多方法的，其中读取文件的方法有如下几种:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//从文件对象中读取长度为b的字节，返回当前读到的字节数以及错误信息。因此使用该方法需要先初始化一个符合内容大小的空的字节列表。读取到文件的末尾时，该方法返回0，io.EOF</div><div class="line">func (f *File) Read(b []byte) (n int, err error)</div><div class="line"></div><div class="line">//从文件的off偏移量开始读取长度为b的字节。返回读取到字节数以及错误信息。当读取到的字节数n小于想要读取字节的长度len(b)的时候，该方法将返回非空的error。当读到文件末尾时，err返回io.EOF</div><div class="line">func (f *File) ReadAt(b []byte, off int64) (n int, err error)</div></pre></td></tr></table></figure></p>
+<p>使用文件对象的<code>Read</code>方法读取：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">func FileRead(name string) &#123;</div><div class="line">    if fileObj,err := os.Open(name);err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        //在定义空的byte列表时尽量大一些，否则这种方式读取内容可能造成文件读取不完整</div><div class="line">        buf := make([]byte, 1024)</div><div class="line">        if n,err := fileObj.Read(buf);err == nil &#123;</div><div class="line">               fmt.Println(&quot;The number of bytes read:&quot;+strconv.Itoa(n),&quot;Buf length:&quot;+strconv.Itoa(len(buf)))</div><div class="line">               result := strings.Replace(string(buf),&quot;\n&quot;,&quot;&quot;,1)</div><div class="line">               fmt.Println(&quot;Use os.Open and File&apos;s Read method to read a file:&quot;,result)</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="使用os-Open和bufio-Reader读取文件内容"><a href="#使用os-Open和bufio-Reader读取文件内容" class="headerlink" title="使用os.Open和bufio.Reader读取文件内容"></a>使用<code>os.Open</code>和<code>bufio.Reader</code>读取文件内容</h4><p><code>bufio</code>包实现了缓存IO,它本身包装了<code>io.Reader</code>和<code>io.Writer</code>对象，创建了另外的Reader和Writer对象，不过该种方式是带有缓存的，因此对于文本I/O来说，该包是提供了一些便利的。</p>
+<p>先看下<code>bufio</code>模块下的相关的<code>Reader</code>函数方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">//首先定义了一个用来缓冲io.Reader对象的结构体，同时该结构体拥有以下相关的方法</div><div class="line">type Reader struct &#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//NewReader函数用来返回一个默认大小buffer的Reader对象(默认大小好像是4096) 等同于NewReaderSize(rd,4096)</div><div class="line">func NewReader(rd io.Reader) *Reader</div><div class="line"></div><div class="line">//该函数返回一个指定大小buffer(size最小为16)的Reader对象，如果 io.Reader参数已经是一个足够大的Reader，它将返回该Reader</div><div class="line">func NewReaderSize(rd io.Reader, size int) *Reader</div><div class="line"></div><div class="line"></div><div class="line">//该方法返回从当前buffer中能被读到的字节数</div><div class="line">func (b *Reader) Buffered() int</div><div class="line"></div><div class="line">//Discard方法跳过后续的 n 个字节的数据，返回跳过的字节数。如果0 &lt;= n &lt;= b.Buffered(),该方法将不会从io.Reader中成功读取数据。</div><div class="line">func (b *Reader) Discard(n int) (discarded int, err error)</div><div class="line"></div><div class="line">//Peekf方法返回缓存的一个切片，该切片只包含缓存中的前n个字节的数据</div><div class="line">func (b *Reader) Peek(n int) ([]byte, error)</div><div class="line"></div><div class="line">//把Reader缓存对象中的数据读入到[]byte类型的p中，并返回读取的字节数。读取成功，err将返回空值</div><div class="line">func (b *Reader) Read(p []byte) (n int, err error)</div><div class="line"></div><div class="line">//返回单个字节，如果没有数据返回err</div><div class="line">func (b *Reader) ReadByte() (byte, error)</div><div class="line"></div><div class="line">//该方法在b中读取delimz之前的所有数据，返回的切片是已读出的数据的引用，切片中的数据在下一次的读取操作之前是有效的。如果未找到delim，将返回查找结果并返回nil空值。因为缓存的数据可能被下一次的读写操作修改，因此一般使用ReadBytes或者ReadString，他们返回的都是数据拷贝</div><div class="line">func (b *Reader) ReadSlice(delim byte) (line []byte, err error)</div><div class="line"></div><div class="line">//功能同ReadSlice，返回数据的拷贝</div><div class="line">func (b *Reader) ReadBytes(delim byte) ([]byte, error)</div><div class="line"></div><div class="line">//功能同ReadBytes,返回字符串</div><div class="line">func (b *Reader) ReadString(delim byte) (string, error)</div><div class="line"></div><div class="line">//该方法是一个低水平的读取方式，一般建议使用ReadBytes(&apos;\n&apos;) 或 ReadString(&apos;\n&apos;)，或者使用一个 Scanner来代替。ReadLine 通过调用 ReadSlice 方法实现，返回的也是缓存的切片，用于读取一行数据，不包括行尾标记（\n 或 \r\n）</div><div class="line">func (b *Reader) ReadLine() (line []byte, isPrefix bool, err error)</div><div class="line"></div><div class="line">//读取单个UTF-8字符并返回一个rune和字节大小</div><div class="line">func (b *Reader) ReadRune() (r rune, size int, err error)</div></pre></td></tr></table></figure></p>
+<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">func BufioRead(name string) &#123;</div><div class="line">    if fileObj,err := os.Open(name);err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        //一个文件对象本身是实现了io.Reader的 使用bufio.NewReader去初始化一个Reader对象，存在buffer中的，读取一次就会被清空</div><div class="line">        reader := bufio.NewReader(fileObj)</div><div class="line">        //使用ReadString(delim byte)来读取delim以及之前的数据并返回相关的字符串.</div><div class="line">        if result,err := reader.ReadString(byte(&apos;@&apos;));err == nil &#123;</div><div class="line">            fmt.Println(&quot;使用ReadSlince相关方法读取内容:&quot;,result)</div><div class="line">        &#125;</div><div class="line">        //注意:上述ReadString已经将buffer中的数据读取出来了，下面将不会输出内容</div><div class="line">        //需要注意的是，因为是将文件内容读取到[]byte中，因此需要对大小进行一定的把控</div><div class="line">        buf := make([]byte,1024)</div><div class="line">        //读取Reader对象中的内容到[]byte类型的buf中</div><div class="line">        if n,err := reader.Read(buf); err == nil &#123;</div><div class="line">            fmt.Println(&quot;The number of bytes read:&quot;+strconv.Itoa(n))</div><div class="line">            //这里的buf是一个[]byte，因此如果需要只输出内容，仍然需要将文件内容的换行符替换掉</div><div class="line">            fmt.Println(&quot;Use bufio.NewReader and os.Open read file contents to a []byte:&quot;,string(buf))</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="读文件所有方式示例"><a href="#读文件所有方式示例" class="headerlink" title="读文件所有方式示例"></a>读文件所有方式示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * @File Name: readfile.go</div><div class="line"> * @Author:</div><div class="line"> * @Email:</div><div class="line"> * @Create Date: 2017-12-16 16:12:01</div><div class="line"> * @Last Modified: 2017-12-17 12:12:02</div><div class="line"> * @Description:读取指定文件的几种方法，需要注意的是[]byte类型在转换成string类型的时候，都会在最后多一行空格，需要使用result := strings.Replace(string(contents),&quot;\n&quot;,&quot;&quot;,1) 方式替换换行符</div><div class="line"> */</div><div class="line">package main</div><div class="line">import (</div><div class="line">    &quot;fmt&quot;</div><div class="line">    &quot;io/ioutil&quot;</div><div class="line">    &quot;strings&quot;</div><div class="line">    &quot;os&quot;</div><div class="line">    &quot;strconv&quot;</div><div class="line">    &quot;bufio&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">   Ioutil(&quot;mytestfile.txt&quot;)</div><div class="line">   OsIoutil(&quot;mytestfile.txt&quot;)</div><div class="line">   FileRead(&quot;mytestfile.txt&quot;)</div><div class="line">   BufioRead(&quot;mytestfile.txt&quot;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">func Ioutil(name string) &#123;</div><div class="line">    if contents,err := ioutil.ReadFile(name);err == nil &#123;</div><div class="line">        //因为contents是[]byte类型，直接转换成string类型后会多一行空格,需要使用strings.Replace替换换行符</div><div class="line">        result := strings.Replace(string(contents),&quot;\n&quot;,&quot;&quot;,1)</div><div class="line">        fmt.Println(&quot;Use ioutil.ReadFile to read a file:&quot;,result)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">func OsIoutil(name string) &#123;</div><div class="line">      if fileObj,err := os.Open(name);err == nil &#123;</div><div class="line">      //if fileObj,err := os.OpenFile(name,os.O_RDONLY,0644); err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        if contents,err := ioutil.ReadAll(fileObj); err == nil &#123;</div><div class="line">            result := strings.Replace(string(contents),&quot;\n&quot;,&quot;&quot;,1)</div><div class="line">            fmt.Println(&quot;Use os.Open family functions and ioutil.ReadAll to read a file :&quot;,result)</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">func FileRead(name string) &#123;</div><div class="line">    if fileObj,err := os.Open(name);err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        //在定义空的byte列表时尽量大一些，否则这种方式读取内容可能造成文件读取不完整</div><div class="line">        buf := make([]byte, 1024)</div><div class="line">        if n,err := fileObj.Read(buf);err == nil &#123;</div><div class="line">               fmt.Println(&quot;The number of bytes read:&quot;+strconv.Itoa(n),&quot;Buf length:&quot;+strconv.Itoa(len(buf)))</div><div class="line">               result := strings.Replace(string(buf),&quot;\n&quot;,&quot;&quot;,1)</div><div class="line">               fmt.Println(&quot;Use os.Open and File&apos;s Read method to read a file:&quot;,result)</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">func BufioRead(name string) &#123;</div><div class="line">    if fileObj,err := os.Open(name);err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        //一个文件对象本身是实现了io.Reader的 使用bufio.NewReader去初始化一个Reader对象，存在buffer中的，读取一次就会被清空</div><div class="line">        reader := bufio.NewReader(fileObj)</div><div class="line">        //使用ReadString(delim byte)来读取delim以及之前的数据并返回相关的字符串.</div><div class="line">        if result,err := reader.ReadString(byte(&apos;@&apos;));err == nil &#123;</div><div class="line">            fmt.Println(&quot;使用ReadSlince相关方法读取内容:&quot;,result)</div><div class="line">        &#125;</div><div class="line">        //注意:上述ReadString已经将buffer中的数据读取出来了，下面将不会输出内容</div><div class="line">        //需要注意的是，因为是将文件内容读取到[]byte中，因此需要对大小进行一定的把控</div><div class="line">        buf := make([]byte,1024)</div><div class="line">        //读取Reader对象中的内容到[]byte类型的buf中</div><div class="line">        if n,err := reader.Read(buf); err == nil &#123;</div><div class="line">            fmt.Println(&quot;The number of bytes read:&quot;+strconv.Itoa(n))</div><div class="line">            //这里的buf是一个[]byte，因此如果需要只输出内容，仍然需要将文件内容的换行符替换掉</div><div class="line">            fmt.Println(&quot;Use bufio.NewReader and os.Open read file contents to a []byte:&quot;,string(buf))</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h3><p>那么上述几种方式来读取文件的方式也支持文件的写入，相关的方法如下:</p>
+<h4 id="使用ioutil包进行文件写入"><a href="#使用ioutil包进行文件写入" class="headerlink" title="使用ioutil包进行文件写入"></a>使用<code>ioutil</code>包进行文件写入</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 写入[]byte类型的data到filename文件中，文件权限为perm</div><div class="line">func WriteFile(filename string, data []byte, perm os.FileMode) error</div></pre></td></tr></table></figure>
+<p>示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">$ cat writefile.go</div><div class="line">/**</div><div class="line"> * @File Name: writefile.go</div><div class="line"> * @Author:</div><div class="line"> * @Email:</div><div class="line"> * @Create Date: 2017-12-17 12:12:09</div><div class="line"> * @Last Modified: 2017-12-17 12:12:30</div><div class="line"> * @Description:使用多种方式将数据写入文件</div><div class="line"> */</div><div class="line">package main</div><div class="line">import (</div><div class="line">    &quot;fmt&quot;</div><div class="line">    &quot;io/ioutil&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">      name := &quot;testwritefile.txt&quot;</div><div class="line">      content := &quot;Hello, xxbandy.github.io!\n&quot;</div><div class="line">      WriteWithIoutil(name,content)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//使用ioutil.WriteFile方式写入文件,是将[]byte内容写入文件,如果content字符串中没有换行符的话，默认就不会有换行符</div><div class="line">func WriteWithIoutil(name,content string) &#123;</div><div class="line">    data :=  []byte(content)</div><div class="line">    if ioutil.WriteFile(name,data,0644) == nil &#123;</div><div class="line">        fmt.Println(&quot;写入文件成功:&quot;,content)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line"># 会有换行符    </div><div class="line">$ go run writefile.go</div><div class="line">写入文件成功: Hello, xxbandy.github.io!</div></pre></td></tr></table></figure></p>
+<h4 id="使用os-Open相关函数进行文件写入"><a href="#使用os-Open相关函数进行文件写入" class="headerlink" title="使用os.Open相关函数进行文件写入"></a>使用<code>os.Open</code>相关函数进行文件写入</h4><p>因为<code>os.Open</code>系列的函数会打开文件，并返回一个文件对象指针，而该文件对象是一个定义的结构体，拥有一些相关写入的方法。</p>
+<p>文件对象结构体以及相关写入文件的方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//写入长度为b字节切片到文件f中，返回写入字节号和错误信息。当n不等于len(b)时，将返回非空的err</div><div class="line">func (f *File) Write(b []byte) (n int, err error)</div><div class="line">//在off偏移量出向文件f写入长度为b的字节</div><div class="line">func (f *File) WriteAt(b []byte, off int64) (n int, err error)</div><div class="line">//类似于Write方法，但是写入内容是字符串而不是字节切片</div><div class="line">func (f *File) WriteString(s string) (n int, err error)</div></pre></td></tr></table></figure></p>
+<p><code>注意：</code>使用WriteString()j进行文件写入发现经常新内容写入时无法正常覆盖全部新内容。(是因为字符串长度不一样)</p>
+<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//使用os.OpenFile()相关函数打开文件对象，并使用文件对象的相关方法进行文件写入操作</div><div class="line">func WriteWithFileWrite(name,content string)&#123;</div><div class="line">    fileObj,err := os.OpenFile(name,os.O_RDWR|os.O_CREATE|os.O_TRUNC,0644)</div><div class="line">    if err != nil &#123;</div><div class="line">        fmt.Println(&quot;Failed to open the file&quot;,err.Error())</div><div class="line">        os.Exit(2)</div><div class="line">    &#125;</div><div class="line">    defer fileObj.Close()</div><div class="line">    if _,err := fileObj.WriteString(content);err == nil &#123;</div><div class="line">        fmt.Println(&quot;Successful writing to the file with os.OpenFile and *File.WriteString method.&quot;,content)</div><div class="line">    &#125;</div><div class="line">    contents := []byte(content)</div><div class="line">    if _,err := fileObj.Write(contents);err == nil &#123;</div><div class="line">        fmt.Println(&quot;Successful writing to thr file with os.OpenFile and *File.Write method.&quot;,content)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>注意:</code>使用<code>os.OpenFile(name string, flag int, perm FileMode)</code>打开文件并进行文件内容更改，需要注意<code>flag</code>相关的参数以及含义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">const (</div><div class="line">        O_RDONLY int = syscall.O_RDONLY // 只读打开文件和os.Open()同义</div><div class="line">        O_WRONLY int = syscall.O_WRONLY // 只写打开文件</div><div class="line">        O_RDWR   int = syscall.O_RDWR   // 读写方式打开文件</div><div class="line">        O_APPEND int = syscall.O_APPEND // 当写的时候使用追加模式到文件末尾</div><div class="line">        O_CREATE int = syscall.O_CREAT  // 如果文件不存在，此案创建</div><div class="line">        O_EXCL   int = syscall.O_EXCL   // 和O_CREATE一起使用, 只有当文件不存在时才创建</div><div class="line">        O_SYNC   int = syscall.O_SYNC   // 以同步I/O方式打开文件，直接写入硬盘.</div><div class="line">        O_TRUNC  int = syscall.O_TRUNC  // 如果可以的话，当打开文件时先清空文件</div><div class="line">)</div></pre></td></tr></table></figure>
+<h4 id="使用io包中的相关函数写入文件"><a href="#使用io包中的相关函数写入文件" class="headerlink" title="使用io包中的相关函数写入文件"></a>使用<code>io</code>包中的相关函数写入文件</h4><p>在<code>io</code>包中有一个<code>WriteString()</code>函数，用来将字符串写入一个<code>Writer</code>对象中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//将字符串s写入w(可以是一个[]byte)，如果w实现了一个WriteString方法，它可以被直接调用。否则w.Write会再一次被调用</div><div class="line">func WriteString(w Writer, s string) (n int, err error)</div><div class="line"></div><div class="line">//Writer对象的定义</div><div class="line">type Writer interface &#123;</div><div class="line">        Write(p []byte) (n int, err error)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//使用io.WriteString()函数进行数据的写入</div><div class="line">func WriteWithIo(name,content string) &#123;</div><div class="line">    fileObj,err := os.OpenFile(name,os.O_RDWR|os.O_CREATE|os.O_APPEND,0644)</div><div class="line">    if err != nil &#123;</div><div class="line">        fmt.Println(&quot;Failed to open the file&quot;,err.Error())</div><div class="line">        os.Exit(2)</div><div class="line">    &#125;</div><div class="line">    if  _,err := io.WriteString(fileObj,content);err == nil &#123;</div><div class="line">        fmt.Println(&quot;Successful appending to the file with os.OpenFile and io.WriteString.&quot;,content)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="使用bufio包中的相关函数写入文件"><a href="#使用bufio包中的相关函数写入文件" class="headerlink" title="使用bufio包中的相关函数写入文件"></a>使用<code>bufio</code>包中的相关函数写入文件</h4><p><code>bufio</code>和<code>io</code>包中很多操作都是相似的，唯一不同的地方是<code>bufio</code>提供了一些缓冲的操作，如果对文件I/O操作比较频繁的，使用<code>bufio</code>还是能增加一些性能的。</p>
+<p>在<code>bufio</code>包中，有一个<code>Writer</code>结构体，而其相关的方法也支持一些写入操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">//Writer是一个空的结构体，一般需要使用NewWriter或者NewWriterSize来初始化一个结构体对象</div><div class="line">type Writer struct &#123;</div><div class="line">        // contains filtered or unexported fields</div><div class="line">&#125;</div><div class="line"></div><div class="line">//NewWriterSize和NewWriter函数</div><div class="line">//返回默认缓冲大小的Writer对象(默认是4096)</div><div class="line">func NewWriter(w io.Writer) *Writer</div><div class="line"></div><div class="line">//指定缓冲大小创建一个Writer对象</div><div class="line">func NewWriterSize(w io.Writer, size int) *Writer</div><div class="line"></div><div class="line">//Writer对象相关的写入数据的方法</div><div class="line"></div><div class="line">//把p中的内容写入buffer,返回写入的字节数和错误信息。如果nn&lt;len(p),返回错误信息中会包含为什么写入的数据比较短</div><div class="line">func (b *Writer) Write(p []byte) (nn int, err error)</div><div class="line">//将buffer中的数据写入 io.Writer</div><div class="line">func (b *Writer) Flush() error</div><div class="line"></div><div class="line">//以下三个方法可以直接写入到文件中</div><div class="line">//写入单个字节</div><div class="line">func (b *Writer) WriteByte(c byte) error</div><div class="line">//写入单个Unicode指针返回写入字节数错误信息</div><div class="line">func (b *Writer) WriteRune(r rune) (size int, err error)</div><div class="line">//写入字符串并返回写入字节数和错误信息</div><div class="line">func (b *Writer) WriteString(s string) (int, error)</div></pre></td></tr></table></figure></p>
+<p><code>注意：如果需要再写入文件时利用缓冲的话只能使用bufio包中的Write方法</code></p>
+<p>示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">//使用bufio包中Writer对象的相关方法进行数据的写入</div><div class="line">func WriteWithBufio(name,content string) &#123;</div><div class="line">    if fileObj,err := os.OpenFile(name,os.O_RDWR|os.O_CREATE|os.O_APPEND,0644);err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        writeObj := bufio.NewWriterSize(fileObj,4096)</div><div class="line">        //</div><div class="line">       if _,err := writeObj.WriteString(content);err == nil &#123;</div><div class="line">              fmt.Println(&quot;Successful appending buffer and flush to file with bufio&apos;s Writer obj WriteString method&quot;,content)</div><div class="line">           &#125;</div><div class="line"></div><div class="line">        //使用Write方法,需要使用Writer对象的Flush方法将buffer中的数据刷到磁盘</div><div class="line">        buf := []byte(content)</div><div class="line">        if _,err := writeObj.Write(buf);err == nil &#123;</div><div class="line">            fmt.Println(&quot;Successful appending to the buffer with os.OpenFile and bufio&apos;s Writer obj Write method.&quot;,content)</div><div class="line">            if  err := writeObj.Flush(); err != nil &#123;panic(err)&#125;</div><div class="line">            fmt.Println(&quot;Successful flush the buffer data to file &quot;,content)</div><div class="line">        &#125;</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="写文件全部示例"><a href="#写文件全部示例" class="headerlink" title="写文件全部示例"></a>写文件全部示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * @File Name: writefile.go</div><div class="line"> * @Author:</div><div class="line"> * @Email:</div><div class="line"> * @Create Date: 2017-12-17 12:12:09</div><div class="line"> * @Last Modified: 2017-12-17 23:12:10</div><div class="line"> * @Description:使用多种方式将数据写入文件</div><div class="line"> */</div><div class="line">package main</div><div class="line">import (</div><div class="line">    &quot;os&quot;</div><div class="line">    &quot;io&quot;</div><div class="line">    &quot;fmt&quot;</div><div class="line">    &quot;io/ioutil&quot;</div><div class="line">    &quot;bufio&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">      name := &quot;testwritefile.txt&quot;</div><div class="line">      content := &quot;Hello, xxbandy.github.io!\n&quot;</div><div class="line">      WriteWithIoutil(name,content)</div><div class="line">      contents := &quot;Hello, xuxuebiao\n&quot;</div><div class="line">      //清空一次文件并写入两行contents</div><div class="line">      WriteWithFileWrite(name,contents)</div><div class="line">      WriteWithIo(name,content)</div><div class="line">      //使用bufio包需要将数据先读到buffer中，然后在flash到磁盘中</div><div class="line">      WriteWithBufio(name,contents)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//使用ioutil.WriteFile方式写入文件,是将[]byte内容写入文件,如果content字符串中没有换行符的话，默认就不会有换行符</div><div class="line">func WriteWithIoutil(name,content string) &#123;</div><div class="line">    data :=  []byte(content)</div><div class="line">    if ioutil.WriteFile(name,data,0644) == nil &#123;</div><div class="line">        fmt.Println(&quot;写入文件成功:&quot;,content)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">//使用os.OpenFile()相关函数打开文件对象，并使用文件对象的相关方法进行文件写入操作</div><div class="line">//清空一次文件</div><div class="line">func WriteWithFileWrite(name,content string)&#123;</div><div class="line">    fileObj,err := os.OpenFile(name,os.O_RDWR|os.O_CREATE|os.O_TRUNC,0644)</div><div class="line">    if err != nil &#123;</div><div class="line">        fmt.Println(&quot;Failed to open the file&quot;,err.Error())</div><div class="line">        os.Exit(2)</div><div class="line">    &#125;</div><div class="line">    defer fileObj.Close()</div><div class="line">    if _,err := fileObj.WriteString(content);err == nil &#123;</div><div class="line">        fmt.Println(&quot;Successful writing to the file with os.OpenFile and *File.WriteString method.&quot;,content)</div><div class="line">    &#125;</div><div class="line">    contents := []byte(content)</div><div class="line">    if _,err := fileObj.Write(contents);err == nil &#123;</div><div class="line">        fmt.Println(&quot;Successful writing to thr file with os.OpenFile and *File.Write method.&quot;,content)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//使用io.WriteString()函数进行数据的写入</div><div class="line">func WriteWithIo(name,content string) &#123;</div><div class="line">    fileObj,err := os.OpenFile(name,os.O_RDWR|os.O_CREATE|os.O_APPEND,0644)</div><div class="line">    if err != nil &#123;</div><div class="line">        fmt.Println(&quot;Failed to open the file&quot;,err.Error())</div><div class="line">        os.Exit(2)</div><div class="line">    &#125;</div><div class="line">    if  _,err := io.WriteString(fileObj,content);err == nil &#123;</div><div class="line">        fmt.Println(&quot;Successful appending to the file with os.OpenFile and io.WriteString.&quot;,content)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//使用bufio包中Writer对象的相关方法进行数据的写入</div><div class="line">func WriteWithBufio(name,content string) &#123;</div><div class="line">    if fileObj,err := os.OpenFile(name,os.O_RDWR|os.O_CREATE|os.O_APPEND,0644);err == nil &#123;</div><div class="line">        defer fileObj.Close()</div><div class="line">        writeObj := bufio.NewWriterSize(fileObj,4096)</div><div class="line">        //</div><div class="line">       if _,err := writeObj.WriteString(content);err == nil &#123;</div><div class="line">              fmt.Println(&quot;Successful appending buffer and flush to file with bufio&apos;s Writer obj WriteString method&quot;,content)</div><div class="line">           &#125;</div><div class="line"></div><div class="line">        //使用Write方法,需要使用Writer对象的Flush方法将buffer中的数据刷到磁盘</div><div class="line">        buf := []byte(content)</div><div class="line">        if _,err := writeObj.Write(buf);err == nil &#123;</div><div class="line">            fmt.Println(&quot;Successful appending to the buffer with os.OpenFile and bufio&apos;s Writer obj Write method.&quot;,content)</div><div class="line">            if  err := writeObj.Flush(); err != nil &#123;panic(err)&#125;</div><div class="line">            fmt.Println(&quot;Successful flush the buffer data to file &quot;,content)</div><div class="line">        &#125;</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Golang/" rel="tag"><i class="fa fa-tag"></i> Golang</a>
+          
+            <a href="/tags/I-O/" rel="tag"><i class="fa fa-tag"></i> I/O</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/09/开源OCR引擎tesseract的构建使用/" rel="next" title="开源OCR引擎tesseract的构建使用">
+                <i class="fa fa-chevron-left"></i> 开源OCR引擎tesseract的构建使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/me.png"
+               alt="Andy Xu" />
+          <p class="site-author-name" itemprop="name">Andy Xu</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个长跑者的运维以及人生经历</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xxbandy" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/9c46ece5b7bd" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-hand-o-up"></i>
+                  
+                    
+                      简书
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://my.oschina.net/xxbAndy/blog" target="_blank" title="开源中国">
+                  
+                    <i class="fa fa-fw fa-heart"></i>
+                  
+                    
+                      开源中国
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.lijiaocn.com" target="_blank" title="lijiaocn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      lijiaocn
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://my.oschina.net/xxbAndy" title="开源中国" target="_blank">开源中国</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/9c46ece5b7bd" title="逼格运维说" target="_blank">逼格运维说</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#读文件"><span class="nav-number">1.</span> <span class="nav-text">读文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用ioutil直接读取"><span class="nav-number">1.1.</span> <span class="nav-text">使用ioutil直接读取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#借助os-Open进行读取文件"><span class="nav-number">1.2.</span> <span class="nav-text">借助os.Open进行读取文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用os-Open和bufio-Reader读取文件内容"><span class="nav-number">1.3.</span> <span class="nav-text">使用os.Open和bufio.Reader读取文件内容</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#读文件所有方式示例"><span class="nav-number">1.4.</span> <span class="nav-text">读文件所有方式示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写文件"><span class="nav-number">2.</span> <span class="nav-text">写文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用ioutil包进行文件写入"><span class="nav-number">2.1.</span> <span class="nav-text">使用ioutil包进行文件写入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用os-Open相关函数进行文件写入"><span class="nav-number">2.2.</span> <span class="nav-text">使用os.Open相关函数进行文件写入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用io包中的相关函数写入文件"><span class="nav-number">2.3.</span> <span class="nav-text">使用io包中的相关函数写入文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用bufio包中的相关函数写入文件"><span class="nav-number">2.4.</span> <span class="nav-text">使用bufio包中的相关函数写入文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#写文件全部示例"><span class="nav-number">2.5.</span> <span class="nav-text">写文件全部示例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Andy Xu</span>
+
+  
+</div>
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+<div class="theme-info">
+<div class="powered-by"></div>
+<span class="post-count">博客全站共42.6k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

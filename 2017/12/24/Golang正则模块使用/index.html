@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Golang,regexp," />
 
 
 
@@ -97,16 +97,18 @@
 
 
 
-<meta name="description" content="一个长跑者的运维以及人生经历">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BG运维说">
-<meta property="og:url" content="http://yoursite.com/tags/Etcd/index.html">
+<meta name="description" content="最近在开发过程中会遇到一些字符串匹配相关的内容，正好去大概学习了下Golang中的regexp模块。因为目前正则模块对我来说更多的就是去匹配并处理字符串的，因此目前主要关注几个返回为string类型的方法。">
+<meta name="keywords" content="Golang,regexp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang正则模块使用">
+<meta property="og:url" content="http://yoursite.com/2017/12/24/Golang正则模块使用/index.html">
 <meta property="og:site_name" content="BG运维说">
-<meta property="og:description" content="一个长跑者的运维以及人生经历">
+<meta property="og:description" content="最近在开发过程中会遇到一些字符串匹配相关的内容，正好去大概学习了下Golang中的regexp模块。因为目前正则模块对我来说更多的就是去匹配并处理字符串的，因此目前主要关注几个返回为string类型的方法。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-24T08:47:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BG运维说">
-<meta name="twitter:description" content="一个长跑者的运维以及人生经历">
+<meta name="twitter:title" content="Golang正则模块使用">
+<meta name="twitter:description" content="最近在开发过程中会遇到一些字符串匹配相关的内容，正好去大概学习了下Golang中的regexp模块。因为目前正则模块对我来说更多的就是去匹配并处理字符串的，因此目前主要关注几个返回为string类型的方法。">
 
 
 
@@ -136,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Etcd/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/24/Golang正则模块使用/"/>
 
 
 
 
 
-  <title>标签: Etcd | BG运维说</title>
+  <title>Golang正则模块使用 | BG运维说</title>
   
 
 
@@ -161,7 +163,7 @@
     
   
 
-  <div class="container sidebar-position-right ">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
     <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
 
@@ -310,54 +312,185 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Etcd<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/24/Golang正则模块使用/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BG运维说">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2017/08/26/Dockerfile-etcd/" itemprop="url">
-              
-                <span itemprop="name">Dockerfile-etcd</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Golang正则模块使用</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-26T17:56:15+08:00"
-              content="2017-08-26" >
-          08-26
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-24T16:39:14+08:00">
+                2017-12-24
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Golang/" itemprop="url" rel="index">
+                    <span itemprop="name">Golang</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在开发过程中会遇到一些字符串匹配相关的内容，正好去大概学习了下Golang中的<code>regexp</code>模块。因为目前正则模块对我来说更多的就是去匹配并处理字符串的，因此目前主要关注几个返回为<code>string</code>类型的方法。<br><a id="more"></a></p>
+<p><strong><code>regexp</code>模块的结构体和方法定义</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">//正则结构体</div><div class="line">type Regexp struct &#123;</div><div class="line">        // contains filtered or unexported fields</div><div class="line">&#125;</div><div class="line"></div><div class="line">//初始化结构体对象的方法</div><div class="line">func Compile(expr string) (*Regexp, error)</div><div class="line">func CompilePOSIX(expr string) (*Regexp, error)</div><div class="line">func MustCompile(str string) *Regexp</div><div class="line">func MustCompilePOSIX(str string) *Regexp</div><div class="line"></div><div class="line"></div><div class="line">//结构体方法.常用的几个</div><div class="line">//在字符串s中查找完全匹配正则表达式re的字符串.如果匹配到就停止不进行全部匹配，如果匹配不到就输出空字符串</div><div class="line">func (re *Regexp) FindString(s string) string</div><div class="line"></div><div class="line">//在字符串s中匹配re表达式，n表示匹配的次数，-1表示匹配整个字符串。返回字符串切片</div><div class="line">func (re *Regexp) FindAllString(s string, n int) []string</div><div class="line"></div><div class="line">//在src中匹配re，并替换为repl，该种方式中repl中的$符号会展开实际的变量，通常用在回溯查找中</div><div class="line">func (re *Regexp) ReplaceAllString(src, repl string) string</div><div class="line"></div><div class="line">//在src中匹配re，并替换为repl,该方法会按照repl中的字面意思进行替换，不支持高级变量匹配，比如回溯等等</div><div class="line">func (re *Regexp) ReplaceAllLiteralString(src, repl string) string</div><div class="line"> </div><div class="line"> </div><div class="line">//在字符串中是否匹配到re定义的字符串，匹配返回true</div><div class="line">func (re *Regexp) MatchString(s string) bool</div></pre></td></tr></table></figure></p>
+<p><strong>简单示例</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">$ cat regexp-test.go</div><div class="line">/**</div><div class="line"> * @File Name: test.go</div><div class="line"> * @Author:</div><div class="line"> * @Email:</div><div class="line"> * @Create Date: 2017-12-24 15:12:31</div><div class="line"> * @Last Modified: 2017-12-24 16:12:12</div><div class="line"> * @Description:</div><div class="line"> */</div><div class="line">package main</div><div class="line"></div><div class="line">import (</div><div class="line">	&quot;fmt&quot;</div><div class="line">	&quot;regexp&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">  testString := &quot;k8s-test-pod-12343k811sadsxsakxz-test-k8s-container.k8s-@xxbandy.github.io&quot;</div><div class="line">	re := regexp.MustCompile(&quot;k8s?&quot;)</div><div class="line">  fmt.Println(&quot;src string:&quot;,testString)</div><div class="line">  fmt.Println(&quot;regular expression:&quot;,re)</div><div class="line"></div><div class="line">  fmt.Println(&quot;FindAllString matching all:&quot;,re.FindAllString(testString,-1))</div><div class="line">  fmt.Println(&quot;FindAllString matching twice:&quot;,re.FindAllString(testString,2))</div><div class="line">  fmt.Println(&quot;FindString:&quot;,re.FindString(testString))</div><div class="line">  fmt.Println(&quot;ReplaceAllString:&quot;,re.ReplaceAllString(testString,&quot;biaoge&quot;))</div><div class="line">  fmt.Println(&quot;ReplaceAllLiteralString:&quot;,re.ReplaceAllLiteralString(testString,&quot;BIAOGE&quot;))</div><div class="line">  fmt.Println(&quot;Match String:&quot;,re.MatchString(testString))</div><div class="line">&#125;</div><div class="line"></div><div class="line">$ go run regexp-test.go</div><div class="line">src string: k8s-test-pod-12343k811sadsxsakxz-test-k8s-container.k8s-@xxbandy.github.io</div><div class="line">regular expression: k8s?</div><div class="line">FindAllString matching all: [k8s k8 k8s k8s]</div><div class="line">FindAllString matching twice: [k8s k8]</div><div class="line">FindString: k8s</div><div class="line">ReplaceAllString: biaoge-test-pod-12343biaoge11sadsxsakxz-test-biaoge-container.biaoge-@xxbandy.github.io</div><div class="line">ReplaceAllLiteralString: BIAOGE-test-pod-12343BIAOGE11sadsxsakxz-test-BIAOGE-container.BIAOGE-@xxbandy.github.io</div><div class="line">Match String: true</div></pre></td></tr></table></figure></p>
+<p>不论是哪种语言的正则模块，个人认为语法都不是最重要的，最重要我认为还是正则表达式本身，如果对正则表达式本身认识比较深的话，不论用哪种语言工具都可以很灵活的处理各种业务场景。这里附上一篇当年写的正则表达式相关的<a href="https://my.oschina.net/xxbAndy/blog/370806" target="_blank" rel="external">文章</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
 
       
     </div>
 
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Golang/" rel="tag"><i class="fa fa-tag"></i> Golang</a>
+          
+            <a href="/tags/regexp/" rel="tag"><i class="fa fa-tag"></i> regexp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/17/Golang读写文件操作/" rel="next" title="Golang读写文件操作">
+                <i class="fa fa-chevron-left"></i> Golang读写文件操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -365,6 +498,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -655,10 +792,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 

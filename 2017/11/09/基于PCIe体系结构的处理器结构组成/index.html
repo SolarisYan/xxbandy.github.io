@@ -107,7 +107,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/%E5%9F%BA%E4%BA%8EPCIe%E7%9A%84%E9%80%9A%E7%94%A8%E5%A4%84%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84.jpg">
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png">
-<meta property="og:updated_time" content="2017-11-09T14:15:42.000Z">
+<meta property="og:updated_time" content="2017-12-20T08:30:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于PCIe体系结构的处理器结构组成">
 <meta name="twitter:description" content="PCIe体系结构的组成部件PCIe总线作为处理器系统的局部总线，其作用与PCI总线类似，主要目的是为了连接处理器系统中的外部设备，当然PCIe总线也可以连接其他处理器系统。在大多数处理器系统中，都使用了RC、Switch和PCIe-to-PCI桥这些基本模块连接PCIe和PCI设备。在PCIe总线中，基于PCIe总线的设备，也被称为EP(Endpoint)。">
@@ -427,9 +427,15 @@
 <p>当前4颗GPU环境的架构：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$  nvidia-smi topo -m</div><div class="line">	GPU0	GPU1	GPU2	GPU3	CPU Affinity</div><div class="line">GPU0	 X 	PIX	PIX	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU1	PIX	 X 	PIX	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU2	PIX	PIX	 X 	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU3	PIX	PIX	PIX	 X 	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">Legend:</div><div class="line">  X   = Self</div><div class="line">  SOC  = Connection traversing PCIe as well as the SMP link between CPU sockets(e.g. QPI)</div><div class="line">  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)</div><div class="line">  PXB  = Connection traversing multiple PCIe switches (without traversing the PCIe Host Bridge)</div><div class="line">  PIX  = Connection traversing a single PCIe switch</div><div class="line">  NV#  = Connection traversing a bonded set of # NVLinks</div></pre></td></tr></table></figure>
 <p><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi topo --matrix</div><div class="line"></div><div class="line">        GPU0    GPU1    GPU2    GPU3    mlx4_0  CPU Affinity</div><div class="line">GPU0     X      PIX     PHB     PHB     PHB     0-11</div><div class="line">GPU1    PIX      X      PHB     PHB     PHB     0-11</div><div class="line">GPU2    PHB     PHB      X      PIX     PHB     0-11</div><div class="line">GPU3    PHB     PHB     PIX      X      PHB     0-11</div><div class="line">mlx4_0  PHB     PHB     PHB     PHB      X </div><div class="line"></div><div class="line">Legend:</div><div class="line"></div><div class="line">  X   = Self</div><div class="line">  SOC = Path traverses a socket-level link (e.g. QPI)(CPU插槽之间直连)</div><div class="line">  PHB = Path traverses a PCIe host bridge(跨PCI总线到另外一颗CPU核心)</div><div class="line">  PXB = Path traverses multiple PCIe internal switches (多个Switch上的EP)</div><div class="line">  PIX = Path traverses a PCIe internal switch(同一个Switch上的EP)</div></pre></td></tr></table></figure>
-<p>上面的GPU拓扑可以看出来GPU0和GPU1以及GPU2和GPU3分别处于一个<code>switch</code>上，GPU0和GPU1(GPU2和GPU3)可以通过<code>switch</code>相互通信，而GPU0和GPU2(GPU3)通信均需要经过一个<code>PCIe Host Bridge</code></p>
-<p>个人理解：SOC相当于是PCI总线直连的，PHB相当于是通过PCIe桥转换的PCI总线去连接的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi topo --matrix</div><div class="line"></div><div class="line">        GPU0    GPU1    GPU2    GPU3    mlx4_0  CPU Affinity</div><div class="line">GPU0     X      PIX     PHB     PHB     PHB     0-11</div><div class="line">GPU1    PIX      X      PHB     PHB     PHB     0-11</div><div class="line">GPU2    PHB     PHB      X      PIX     PHB     0-11</div><div class="line">GPU3    PHB     PHB     PIX      X      PHB     0-11</div><div class="line">mlx4_0  PHB     PHB     PHB     PHB      X </div><div class="line"></div><div class="line">Legend:</div><div class="line"></div><div class="line">  X   = Self</div><div class="line">  SOC = Path traverses a socket-level link (e.g. QPI)(CPU插槽之间直连,跨物理CPU)</div><div class="line">  PHB = Path traverses a PCIe host bridge(跨PCIe host bridge设备)</div><div class="line">  PXB = Path traverses multiple PCIe internal switches (通过内部多个Switch上进行互联的EP)</div><div class="line">  PIX = Path traverses a PCIe internal switch(同一个Switch上的EP)</div></pre></td></tr></table></figure>
+<p>上面的GPU拓扑可以看出来GPU0和GPU1以及GPU2和GPU3分别处于一个<code>switch</code>和<code>PCIe host bridge</code>上，也即GPU0和GPU1(GPU2和GPU3)可以通过直连的<code>switch</code>相互通信，而GPU0和GPU2(GPU3)通信均需要经过一个<code>PCIe Host Bridge</code></p>
+<p>个人理解:</p>
+<ul>
+<li>SOC相当于是通过物理CPU之间的SMP Link通信的(该种方式跨了CPU核心);</li>
+<li>PHB相当于是通过PCIe host bridge 的PCIe设备下的EP和Switch下的EP进行互联的结构</li>
+<li>PXB相当于是同一颗物理CPU下的多个Switch下的EP互联</li>
+<li>PIX相当于是一个Switch内部的多个EP互相连接(效率最高)</li>
+</ul>
 <p><strong>参考文章</strong></p>
 <p><a href="https://www.mianbaoban.cn/blog/post/193694" target="_blank" rel="external">PCIe体系结构组成部件</a><br><a href="http://www.ssdfans.com/%E8%80%81%E7%94%B7%E5%AD%A9%E8%AF%BBpcie%E4%B9%8B%E4%BA%8C%EF%BC%9Apcie%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84/" target="_blank" rel="external">PCIe拓扑结构</a></p>
 
@@ -568,7 +574,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -590,7 +596,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -746,7 +752,7 @@
 
 <div class="theme-info">
 <div class="powered-by"></div>
-<span class="post-count">博客全站共42.6k字</span>
+<span class="post-count">博客全站共43.4k字</span>
 </div>
 
         

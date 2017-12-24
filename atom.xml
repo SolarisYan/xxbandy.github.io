@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-17T15:33:29.000Z</updated>
+  <updated>2017-12-24T08:47:58.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Golang正则模块使用</title>
+    <link href="http://yoursite.com/2017/12/24/Golang%E6%AD%A3%E5%88%99%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8/"/>
+    <id>http://yoursite.com/2017/12/24/Golang正则模块使用/</id>
+    <published>2017-12-24T08:39:14.000Z</published>
+    <updated>2017-12-24T08:47:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在开发过程中会遇到一些字符串匹配相关的内容，正好去大概学习了下Golang中的<code>regexp</code>模块。因为目前正则模块对我来说更多的就是去匹配并处理字符串的，因此目前主要关注几个返回为<code>string</code>类型的方法。<br><a id="more"></a></p>
+<p><strong><code>regexp</code>模块的结构体和方法定义</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">//正则结构体</div><div class="line">type Regexp struct &#123;</div><div class="line">        // contains filtered or unexported fields</div><div class="line">&#125;</div><div class="line"></div><div class="line">//初始化结构体对象的方法</div><div class="line">func Compile(expr string) (*Regexp, error)</div><div class="line">func CompilePOSIX(expr string) (*Regexp, error)</div><div class="line">func MustCompile(str string) *Regexp</div><div class="line">func MustCompilePOSIX(str string) *Regexp</div><div class="line"></div><div class="line"></div><div class="line">//结构体方法.常用的几个</div><div class="line">//在字符串s中查找完全匹配正则表达式re的字符串.如果匹配到就停止不进行全部匹配，如果匹配不到就输出空字符串</div><div class="line">func (re *Regexp) FindString(s string) string</div><div class="line"></div><div class="line">//在字符串s中匹配re表达式，n表示匹配的次数，-1表示匹配整个字符串。返回字符串切片</div><div class="line">func (re *Regexp) FindAllString(s string, n int) []string</div><div class="line"></div><div class="line">//在src中匹配re，并替换为repl，该种方式中repl中的$符号会展开实际的变量，通常用在回溯查找中</div><div class="line">func (re *Regexp) ReplaceAllString(src, repl string) string</div><div class="line"></div><div class="line">//在src中匹配re，并替换为repl,该方法会按照repl中的字面意思进行替换，不支持高级变量匹配，比如回溯等等</div><div class="line">func (re *Regexp) ReplaceAllLiteralString(src, repl string) string</div><div class="line"> </div><div class="line"> </div><div class="line">//在字符串中是否匹配到re定义的字符串，匹配返回true</div><div class="line">func (re *Regexp) MatchString(s string) bool</div></pre></td></tr></table></figure></p>
+<p><strong>简单示例</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">$ cat regexp-test.go</div><div class="line">/**</div><div class="line"> * @File Name: test.go</div><div class="line"> * @Author:</div><div class="line"> * @Email:</div><div class="line"> * @Create Date: 2017-12-24 15:12:31</div><div class="line"> * @Last Modified: 2017-12-24 16:12:12</div><div class="line"> * @Description:</div><div class="line"> */</div><div class="line">package main</div><div class="line"></div><div class="line">import (</div><div class="line">	&quot;fmt&quot;</div><div class="line">	&quot;regexp&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">  testString := &quot;k8s-test-pod-12343k811sadsxsakxz-test-k8s-container.k8s-@xxbandy.github.io&quot;</div><div class="line">	re := regexp.MustCompile(&quot;k8s?&quot;)</div><div class="line">  fmt.Println(&quot;src string:&quot;,testString)</div><div class="line">  fmt.Println(&quot;regular expression:&quot;,re)</div><div class="line"></div><div class="line">  fmt.Println(&quot;FindAllString matching all:&quot;,re.FindAllString(testString,-1))</div><div class="line">  fmt.Println(&quot;FindAllString matching twice:&quot;,re.FindAllString(testString,2))</div><div class="line">  fmt.Println(&quot;FindString:&quot;,re.FindString(testString))</div><div class="line">  fmt.Println(&quot;ReplaceAllString:&quot;,re.ReplaceAllString(testString,&quot;biaoge&quot;))</div><div class="line">  fmt.Println(&quot;ReplaceAllLiteralString:&quot;,re.ReplaceAllLiteralString(testString,&quot;BIAOGE&quot;))</div><div class="line">  fmt.Println(&quot;Match String:&quot;,re.MatchString(testString))</div><div class="line">&#125;</div><div class="line"></div><div class="line">$ go run regexp-test.go</div><div class="line">src string: k8s-test-pod-12343k811sadsxsakxz-test-k8s-container.k8s-@xxbandy.github.io</div><div class="line">regular expression: k8s?</div><div class="line">FindAllString matching all: [k8s k8 k8s k8s]</div><div class="line">FindAllString matching twice: [k8s k8]</div><div class="line">FindString: k8s</div><div class="line">ReplaceAllString: biaoge-test-pod-12343biaoge11sadsxsakxz-test-biaoge-container.biaoge-@xxbandy.github.io</div><div class="line">ReplaceAllLiteralString: BIAOGE-test-pod-12343BIAOGE11sadsxsakxz-test-BIAOGE-container.BIAOGE-@xxbandy.github.io</div><div class="line">Match String: true</div></pre></td></tr></table></figure></p>
+<p>不论是哪种语言的正则模块，个人认为语法都不是最重要的，最重要我认为还是正则表达式本身，如果对正则表达式本身认识比较深的话，不论用哪种语言工具都可以很灵活的处理各种业务场景。这里附上一篇当年写的正则表达式相关的<a href="https://my.oschina.net/xxbAndy/blog/370806" target="_blank" rel="external">文章</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在开发过程中会遇到一些字符串匹配相关的内容，正好去大概学习了下Golang中的&lt;code&gt;regexp&lt;/code&gt;模块。因为目前正则模块对我来说更多的就是去匹配并处理字符串的，因此目前主要关注几个返回为&lt;code&gt;string&lt;/code&gt;类型的方法。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Golang" scheme="http://yoursite.com/categories/Golang/"/>
+    
+    
+      <category term="Golang" scheme="http://yoursite.com/tags/Golang/"/>
+    
+      <category term="regexp" scheme="http://yoursite.com/tags/regexp/"/>
+    
+  </entry>
   
   <entry>
     <title>Golang读写文件操作</title>
@@ -127,12 +155,13 @@
     <link href="http://yoursite.com/2017/11/28/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7%E6%8A%80%E5%B7%A7/"/>
     <id>http://yoursite.com/2017/11/28/效率工具技巧/</id>
     <published>2017-11-28T06:17:54.000Z</published>
-    <updated>2017-11-28T06:24:57.000Z</updated>
+    <updated>2017-12-24T09:13:11.000Z</updated>
     
     <content type="html"><![CDATA[<a id="more"></a>
 <h3 id="Yaml语法检测"><a href="#Yaml语法检测" class="headerlink" title="Yaml语法检测"></a>Yaml语法检测</h3><p><a href="http://www.yamllint.com/" target="_blank" rel="external">yaml语法在线检测</a></p>
 <h3 id="Json字符串解析"><a href="#Json字符串解析" class="headerlink" title="Json字符串解析"></a>Json字符串解析</h3><p><a href="http://www.kjson.com/" target="_blank" rel="external">json格式化在线校验工具</a></p>
 <h3 id="Restful-API-文档-设计"><a href="#Restful-API-文档-设计" class="headerlink" title="Restful API 文档+设计"></a>Restful API 文档+设计</h3><p><a href="https://app.apiary.io" target="_blank" rel="external">在线api设计</a></p>
+<h3 id="URL转PDF"><a href="#URL转PDF" class="headerlink" title="URL转PDF"></a>URL转PDF</h3><p><a href="http://pdfmyurl.com/" target="_blank" rel="external">在线URL转换PDF工具</a></p>
 ]]></content>
     
     <summary type="html">
@@ -324,9 +353,9 @@
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
     
-      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
-    
       <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
     
       <category term="最佳实践" scheme="http://yoursite.com/tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/"/>
     
@@ -412,7 +441,7 @@
     <link href="http://yoursite.com/2017/11/09/%E5%9F%BA%E4%BA%8EPCIe%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%9A%84%E5%A4%84%E7%90%86%E5%99%A8%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90/"/>
     <id>http://yoursite.com/2017/11/09/基于PCIe体系结构的处理器结构组成/</id>
     <published>2017-11-09T13:27:07.000Z</published>
-    <updated>2017-11-09T14:15:42.000Z</updated>
+    <updated>2017-12-20T08:30:25.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="PCIe体系结构的组成部件"><a href="#PCIe体系结构的组成部件" class="headerlink" title="PCIe体系结构的组成部件"></a>PCIe体系结构的组成部件</h2><p>PCIe总线作为处理器系统的局部总线，其作用与PCI总线类似，主要目的是为了连接处理器系统中的外部设备，当然PCIe总线也可以连接其他处理器系统。<br>在大多数处理器系统中，都使用了RC、Switch和PCIe-to-PCI桥这些基本模块连接PCIe和PCI设备。在PCIe总线中，基于PCIe总线的设备，也被称为EP(Endpoint)。<br><a id="more"></a></p>
 <h2 id="基于PCIe总线的通用处理器结构"><a href="#基于PCIe总线的通用处理器结构" class="headerlink" title="基于PCIe总线的通用处理器结构"></a>基于PCIe总线的通用处理器结构</h2><p>PCIe总线控制器即为RC(Root Complex).如果该处理器需要连接更多的PCIe设备时，需要使用Switch扩展PCIe链路。</p>
@@ -423,9 +452,15 @@
 <p>当前4颗GPU环境的架构：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$  nvidia-smi topo -m</div><div class="line">	GPU0	GPU1	GPU2	GPU3	CPU Affinity</div><div class="line">GPU0	 X 	PIX	PIX	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU1	PIX	 X 	PIX	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU2	PIX	PIX	 X 	PIX	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">GPU3	PIX	PIX	PIX	 X 	0-0,2-2,4-4,6-6,8-8,10-10,12-12,14-14,16-16,18-18,20-20,22-22</div><div class="line">Legend:</div><div class="line">  X   = Self</div><div class="line">  SOC  = Connection traversing PCIe as well as the SMP link between CPU sockets(e.g. QPI)</div><div class="line">  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)</div><div class="line">  PXB  = Connection traversing multiple PCIe switches (without traversing the PCIe Host Bridge)</div><div class="line">  PIX  = Connection traversing a single PCIe switch</div><div class="line">  NV#  = Connection traversing a bonded set of # NVLinks</div></pre></td></tr></table></figure>
 <p><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi topo --matrix</div><div class="line"></div><div class="line">        GPU0    GPU1    GPU2    GPU3    mlx4_0  CPU Affinity</div><div class="line">GPU0     X      PIX     PHB     PHB     PHB     0-11</div><div class="line">GPU1    PIX      X      PHB     PHB     PHB     0-11</div><div class="line">GPU2    PHB     PHB      X      PIX     PHB     0-11</div><div class="line">GPU3    PHB     PHB     PIX      X      PHB     0-11</div><div class="line">mlx4_0  PHB     PHB     PHB     PHB      X </div><div class="line"></div><div class="line">Legend:</div><div class="line"></div><div class="line">  X   = Self</div><div class="line">  SOC = Path traverses a socket-level link (e.g. QPI)(CPU插槽之间直连)</div><div class="line">  PHB = Path traverses a PCIe host bridge(跨PCI总线到另外一颗CPU核心)</div><div class="line">  PXB = Path traverses multiple PCIe internal switches (多个Switch上的EP)</div><div class="line">  PIX = Path traverses a PCIe internal switch(同一个Switch上的EP)</div></pre></td></tr></table></figure>
-<p>上面的GPU拓扑可以看出来GPU0和GPU1以及GPU2和GPU3分别处于一个<code>switch</code>上，GPU0和GPU1(GPU2和GPU3)可以通过<code>switch</code>相互通信，而GPU0和GPU2(GPU3)通信均需要经过一个<code>PCIe Host Bridge</code></p>
-<p>个人理解：SOC相当于是PCI总线直连的，PHB相当于是通过PCIe桥转换的PCI总线去连接的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ nvidia-smi topo --matrix</div><div class="line"></div><div class="line">        GPU0    GPU1    GPU2    GPU3    mlx4_0  CPU Affinity</div><div class="line">GPU0     X      PIX     PHB     PHB     PHB     0-11</div><div class="line">GPU1    PIX      X      PHB     PHB     PHB     0-11</div><div class="line">GPU2    PHB     PHB      X      PIX     PHB     0-11</div><div class="line">GPU3    PHB     PHB     PIX      X      PHB     0-11</div><div class="line">mlx4_0  PHB     PHB     PHB     PHB      X </div><div class="line"></div><div class="line">Legend:</div><div class="line"></div><div class="line">  X   = Self</div><div class="line">  SOC = Path traverses a socket-level link (e.g. QPI)(CPU插槽之间直连,跨物理CPU)</div><div class="line">  PHB = Path traverses a PCIe host bridge(跨PCIe host bridge设备)</div><div class="line">  PXB = Path traverses multiple PCIe internal switches (通过内部多个Switch上进行互联的EP)</div><div class="line">  PIX = Path traverses a PCIe internal switch(同一个Switch上的EP)</div></pre></td></tr></table></figure>
+<p>上面的GPU拓扑可以看出来GPU0和GPU1以及GPU2和GPU3分别处于一个<code>switch</code>和<code>PCIe host bridge</code>上，也即GPU0和GPU1(GPU2和GPU3)可以通过直连的<code>switch</code>相互通信，而GPU0和GPU2(GPU3)通信均需要经过一个<code>PCIe Host Bridge</code></p>
+<p>个人理解:</p>
+<ul>
+<li>SOC相当于是通过物理CPU之间的SMP Link通信的(该种方式跨了CPU核心);</li>
+<li>PHB相当于是通过PCIe host bridge 的PCIe设备下的EP和Switch下的EP进行互联的结构</li>
+<li>PXB相当于是同一颗物理CPU下的多个Switch下的EP互联</li>
+<li>PIX相当于是一个Switch内部的多个EP互相连接(效率最高)</li>
+</ul>
 <p><strong>参考文章</strong></p>
 <p><a href="https://www.mianbaoban.cn/blog/post/193694" target="_blank" rel="external">PCIe体系结构组成部件</a><br><a href="http://www.ssdfans.com/%E8%80%81%E7%94%B7%E5%AD%A9%E8%AF%BBpcie%E4%B9%8B%E4%BA%8C%EF%BC%9Apcie%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84/" target="_blank" rel="external">PCIe拓扑结构</a></p>
 ]]></content>
@@ -891,7 +926,7 @@
     <link href="http://yoursite.com/2017/10/26/GPU%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%8E%A9%E8%BD%ACDocker-%E4%BA%8C/"/>
     <id>http://yoursite.com/2017/10/26/GPU环境下玩转Docker-二/</id>
     <published>2017-10-26T02:07:46.000Z</published>
-    <updated>2017-10-30T14:28:38.000Z</updated>
+    <updated>2017-12-20T07:00:50.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>前言:<br>在一节中<a href="https://xxbandy.github.io/2017/10/26/GPU%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%8E%A9%E8%BD%ACDocker-%E4%B8%80/" target="_blank" rel="external"></a>,我们已经在GPU物理机上准备好了GPU环境，本篇文章介绍如何使用Docker来管理GPU容器。</p>
@@ -927,6 +962,28 @@
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># curl -s http://localhost:3476/docker/cli</div><div class="line">--volume-driver=nvidia-docker --volume=nvidia_driver_375.39:/usr/local/nvidia:ro --device=/dev/nvidiactl --device=/dev/nvidia-uvm --device=/dev/nvidia-uvm-tools --device=/dev/nvidia0 --device=/dev/nvidia1 --device=/dev/nvidia2 --device=/dev/nvidia3</div></pre></td></tr></table></figure>
 <p>也就是说<code>nvidia-docker</code>在创建容器的时候，默认是加入了上述的参数的。也就是docker原生调用过程中使用的<code>-v</code>和<code>--device</code>.其实可以查看<code>nvidia-docker</code>工具生成的容器的相关配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"># docker inspect evil_ride</div><div class="line">&quot;HostConfig&quot;: &#123;</div><div class="line">            &quot;Binds&quot;: [</div><div class="line">                &quot;nvidia_driver_375.39:/usr/local/nvidia:ro&quot;</div><div class="line">            ],</div><div class="line">            ........</div><div class="line">&#125;</div><div class="line"></div><div class="line">&quot;Devices&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidiactl&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidiactl&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia-uvm&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia-uvm&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia-uvm-tools&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia-uvm-tools&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia0&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia0&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia1&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia1&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia2&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia2&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;,</div><div class="line">                &#123;</div><div class="line">                    &quot;PathOnHost&quot;: &quot;/dev/nvidia3&quot;,</div><div class="line">                    &quot;PathInContainer&quot;: &quot;/dev/nvidia3&quot;,</div><div class="line">                    &quot;CgroupPermissions&quot;: &quot;rwm&quot;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line"></div><div class="line"></div><div class="line">        &quot;Mounts&quot;: [</div><div class="line">            &#123;</div><div class="line">                &quot;Name&quot;: &quot;nvidia_driver_375.39&quot;,</div><div class="line">                &quot;Source&quot;: &quot;/var/lib/nvidia-docker/volumes/nvidia_driver/375.39&quot;,</div><div class="line">                &quot;Destination&quot;: &quot;/usr/local/nvidia&quot;,</div><div class="line">                &quot;Driver&quot;: &quot;nvidia-docker&quot;,</div><div class="line">                &quot;Mode&quot;: &quot;ro&quot;,</div><div class="line">                &quot;RW&quot;: false,</div><div class="line">                &quot;Propagation&quot;: &quot;rprivate&quot;</div><div class="line">            &#125;</div><div class="line">        ],</div><div class="line"></div><div class="line"></div><div class="line">        &quot;Env&quot;: [</div><div class="line">                &quot;PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;,</div><div class="line">                &quot;CUDA_VERSION=8.0.61&quot;,</div><div class="line">                &quot;NVIDIA_CUDA_VERSION=8.0.61&quot;,</div><div class="line">                &quot;CUDA_PKG_VERSION=8-0=8.0.61-1&quot;,</div><div class="line">                &quot;LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64&quot;,</div><div class="line">                &quot;NVIDIA_VISIBLE_DEVICES=all&quot;,</div><div class="line">                &quot;NVIDIA_DRIVER_CAPABILITIES=compute,utility&quot;,</div><div class="line">                &quot;LIBRARY_PATH=/usr/local/cuda/lib64/stubs:&quot;,</div><div class="line">                &quot;CUDNN_VERSION=6.0.21&quot;</div><div class="line">            ],</div><div class="line"></div><div class="line"></div><div class="line">        &quot;Labels&quot;: &#123;</div><div class="line">                &quot;com.nvidia.build.id&quot;: &quot;29071360&quot;,</div><div class="line">                &quot;com.nvidia.build.ref&quot;: &quot;836d5387f8888c3924aff7a011f9b2cd9956d3db&quot;,</div><div class="line">                &quot;com.nvidia.cuda.version&quot;: &quot;8.0.61&quot;,</div><div class="line">                &quot;com.nvidia.cudnn.version&quot;: &quot;6.0.21&quot;,</div><div class="line">                &quot;com.nvidia.volumes.needed&quot;: &quot;nvidia_driver&quot;,</div><div class="line">                &quot;maintainer&quot;: &quot;NVIDIA CORPORATION \u003ccudatools@nvidia.com\u003e&quot;</div><div class="line">            &#125;</div></pre></td></tr></table></figure></p>
+<p><code>注意:nvidia-driver的版本以及GPU型号以及nvidia-docker的版本三者是有强关联关系的</code></p>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>nvidia-driver</th>
+<th>nvidia-docker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tesla M40</td>
+<td>NVIDIA-Linux-x86_64-375.39.run</td>
+<td>nvidia-docker-1.0.1-1.x86_64</td>
+</tr>
+<tr>
+<td>P40</td>
+<td>NVIDIA-Linux-x86_64-384.81.run</td>
+<td>XX</td>
+</tr>
+</tbody>
+</table>
 ]]></content>
     
     <summary type="html">
@@ -1289,90 +1346,6 @@
       <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
     
       <category term="Etcd" scheme="http://yoursite.com/tags/Etcd/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ansible-Etcd-cluster</title>
-    <link href="http://yoursite.com/2017/08/26/Ansible-Etcd-cluster/"/>
-    <id>http://yoursite.com/2017/08/26/Ansible-Etcd-cluster/</id>
-    <published>2017-08-26T07:51:12.000Z</published>
-    <updated>2017-08-29T15:45:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>本篇文章记录一下使用<code>ansible-playbooks</code>进行快速构建一个可用的etcd集群。在阅读并实践本文章之前，请确保您有一个可用的<code>ansible</code>环境。</p>
-</blockquote>
-<a id="more"></a>
-<h3 id="一、集群规划"><a href="#一、集群规划" class="headerlink" title="一、集群规划"></a>一、集群规划</h3><p><code>注意:本文档基于centos7+的操作系统上进行构建，在rhel7+系列也可用使用，其他发行版本可酌情参考</code></p>
-<table>
-<thead>
-<tr>
-<th>etcd_name</th>
-<th>节点</th>
-<th>端口</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>etcd1</td>
-<td>10.0.0.77</td>
-<td>2379/2380</td>
-</tr>
-<tr>
-<td>etcd2</td>
-<td>10.0.0.78</td>
-<td>2379/2380</td>
-</tr>
-<tr>
-<td>etcd3</td>
-<td>10.0.0.79</td>
-<td>2379/2380</td>
-</tr>
-</tbody>
-</table>
-<p>以上节点详情信息用来规划集群规模以及名称角色，配置文件中<code>ETCD_INITIAL_CLUSTER</code>选项中的<code>etcd_name</code>和地址需要和主机规划中一致</p>
-<h3 id="二、etcd集群部署"><a href="#二、etcd集群部署" class="headerlink" title="二、etcd集群部署"></a>二、etcd集群部署</h3><blockquote>
-<p>环境前提：已经配置过ansible相关的环境，并且可以免密登录</p>
-</blockquote>
-<p><strong>1.etcd集群相关的配置文件</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div></pre></td><td class="code"><pre><div class="line">$ tree . </div><div class="line">.</div><div class="line">├──etcd-install.yml   #ansible-playbook 脚本</div><div class="line">├──etcd.conf.j2       #etcd主配置文件</div><div class="line">├──etcd.service       #systemd服务启动文件</div><div class="line">├──host               #etcd集群主机列表</div><div class="line"></div><div class="line"># ansible-playbooks 脚本</div><div class="line">$ cat etcd-install.yml</div><div class="line">---</div><div class="line">- hosts: &quot;&#123;&#123; host &#125;&#125;&quot;</div><div class="line">  remote_user: root</div><div class="line">  vars:</div><div class="line">    hostip: &quot;&#123;&#123; ansible_all_ipv4_addresses[0] &#125;&#125;&quot;</div><div class="line">    ipv6: &quot;&#123;&#123; ansible_all_ipv6_addresses[0].split(&apos;:&apos;)[-1] &#125;&#125;&quot;</div><div class="line">    packagedir: /tmp/</div><div class="line">    serverdir: /export/servers/</div><div class="line">    download: https://github.com/coreos/etcd/releases/</div><div class="line">    etcd_version: etcd-v3.1.5-linux-amd64</div><div class="line">  tasks:</div><div class="line">  - name: &quot;test ping&quot;</div><div class="line">    ping:</div><div class="line">  - name: &quot;init env&quot;</div><div class="line">    shell: &quot;mkdir -p /export/servers /etc/etcd/ /export/Data/etcd/ &quot;</div><div class="line"></div><div class="line"></div><div class="line">  - name: &quot;wget &#123;&#123; etcd_version &#125;&#125;&quot;</div><div class="line">    get_url:</div><div class="line">     url: &quot;&#123;&#123; item.url &#125;&#125;&quot;</div><div class="line">     dest: &quot;&#123;&#123; item.dest &#125;&#125;&quot;</div><div class="line">     mode: 0644</div><div class="line">     owner: root</div><div class="line">     group: root</div><div class="line">    with_items:</div><div class="line">        - &#123; url: &quot;&#123;&#123; download &#125;&#125;&#123;&#123; etcd_version &#125;&#125;.tar.gz&quot; , dest: &quot;&#123;&#123; packagedir &#125;&#125;&quot; &#125;</div><div class="line"></div><div class="line">  - name: &quot;untar the &#123;&#123; etcd_version &#125;&#125;&quot;</div><div class="line">    unarchive:</div><div class="line">     src: &quot;&#123;&#123; item.src &#125;&#125;&quot;</div><div class="line">     dest: &quot;&#123;&#123; item.dest &#125;&#125;&quot;</div><div class="line">     owner: root</div><div class="line">     group: root</div><div class="line">     remote_src: yes</div><div class="line">    with_items:</div><div class="line">      - &#123; src: &quot;&#123;&#123; packagedir &#125;&#125;&#123;&#123; etcd_version &#125;&#125;.tar.gz&quot;, dest: &quot;&#123;&#123; serverdir &#125;&#125;&quot; &#125;</div><div class="line"></div><div class="line">  - name: &quot;copy the etcd execfile&quot;</div><div class="line">    shell: &quot;cp -rp &#123;&#123; serverdir &#125;&#125;&#123;&#123; etcd_version &#125;&#125;/etcd* /usr/bin/&quot;</div><div class="line"></div><div class="line">  - name: &quot;init the es configuration!&quot;</div><div class="line">    template:</div><div class="line">      src: &quot;&#123;&#123; item.src &#125;&#125;&quot;</div><div class="line">      dest: &quot;&#123;&#123; item.dest &#125;&#125;&quot;</div><div class="line">      mode: 0755</div><div class="line">      owner: root</div><div class="line">      group: root</div><div class="line">    with_items:</div><div class="line">      #dest后面的引号与大括号中间一定不能有空格,还有后面引号的空格也要取消掉,不然文件会有空格</div><div class="line">      - &#123; src: &quot;etcd.conf.j2&quot;, dest: &quot;/etc/etcd/etcd.conf&quot; &#125;</div><div class="line">      - &#123; src: &quot;etcd.service&quot;, dest: &quot;/etc/systemd/system/&quot; &#125;</div><div class="line"></div><div class="line"># etcd主配置文件模板，这里采用jinja2模板引擎</div><div class="line">$ cat etcd.conf.j2</div><div class="line"># [member]</div><div class="line">BASE_DIR=&quot;/export&quot;</div><div class="line"># 由于etcd_name变量比较特殊，需要和ETCD_INITIAL_CLUSTER中的值一一对应，暂时写为etcd1,配置下发后需要将该值替换成对应节点的名称</div><div class="line">ETCD_NAME=&quot;etcd1&quot;</div><div class="line">ETCD_DATA_DIR=&quot;/export/Data/etcd&quot;</div><div class="line">ETCD_LISTEN_PEER_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2380&quot;</div><div class="line">ETCD_LISTEN_CLIENT_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2379&quot;</div><div class="line"></div><div class="line">#[cluster]</div><div class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2380&quot;</div><div class="line">ETCD_INITIAL_CLUSTER_TOKEN=&quot;etcd-cluster&quot;</div><div class="line">ETCD_ADVERTISE_CLIENT_URLS=&quot;http://&#123;&#123; hostip &#125;&#125;:2379&quot;</div><div class="line"></div><div class="line">#[initial-cluster]</div><div class="line"># 需要按照etcd集群规划节点来填写</div><div class="line">ETCD_INITIAL_CLUSTER=&quot;etcd1=http://10.0.0.77:2380,etcd2=http://10.0.0.78:2380,etcd3=http://10.0.0.79:2380&quot;</div><div class="line"></div><div class="line"></div><div class="line"># systemd 启动脚本</div><div class="line">$ cat etcd.service</div><div class="line">[Unit]</div><div class="line">Description=Etcd Server</div><div class="line">After=network.target</div><div class="line">After=network-online.target</div><div class="line">Wants=network-online.target</div><div class="line">Documentation=https://github.com/coreos</div><div class="line"></div><div class="line">[Service]</div><div class="line">Type=notify</div><div class="line"># 数据目录，需要提前进行创建</div><div class="line">WorkingDirectory=/export/Data/etcd/</div><div class="line">EnvironmentFile=-/etc/etcd/etcd.conf</div><div class="line">ExecStart=/usr/bin/etcd \</div><div class="line">  --name $&#123;ETCD_NAME&#125; \</div><div class="line">  --initial-advertise-peer-urls $&#123;ETCD_INITIAL_ADVERTISE_PEER_URLS&#125; \</div><div class="line">  --listen-peer-urls $&#123;ETCD_LISTEN_PEER_URLS&#125; \</div><div class="line">  --listen-client-urls $&#123;ETCD_LISTEN_CLIENT_URLS&#125;,http://127.0.0.1:2379 \</div><div class="line">  --advertise-client-urls $&#123;ETCD_ADVERTISE_CLIENT_URLS&#125; \</div><div class="line">  --initial-cluster-token $&#123;ETCD_INITIAL_CLUSTER_TOKEN&#125; \</div><div class="line">  --initial-cluster $&#123;ETCD_INITIAL_CLUSTER&#125; \</div><div class="line">  --initial-cluster-state new \</div><div class="line">  --data-dir=$&#123;ETCD_DATA_DIR&#125;</div><div class="line">Restart=on-failure</div><div class="line">RestartSec=5</div><div class="line">LimitNOFILE=65536</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div><div class="line"></div><div class="line">$ cat hosts</div><div class="line">[etcd]</div><div class="line">10.0.0.77</div><div class="line">10.0.0.78</div><div class="line">10.0.0.79</div></pre></td></tr></table></figure></p>
-<p><strong>2.使用ansible-playbooks进行部署etcd集群</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ansible-playbook -i host -e host=etcd etcd-install.yml</div></pre></td></tr></table></figure>
-<p>等待正确执行完成之后，三个节点的etcd就已经安装好了，由于是集群，所以各个节点上的配置还是有专属的部分，暂时没有想到如何进行一次性安装启动，将安装、修改配置、启动作为三部分操作.</p>
-<p><strong>3.登录每个节点进行修改etcd_name</strong></p>
-<p>修改每个节点上的<code>/etc/etcd/etcd.conf</code>文件:<br><code>注意：需要将各个节点ip和etcd_name对应起来(etcd1-&gt;77 etcd2-&gt;78 etcd-&gt;79)</code></p>
-<p>77节点上的配置如下(其他两个节点修改对应的etcd_name)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ETCD_NAME=&quot;etcd1&quot;</div><div class="line">ETCD_INITIAL_CLUSTER=&quot;etcd1=http://10.0.0.77:2380,etcd2=http://10.0.0.78:2380,etcd3=http://10.0.0.79:2380&quot;</div></pre></td></tr></table></figure>
-<p><strong>4.检测配置文件并进行启动集群</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ansible -i host all -m shell -a &apos;systemctl daemon-reload &amp;&amp; systemctl start etcd &amp;&amp; systemctl enable etcd&apos;</div></pre></td></tr></table></figure>
-<p><code>注意：由于etcd采用集群模式，在启动第一个实例的时候会一直监听其他实例，这个时候需要尽快启动其他实例，以完成集群发现，否则第一个实例会在一定时间内挂掉</code></p>
-<p><strong>5.集群状态监测</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ etcdctl cluster-health</div><div class="line">member 4d946fabd2e1eb9f is healthy: got healthy result from http://10.0.0.79:2379</div><div class="line">member 805150a1f1a44604 is healthy: got healthy result from http://10.0.0.77:2379</div><div class="line">member 81ddc2f4095fe8a1 is healthy: got healthy result from http://10.0.0.78:2379</div><div class="line">cluster is healthy</div><div class="line"></div><div class="line">$ etcdctl member list</div><div class="line">4d946fabd2e1eb9f: name=etcd3 peerURLs=http://10.0.0.79:2380 clientURLs=http://10.0.0.79:2379 isLeader=true</div><div class="line">805150a1f1a44604: name=etcd1 peerURLs=http://10.0.0.77:2380 clientURLs=http://10.0.0.77:2379 isLeader=false</div><div class="line">81ddc2f4095fe8a1: name=etcd2 peerURLs=http://10.0.0.78:2380 clientURLs=http://10.0.0.78:2379 isLeader=false</div></pre></td></tr></table></figure>
-<p>如此，可以发现我们的etcd集群已经迅速运行起来了！</p>
-<h3 id="三、etcd集群的基本使用"><a href="#三、etcd集群的基本使用" class="headerlink" title="三、etcd集群的基本使用"></a>三、etcd集群的基本使用</h3><p><code>注意1:</code>由于是集群模式，所以可用在任何一个节点进行写入操作，用户也可用使用etcd的http接口进行使用<br><code>注意2:</code>etcd v2和v3的API是完全不同的两个存储实现，所以用户在使用的时候需要注意<code>在etcd v2版本中是采用set存数据的，v3版本中采用put方式</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">指定API版本</div><div class="line"># export ETCDCTL_API=3</div><div class="line"># etcdctl  put foo &quot;Hello World!&quot;</div><div class="line"># etcdctl get foo</div><div class="line">以json格式输出</div><div class="line"># etcdctl --write-out=&quot;json&quot; get foo</div></pre></td></tr></table></figure>
-<p><strong>通过前缀获取数据</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">etcdctl --endpoints=$ENDPOINTS put web1 value1</div><div class="line">etcdctl --endpoints=$ENDPOINTS put web2 value2</div><div class="line">etcdctl --endpoints=$ENDPOINTS put web3 value3</div><div class="line"></div><div class="line">etcdctl --endpoints=$ENDPOINTS get web --prefix</div><div class="line">web1</div><div class="line">value1</div><div class="line">web2</div><div class="line">value2</div><div class="line">web3</div><div class="line">value3</div></pre></td></tr></table></figure>
-<p><strong>删除数据</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">etcdctl --endpoints=$ENDPOINTS put key myvalue</div><div class="line">etcdctl --endpoints=$ENDPOINTS del key</div><div class="line"></div><div class="line">etcdctl --endpoints=$ENDPOINTS put k1 value1</div><div class="line">etcdctl --endpoints=$ENDPOINTS put k2 value2</div><div class="line">etcdctl --endpoints=$ENDPOINTS del k --prefix</div></pre></td></tr></table></figure>
-<p><strong>集群状态信息</strong></p>
-<p><code>v3 的API才有这个功能</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">etcdctl --write-out=table  --endpoints=$&#123;HOST_1&#125;:2379,$&#123;HOST_2&#125;:2379,$&#123;HOST_3&#125;:2379 endpoint status</div><div class="line">+-------------------+------------------+---------+---------+-----------+-----------+------------+</div><div class="line">|     ENDPOINT      |        ID        | VERSION | DB SIZE | IS LEADER | RAFT TERM | RAFT INDEX |</div><div class="line">+-------------------+------------------+---------+---------+-----------+-----------+------------+</div><div class="line">| 10.0.0.77:2379 | 805150a1f1a44604 | 3.1.5   | 1.2 MB  | false     |       639 |     188421 |</div><div class="line">| 10.0.0.78:2379 | 81ddc2f4095fe8a1 | 3.1.5   | 1.2 MB  | false     |       639 |     188421 |</div><div class="line">| 10.0.0.79:2379 | 4d946fabd2e1eb9f | 3.1.5   | 1.2 MB  | true      |       639 |     188421 |</div><div class="line">+-------------------+------------------+---------+---------+-----------+-----------+------------+</div></pre></td></tr></table></figure></p>
-<!--more-->
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;本篇文章记录一下使用&lt;code&gt;ansible-playbooks&lt;/code&gt;进行快速构建一个可用的etcd集群。在阅读并实践本文章之前，请确保您有一个可用的&lt;code&gt;ansible&lt;/code&gt;环境。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Ansible" scheme="http://yoursite.com/categories/Ansible/"/>
-    
-    
-      <category term="Ansible" scheme="http://yoursite.com/tags/Ansible/"/>
-    
-      <category term="Etcd-Cluster" scheme="http://yoursite.com/tags/Etcd-Cluster/"/>
     
   </entry>
   

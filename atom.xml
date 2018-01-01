@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-24T08:47:58.000Z</updated>
+  <updated>2018-01-01T11:31:04.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,16 +16,81 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>回顾2017-展望2018</title>
+    <link href="http://yoursite.com/2018/01/01/%E5%9B%9E%E9%A1%BE2017-%E5%B1%95%E6%9C%9B2018/"/>
+    <id>http://yoursite.com/2018/01/01/回顾2017-展望2018/</id>
+    <published>2018-01-01T11:29:09.000Z</published>
+    <updated>2018-01-01T11:31:04.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>2017年，除工作之外的时间估计更多的都花费在跑步上了。从4月15日的TNF50，到7月14日的崇礼越野50，再到9月10的太原国际马拉松和9月17日的北京国际马拉松，以及11月4号陪我宇神奥森100的最后30公里。当然，跑量不算多，但是和忙碌的工作穿插起来，也构成了2017完美的一年，这一年以跑步开始以跑步结束，收获乐趣的同时也让我成长了更多。2017，首先感谢我的家人朋友，我的京东跑友以及我的同事领导们，最后也要感谢在你们指导下的我自己，是你们的指导、包容和支持，让我在这一年里收获良多。<br><a id="more"></a></p>
+<p><img src="http://oyep1jupk.bkt.clouddn.com/2018-run.jpeg" alt=""><br><img src="http://oyep1jupk.bkt.clouddn.com/2018.png" alt=""></p>
+<p>2018年，我的个人活动中心依旧会是跑步，但是我想尝试更多，挑战不同难度的越野比赛，以此来不断磨练自己的心性；同时我会拼劲全力来做好与自己本职工作相关的工作，结合场景为团队创造价值，为什么是拼劲全力呢？因为在我眼里，工作对于我来说远远不是最终要的，生活才是，所以我不会以身试险，经常去拿自己的身体换取工作的回报，当然偶尔的几次还是可以的，毕竟我爱我做的工作。所以最后，我会将跑步和工作之外的时间都投入到家庭和生活之中(好像也没有太多时间了哦)。</p>
+<h3 id="回顾2017"><a href="#回顾2017" class="headerlink" title="回顾2017"></a>回顾2017</h3><p><a href="https://xxbandy.github.io/2017/11/05/%E6%88%91%E7%9A%84%E8%B6%8A%E9%87%8E%E5%85%83%E5%B9%B4/" target="_blank" rel="external">马拉松的回顾</a>之前已经总结了，2017年在工作以及个人职业生涯规划上的时间投入是比较多的，所以好像除了工作以及职业生涯方面的回顾和思考好像也么有什么了。</p>
+<h4 id="专注"><a href="#专注" class="headerlink" title="专注"></a>专注</h4><p>2017年上半年，在外面参加的技术大会会比较多，一方面是因为想接触一些技术界的大神老师们，另外一方面也是想学习学习，学习一些企业IT架构以及对于某种业务场景下，某种技术组合的解决方案最终产生的价值效益比。</p>
+<p>虽然过去的一年在企业容器化道路上没有一些非常成功的案例实践，但是在过程中自己也摸索出一些通用的门道，包括一些<code>业务场景</code>的技术选型，业务<code>价值</code>的交付链以及<code>用户友好性</code>的考虑，同时在对待项目过程中的及时反馈和向上管理等多方面的问题。但是说这么多，你可能会觉得很虚，其实真的很虚，以上涉及到的业务场景、价值交付、用户以及项目管理中的一些东西，说起来其实很简单，但是实际做起来有多难想必只有亲身经历过的人才知道，因为整个项目过程中可能涉及的是一个小生态，而不仅仅是项目那么简单。</p>
+<p>2017年，我面过几个人，也被几个人面过，面完之后也的确给我的感觉是很虚。可能也是得益于当前各种技术发展的太快并且各种对应的开源软件层出不穷吧，大家普遍的感觉就是，只要这个东西还不错，能解决一些问题，然后就拿来就用，至于这个东西底层是怎么实现的，如何去进行优化并结合其他周边的业务场景，考虑这个的人并不是很多，所以最后造成的结果就是，维护一些项目可能需要各种各样的工具，最终被很多东西裹挟(其实这也就解释了为什么很多大厂都是基于某个技术进行开发适合自己的产品了)。当然说这么多，我想表达的只是：</p>
+<p><strong>2018年，我会更加专注于去做某一件事，更加深入的去研究某一个技术以及最基础的知识，如果你还没有这样做，我建议一定要腾出来时间去专注于某一件事的研究，我相信那样会有惊喜发生。</strong></p>
+<h4 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h4><p>17年，同样有一件事情没有做好，那就是写作(暂且叫做写作吧)和分享，最早维护了一个微信公众号<code>逼格运维说</code>，主要用来分享我个人经历思考以及运维方面的知识，后来由于个人经历方面的原因，将运维方面的知识迁移到简书<code>BG运维</code>上，来分享运维相关的技术文章，而后个人微信公众号就没再分享过了，一方面因为微信公众号内容的排版问题，另外一方面感觉实在没有去深入思考某些相关的东西。到后来，索性自己维护一个个人主页<code>xxbandy.github.io</code>,基于<code>Markdown</code>的语法,排版方便也能进行历史文章的修改，因此就将当初想在公众号<code>逼格运维说</code>做的事情慢慢迁移到个人主页(xxbandy.github.io)了。这里可以向大家推荐几个Markdown编辑器，免费的可以选择<code>有道云笔记</code>，付费用户可以选择<code>为知笔记</code>，还有一款免费的Markdown语法PPT编辑器<code>Marp</code>，经过多次尝试使用，个人感觉上述三个软件还是不错的。</p>
+<p>那我为什么要做这件事呢？一方面是想通过文字的方式记录自己的实践和思考，未来回过头来有反思和优化依据;另外一方面是想培养自己书写总结的能力。而后来我发现通过这种写作的方式很能提高工作中的沟通效率，在工作中做到<code>事必有果</code>，文档记录是一个最简单且高效的方式了。</p>
+<p><strong>所以，2018年，我会尽量将自己的工作以及项目结论进行文档化记录一方面巩固自己，另外一方面提高团队整体协作效率</strong></p>
+<h4 id="适合"><a href="#适合" class="headerlink" title="适合"></a>适合</h4><p>老哥以前经常给我说一句话”适合自己的才是最好的”，我觉得这句话放在那里都是最合适不过的。而像我们搞运维的也一样，如何站在业务方的角度去考虑问题，如何去深挖当前业务痛点并结合特定技术来提供解决方案，这些对于最终结果的好坏都是致命的因素。举个很简单的例子，如果按照容器以及周边生态本身的技术特性去推动企业应用容器化改造，这样的效果肯定是大打折扣的，因为不论是按照容器化或者微服务化的思想，传统的业务架构都是存在一定差异性的，只从技术的角度去推动，那么不仅在时间上不乐观，而且很有可能因为某一次失误失去所有机会。只有根据当前业务场景以及实际痛点去调整改造技术方案，才有可能最大程度的推进容器化项目改造。我承认，我不是一个忠实的技术拥护者，因为我认为如果某个技术不能找到合适的场景，那么该技术本身是没有价值的，而映射到企业内部，如果你做出来一款没有合适场景的软件系统，不仅仅该产品没有价值，当没有人使用它的时候，想必开发者本身也有点灰心了吧，至少我有过这种感觉。</p>
+<p><strong>那，很明显了，2018年做项目和产品，我可能不会贸然行动了，至少要搞清楚业务的场景以及痛点是什么，也就是不要着急去做技术架构，可以先去了解业务和产品架构，而后再规划技术产品。一定要结合场景去做产品，因为适合业务场景的才是最好的产品。</strong></p>
+<p>2017年，个人感觉工作上除了经历比较多，犯错比较多之外，好像没有什么做的比较成功的地方，但本身这种经历对于我而言已经是莫大的财富了，这也要感谢我领导超哥的支持，以及团队其他小伙伴们的包容和理解了。</p>
+<h3 id="展望2018"><a href="#展望2018" class="headerlink" title="展望2018"></a>展望2018</h3><p><img src="http://oyep1jupk.bkt.clouddn.com/8.png" alt=""></p>
+<p>突然很喜欢8这个数字，不仅仅是它有”fa”的谐音，也不仅仅是因为昨天跑”2018”只剩下”8”的图案，而是因为对”8”有了另外一种解读—“双循环结构”，不断更新迭代的循环系统会让系统本身更加健壮有力。</p>
+<p>2018，专注于自己想做的并结合实际的业务场景踏实去做，且要不断积累自己的各方面能力。金融领域的运维并不只是有”稳定，效率，成本”,”质量和安全”，所以专注于某一个点精耕细作，结合金融领域的运维继续努力去做事。</p>
+<p>对了，得什么不要得病，2018，身体健康很重要。祝大家在新的一年里身体健康，888！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;2017年，除工作之外的时间估计更多的都花费在跑步上了。从4月15日的TNF50，到7月14日的崇礼越野50，再到9月10的太原国际马拉松和9月17日的北京国际马拉松，以及11月4号陪我宇神奥森100的最后30公里。当然，跑量不算多，但是和忙碌的工作穿插起来，也构成了2017完美的一年，这一年以跑步开始以跑步结束，收获乐趣的同时也让我成长了更多。2017，首先感谢我的家人朋友，我的京东跑友以及我的同事领导们，最后也要感谢在你们指导下的我自己，是你们的指导、包容和支持，让我在这一年里收获良多。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="生活思考" scheme="http://yoursite.com/categories/%E7%94%9F%E6%B4%BB%E6%80%9D%E8%80%83/"/>
+    
+    
+      <category term="2018" scheme="http://yoursite.com/tags/2018/"/>
+    
+      <category term="规划" scheme="http://yoursite.com/tags/%E8%A7%84%E5%88%92/"/>
+    
+      <category term="思考" scheme="http://yoursite.com/tags/%E6%80%9D%E8%80%83/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Golang中GBK和UTF-8格式画像转换</title>
+    <link href="http://yoursite.com/2017/12/24/Golang%E4%B8%ADGBK%E5%92%8CUTF-8%E6%A0%BC%E5%BC%8F%E7%94%BB%E5%83%8F%E8%BD%AC%E6%8D%A2/"/>
+    <id>http://yoursite.com/2017/12/24/Golang中GBK和UTF-8格式画像转换/</id>
+    <published>2017-12-24T09:36:14.000Z</published>
+    <updated>2017-12-24T09:37:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>直接上代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * @File Name: gb2312-utf8.go</div><div class="line"> * @Author:</div><div class="line"> * @Email:</div><div class="line"> * @Create Date: 2017-12-18 14:12:25</div><div class="line"> * @Last Modified: 2017-12-18 14:12:00</div><div class="line"> * @Description:</div><div class="line"> */</div><div class="line">package main</div><div class="line">import (</div><div class="line">    &quot;bytes&quot;</div><div class="line">    &quot;golang.org/x/text/encoding/simplifiedchinese&quot;</div><div class="line">    &quot;golang.org/x/text/transform&quot;</div><div class="line">    &quot;io/ioutil&quot;</div><div class="line">    &quot;fmt&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func GbkToUtf8(s []byte) ([]byte, error) &#123;</div><div class="line">    reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewDecoder())</div><div class="line">    d, e := ioutil.ReadAll(reader)</div><div class="line">    if e != nil &#123;</div><div class="line">        return nil, e</div><div class="line">    &#125;</div><div class="line">    return d, nil</div><div class="line">&#125;</div><div class="line"></div><div class="line">func Utf8ToGbk(s []byte) ([]byte, error) &#123;</div><div class="line">    reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewEncoder())</div><div class="line">    d, e := ioutil.ReadAll(reader)</div><div class="line">    if e != nil &#123;</div><div class="line">        return nil, e</div><div class="line">    &#125;</div><div class="line">    return d, nil</div><div class="line">&#125;</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line"></div><div class="line">    s := &quot;GBK 与 UTF-8 编码转换测试&quot;</div><div class="line">    gbk, err := Utf8ToGbk([]byte(s))</div><div class="line">    if err != nil &#123;</div><div class="line">        fmt.Println(err)</div><div class="line">    &#125; else &#123;</div><div class="line">        fmt.Println(string(gbk))</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    utf8, err := GbkToUtf8(gbk)</div><div class="line">    if err != nil &#123;</div><div class="line">        fmt.Println(err)</div><div class="line">    &#125; else &#123;</div><div class="line">        fmt.Println(string(utf8))</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ go run gbktoutf-8.go</div><div class="line">GBK �� UTF-8 ����ת������</div><div class="line">GBK 与 UTF-8 编码转换测试</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;直接上代码&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Golang正则模块使用</title>
     <link href="http://yoursite.com/2017/12/24/Golang%E6%AD%A3%E5%88%99%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8/"/>
     <id>http://yoursite.com/2017/12/24/Golang正则模块使用/</id>
     <published>2017-12-24T08:39:14.000Z</published>
-    <updated>2017-12-24T08:47:58.000Z</updated>
+    <updated>2017-12-24T09:34:27.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近在开发过程中会遇到一些字符串匹配相关的内容，正好去大概学习了下Golang中的<code>regexp</code>模块。因为目前正则模块对我来说更多的就是去匹配并处理字符串的，因此目前主要关注几个返回为<code>string</code>类型的方法。<br><a id="more"></a></p>
 <p><strong><code>regexp</code>模块的结构体和方法定义</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">//正则结构体</div><div class="line">type Regexp struct &#123;</div><div class="line">        // contains filtered or unexported fields</div><div class="line">&#125;</div><div class="line"></div><div class="line">//初始化结构体对象的方法</div><div class="line">func Compile(expr string) (*Regexp, error)</div><div class="line">func CompilePOSIX(expr string) (*Regexp, error)</div><div class="line">func MustCompile(str string) *Regexp</div><div class="line">func MustCompilePOSIX(str string) *Regexp</div><div class="line"></div><div class="line"></div><div class="line">//结构体方法.常用的几个</div><div class="line">//在字符串s中查找完全匹配正则表达式re的字符串.如果匹配到就停止不进行全部匹配，如果匹配不到就输出空字符串</div><div class="line">func (re *Regexp) FindString(s string) string</div><div class="line"></div><div class="line">//在字符串s中匹配re表达式，n表示匹配的次数，-1表示匹配整个字符串。返回字符串切片</div><div class="line">func (re *Regexp) FindAllString(s string, n int) []string</div><div class="line"></div><div class="line">//在src中匹配re，并替换为repl，该种方式中repl中的$符号会展开实际的变量，通常用在回溯查找中</div><div class="line">func (re *Regexp) ReplaceAllString(src, repl string) string</div><div class="line"></div><div class="line">//在src中匹配re，并替换为repl,该方法会按照repl中的字面意思进行替换，不支持高级变量匹配，比如回溯等等</div><div class="line">func (re *Regexp) ReplaceAllLiteralString(src, repl string) string</div><div class="line"> </div><div class="line"> </div><div class="line">//在字符串中是否匹配到re定义的字符串，匹配返回true</div><div class="line">func (re *Regexp) MatchString(s string) bool</div></pre></td></tr></table></figure></p>
 <p><strong>简单示例</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">$ cat regexp-test.go</div><div class="line">/**</div><div class="line"> * @File Name: test.go</div><div class="line"> * @Author:</div><div class="line"> * @Email:</div><div class="line"> * @Create Date: 2017-12-24 15:12:31</div><div class="line"> * @Last Modified: 2017-12-24 16:12:12</div><div class="line"> * @Description:</div><div class="line"> */</div><div class="line">package main</div><div class="line"></div><div class="line">import (</div><div class="line">	&quot;fmt&quot;</div><div class="line">	&quot;regexp&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">  testString := &quot;k8s-test-pod-12343k811sadsxsakxz-test-k8s-container.k8s-@xxbandy.github.io&quot;</div><div class="line">	re := regexp.MustCompile(&quot;k8s?&quot;)</div><div class="line">  fmt.Println(&quot;src string:&quot;,testString)</div><div class="line">  fmt.Println(&quot;regular expression:&quot;,re)</div><div class="line"></div><div class="line">  fmt.Println(&quot;FindAllString matching all:&quot;,re.FindAllString(testString,-1))</div><div class="line">  fmt.Println(&quot;FindAllString matching twice:&quot;,re.FindAllString(testString,2))</div><div class="line">  fmt.Println(&quot;FindString:&quot;,re.FindString(testString))</div><div class="line">  fmt.Println(&quot;ReplaceAllString:&quot;,re.ReplaceAllString(testString,&quot;biaoge&quot;))</div><div class="line">  fmt.Println(&quot;ReplaceAllLiteralString:&quot;,re.ReplaceAllLiteralString(testString,&quot;BIAOGE&quot;))</div><div class="line">  fmt.Println(&quot;Match String:&quot;,re.MatchString(testString))</div><div class="line">&#125;</div><div class="line"></div><div class="line">$ go run regexp-test.go</div><div class="line">src string: k8s-test-pod-12343k811sadsxsakxz-test-k8s-container.k8s-@xxbandy.github.io</div><div class="line">regular expression: k8s?</div><div class="line">FindAllString matching all: [k8s k8 k8s k8s]</div><div class="line">FindAllString matching twice: [k8s k8]</div><div class="line">FindString: k8s</div><div class="line">ReplaceAllString: biaoge-test-pod-12343biaoge11sadsxsakxz-test-biaoge-container.biaoge-@xxbandy.github.io</div><div class="line">ReplaceAllLiteralString: BIAOGE-test-pod-12343BIAOGE11sadsxsakxz-test-BIAOGE-container.BIAOGE-@xxbandy.github.io</div><div class="line">Match String: true</div></pre></td></tr></table></figure></p>
 <p>不论是哪种语言的正则模块，个人认为语法都不是最重要的，最重要我认为还是正则表达式本身，如果对正则表达式本身认识比较深的话，不论用哪种语言工具都可以很灵活的处理各种业务场景。这里附上一篇当年写的正则表达式相关的<a href="https://my.oschina.net/xxbAndy/blog/370806" target="_blank" rel="external">文章</a></p>
+<p>看到另外一篇文章的正则总结的挺好，分享下来.<br><a href="http://blog.csdn.net/zfy1355/article/details/52959803" target="_blank" rel="external">http://blog.csdn.net/zfy1355/article/details/52959803</a></p>
 ]]></content>
     
     <summary type="html">
@@ -1258,94 +1323,11 @@
     
       <category term="GPU" scheme="http://yoursite.com/tags/GPU/"/>
     
-      <category term="NVIDIA" scheme="http://yoursite.com/tags/NVIDIA/"/>
-    
       <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
     
+      <category term="NVIDIA" scheme="http://yoursite.com/tags/NVIDIA/"/>
+    
       <category term="NVIDIA-Docker" scheme="http://yoursite.com/tags/NVIDIA-Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ITers们,请注意你们的身体</title>
-    <link href="http://yoursite.com/2017/09/14/ITers%E4%BB%AC-%E8%AF%B7%E6%B3%A8%E6%84%8F%E4%BD%A0%E4%BB%AC%E7%9A%84%E8%BA%AB%E4%BD%93/"/>
-    <id>http://yoursite.com/2017/09/14/ITers们-请注意你们的身体/</id>
-    <published>2017-09-13T19:05:39.000Z</published>
-    <updated>2017-09-16T15:26:45.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近加班也不算太严重，不过因为赶上新项目的开工，需要花费一些额外的功夫去研究一些技术的使用场景，连续劳累了一个月之后，最终的结果就是不管晚上几点睡，第二天从来不会自动醒过来，并且随之而来身体上的体验就是左眼皮不停的再跳，跳到你感觉心烦仍不罢休，有天我还专门和朋友同事开玩笑说，“可能最近会有什么喜事吧，左眼睛一直在跳”。后来我还专门在知乎，以及贴吧之类的论坛上去查找一些相关的信息，得到一致的结论就是：有个毛线的喜事，是因为你缺觉！</p>
-<a id="more"></a>
-<p>好吧，看来在一段时间内，如果作息还有生活不规律，身体会提前给你警告。</p>
-<p>其实搞it经常都会有两两种身体上的问题：一个是颈椎不好，另外一个是腰不好。这两个问题可算是在我身体上体现的淋漓尽致了，因为我在这两个问题上面可算是吃了不少苦头，导致我现在是按摩院和健身房的常客，经常回去做个肩颈按摩或者去健身房跑跑步，为的就是能够稍微减轻一些身体上的痛苦，同时也能够更加保重自己的身体。</p>
-<p>上周五的时候，突然感觉腰有点不舒服，也就没有在意就去准备参加太原马拉松去了，整个马拉松跑的很爽很溜，毕竟是人生第一次跑马，最终也跑到了自己期望的成绩。</p>
-<p><img src="/images/tymls-1.jpeg" alt="太马奖牌"><br><img src="/images/tymls-2.jpeg" alt="太马成绩"><br><img src="/images/tymls-3.jpeg" alt="太马路线"></p>
-<p>跑完整个马拉松之后的这几天里，身体到没有其他部位的不舒服，但唯独腰却很不舒服，不能久坐，时间一长就会感觉到一种难以言表的疼痛。看过医生并且去中医按摩的结果是，坐姿不正和长时间坐着办公造成的腰肌轻微劳损。So，最近不得不站着办公，没事的时候，也会刻意的去捶捶腰。突然之间感觉搞我们这行的还蛮辛苦的，以后还是得更加注意身体。</p>
-<p>本以为我挺辛苦的，昨晚八点多一业务开发来找我帮他们处理问题，我说你们为啥一到下班七八点就来找我呢？为啥不在上班时间找我处理呢？他说了句，“哥啊，我们哪有下班和上班的时间区分啊！”，真的感觉他们比我们要辛苦多了。后来想了想，的确是，他们那些业务研发，经常为了赶项目进度连续好些天工作到凌晨一二点，然后早上九点前又按时来公司上班。所以这也就不难理解，为啥搞it得经常会出现一些意外的情况，但我还是觉得，工作再怎么重要，还是得注意休息，保重身体，不然业务做的再好，钱赚的再多，又有毛用呢，已经脱离了我们来到这个世上的最初的目标。</p>
-<p>所以，那些搞IT的兄弟姐们们，还是建议你们平时注意下自己的身体状况，多锻炼锻炼，加班干活适可而止就行了！<br><!--more--></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近加班也不算太严重，不过因为赶上新项目的开工，需要花费一些额外的功夫去研究一些技术的使用场景，连续劳累了一个月之后，最终的结果就是不管晚上几点睡，第二天从来不会自动醒过来，并且随之而来身体上的体验就是左眼皮不停的再跳，跳到你感觉心烦仍不罢休，有天我还专门和朋友同事开玩笑说，“可能最近会有什么喜事吧，左眼睛一直在跳”。后来我还专门在知乎，以及贴吧之类的论坛上去查找一些相关的信息，得到一致的结论就是：有个毛线的喜事，是因为你缺觉！&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="生活思考" scheme="http://yoursite.com/categories/%E7%94%9F%E6%B4%BB%E6%80%9D%E8%80%83/"/>
-    
-    
-      <category term="工作" scheme="http://yoursite.com/tags/%E5%B7%A5%E4%BD%9C/"/>
-    
-      <category term="生活" scheme="http://yoursite.com/tags/%E7%94%9F%E6%B4%BB/"/>
-    
-      <category term="感悟" scheme="http://yoursite.com/tags/%E6%84%9F%E6%82%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Dockerfile-etcd</title>
-    <link href="http://yoursite.com/2017/08/26/Dockerfile-etcd/"/>
-    <id>http://yoursite.com/2017/08/26/Dockerfile-etcd/</id>
-    <published>2017-08-26T09:56:15.000Z</published>
-    <updated>2017-08-29T15:43:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>本篇文章手把手教你如何使用Dockerfile构建自己etcd镜像，并且已经提供基于etcd3.0.10 的image供读者使用，用户可以快速使用docker image构建自己的etcd集群环境</p>
-</blockquote>
-<a id="more"></a>
-<h3 id="一、etcd镜像的Dockerfile文件结构"><a href="#一、etcd镜像的Dockerfile文件结构" class="headerlink" title="一、etcd镜像的Dockerfile文件结构"></a>一、etcd镜像的Dockerfile文件结构</h3><p><code>注意：优秀的docker镜像源文件都是会尝试去除所有依赖的，也即是该文件无论被谁拿走使用，都可以快速构建属于自己的image</code></p>
-<p>etcd镜像的Dockerfile项目文件结构：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">$ tree .</div><div class="line">.</div><div class="line">├──Dockerfile</div><div class="line">├──docker-entrypoint.sh</div><div class="line"></div><div class="line"></div><div class="line"># Dockerfile 文件</div><div class="line">$ cat Dockerfile</div><div class="line">FROM centos-biaoge</div><div class="line">MAINTAINER 371990778@qq.com</div><div class="line">ENV LANG=zh_CN.UTF-8;\</div><div class="line">    LC_ALL=zh_CN.UTF-8;\</div><div class="line">    TZ=&quot;Asia/Shanghai&quot;;\</div><div class="line">    TERM=xterm;\</div><div class="line">    DOWNLOAD=https://github.com/coreos/etcd/releases/download/v3.0.10/ \</div><div class="line">    ETCDVERSION=etcd-v3.0.10-linux-amd64 \</div><div class="line">    USER=admin </div><div class="line">RUN yum install mkdir curl wget tar chown unzip -y;\</div><div class="line">    useradd $&#123;USER&#125; ;\</div><div class="line">    mkdir -p /export/&#123;servers,Logs,packages,Apps,Shell&#125;;\</div><div class="line">    wget $&#123;DOWNLOAD&#125;$&#123;ETCDVERSION&#125;.tar.gz &amp;&amp; tar -zxf $&#123;ETCDVERSION&#125;.tar.gz -C /export/servers/ &amp;&amp; \</div><div class="line">    /bin/rm -rf $&#123;ETCDVERSION&#125;.tar.gz;\</div><div class="line">    chown -R $&#123;USER&#125;.$&#123;USER&#125; /export ;\</div><div class="line">    ln -s /export/servers/$&#123;ETCDVERSION&#125;/etcd* /usr/bin/;</div><div class="line">EXPOSE 2379 2380</div><div class="line">COPY docker-entrypoint.sh /</div><div class="line">ENTRYPOINT [&quot;/docker-entrypoint.sh&quot;]</div><div class="line"></div><div class="line"># 镜像启动脚本</div><div class="line">$ cat docker-entrypoint.sh</div><div class="line">#!/bin/bash</div><div class="line">#Filename:docker-entrypoint.sh</div><div class="line">#Author_by:Andy_xu </div><div class="line">#Contact:[mail:371990778@qq.com,QQ:371990778]</div><div class="line">#Date:2017-07-25 16:42</div><div class="line">#Description:</div><div class="line">if [ -z $NAME ];then</div><div class="line">	NAME=my-etcd-1</div><div class="line">fi</div><div class="line">if [ -z $DATADIR ];then</div><div class="line">	DATADIR=/export/etcd_data</div><div class="line">fi</div><div class="line">if [ -z $MYHOST ];then</div><div class="line">	MYHOST=http://localhost</div><div class="line">fi</div><div class="line">if [ -z $PORT ];then</div><div class="line">        PORT=2379</div><div class="line">fi</div><div class="line">if [ -z $CLUSTER_PORT ];then</div><div class="line">        CLUSTER_PORT=2380</div><div class="line">fi</div><div class="line">if [ -z $CLUSTER ];then </div><div class="line">	CLUSTER=my-etcd-1=http://localhost:2380</div><div class="line">fi</div><div class="line">if [ -z $CLUSTER_TOKEN ];then </div><div class="line">	CLUSTER_TOKEN=my-etcd-token</div><div class="line">fi</div><div class="line">if [ -z $CLUSTER_STATE ];then</div><div class="line">	CLUSTER_STATE=new</div><div class="line">fi</div><div class="line">	</div><div class="line">ETCD_CMD=&quot;etcd --name $&#123;NAME&#125; --data-dir $&#123;DATADIR&#125;  \</div><div class="line">	--listen-client-urls http://0.0.0.0:$&#123;PORT&#125;  \</div><div class="line">	--advertise-client-urls $&#123;MYHOST&#125;:$&#123;PORT&#125; \</div><div class="line">  	--listen-peer-urls $&#123;MYHOST&#125;:$&#123;CLUSTER_PORT&#125; \</div><div class="line">	--initial-advertise-peer-urls $&#123;MYHOST&#125;:$&#123;CLUSTER_PORT&#125; \</div><div class="line">	--initial-cluster $CLUSTER  \</div><div class="line">	 --initial-cluster-token $CLUSTER_TOKEN \</div><div class="line">	--initial-cluster-state $&#123;CLUSTER_STATE&#125; \</div><div class="line">	$*&quot;</div><div class="line">echo -e &quot;Running &apos;$ETCD_CMD&apos;\nBEGIN ETCD OUTPUT\n&quot;</div><div class="line">exec $ETCD_CMD</div></pre></td></tr></table></figure>
-<h3 id="二、构建并使用image"><a href="#二、构建并使用image" class="headerlink" title="二、构建并使用image"></a>二、构建并使用image</h3><p><strong>1.构建etcd的image</strong></p>
-<p>进入项目路径下，执行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker build -t xxbandy123/etcd:3.0.10</div></pre></td></tr></table></figure></p>
-<p><strong>2.使用默认参数创建etcd单实例</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -itd --name etcd-1 xxbandy123/etcd:3.0.10  --auto-compaction-retention 1</div></pre></td></tr></table></figure>
-<p><code>注意：后面的 --auto-compaction-retention 1 为额外增加的参数表示1小时自动压缩保留
-默认的容器启动后面都可以增加额外的参数</code></p>
-<p><strong>3.使用自定义的参数进行创建etcd单实例</strong></p>
-<p>image内部定义的默认参数如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">NAME=my-etcd-1</div><div class="line">DATADIR=/export/etcd_data</div><div class="line">MYHOST=http://localhost</div><div class="line">PORT=2379</div><div class="line">CLUSTER_PORT=2380</div><div class="line">CLUSTER=my-etcd-1=http://localhost:2380</div><div class="line">CLUSTER_TOKEN=my-etcd-token</div><div class="line">CLUSTER_STATE=new</div><div class="line"></div><div class="line"></div><div class="line">etcd --name $&#123;NAME&#125; --data-dir $&#123;DATADIR&#125;  \</div><div class="line">    --listen-client-urls http://0.0.0.0:$&#123;PORT&#125;  \</div><div class="line">    --advertise-client-urls $&#123;MYHOST&#125;:$&#123;PORT&#125; \</div><div class="line">    --listen-peer-urls $&#123;MYHOST&#125;:$&#123;CLUSTER_PORT&#125; \</div><div class="line">    --initial-advertise-peer-urls $&#123;MYHOST&#125;:$&#123;CLUSTER_PORT&#125; \</div><div class="line">    --initial-cluster $CLUSTER  \</div><div class="line">     --initial-cluster-token $CLUSTER_TOKEN \</div><div class="line">    --initial-cluster-state $&#123;CLUSTER_STATE&#125;</div></pre></td></tr></table></figure>
-<p>可以通过环境变量的方式启动单实例的etcd，也可以将该image传入不通变量去构造集群</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -itd -e DATADIR=/root/etcd_data -e CLUSTER_TOKEN=biaoge xxbandy123/etcd:3.0.10 --auto-compaction-retention 1</div></pre></td></tr></table></figure>
-<p><strong>4.如何使用etcd</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">docker pull xxbandy123/etcd:3.0.10</div><div class="line"></div><div class="line"># docker  ps -l</div><div class="line">CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS              PORTS                                            NAMES</div><div class="line">e17c9479b424        xxbandy123/etcd:3.0.10   &quot;/docker-entrypoint.s&quot;   19 seconds ago      Up 17 seconds       0.0.0.0:1025-&gt;2379/tcp, 0.0.0.0:1024-&gt;2380/tcp   sharp_keller</div><div class="line"></div><div class="line"># docker  exec -it sharp_keller etcdctl set test biaoge</div><div class="line">biaoge</div><div class="line"></div><div class="line"># curl -s localhost:1025/v2/keys/test | jq .</div><div class="line">&#123;</div><div class="line">  &quot;node&quot;: &#123;</div><div class="line">    &quot;createdIndex&quot;: 4,</div><div class="line">    &quot;modifiedIndex&quot;: 4,</div><div class="line">    &quot;value&quot;: &quot;biaoge&quot;,</div><div class="line">    &quot;key&quot;: &quot;/test&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;action&quot;: &quot;get&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">在任何一个客户端去访问：</div><div class="line"># curl -s 10.241.131.109:1025/v2/keys/test | jq .</div><div class="line">&#123;</div><div class="line">  &quot;node&quot;: &#123;</div><div class="line">    &quot;createdIndex&quot;: 4,</div><div class="line">    &quot;modifiedIndex&quot;: 4,</div><div class="line">    &quot;value&quot;: &quot;biaoge&quot;,</div><div class="line">    &quot;key&quot;: &quot;/test&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;action&quot;: &quot;get&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="三、自由发挥时间"><a href="#三、自由发挥时间" class="headerlink" title="三、自由发挥时间"></a>三、自由发挥时间</h3><p>由于该etcd实例可以通过环境变量传入参数，因此虽然是一个image，但是却非常灵活，用户可以在很快的时间内创建出来一个etcd集群。So，学会如何构建一个etcd镜像后，可以尝试下使用该image来快速构建一个etcd集群。</p>
-<p>为方便大家的使用，该image已经上传到docker hub中，读者可以直接在本地pull后进行使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull xxbandy123/etcd:3.0.10</div></pre></td></tr></table></figure></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;本篇文章手把手教你如何使用Dockerfile构建自己etcd镜像，并且已经提供基于etcd3.0.10 的image供读者使用，用户可以快速使用docker image构建自己的etcd集群环境&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
-    
-    
-      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
-    
-      <category term="Etcd" scheme="http://yoursite.com/tags/Etcd/"/>
     
   </entry>
   

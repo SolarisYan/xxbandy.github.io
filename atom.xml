@@ -418,9 +418,9 @@
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
     
-      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
-    
       <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
     
       <category term="最佳实践" scheme="http://yoursite.com/tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/"/>
     
@@ -1323,9 +1323,9 @@
     
       <category term="GPU" scheme="http://yoursite.com/tags/GPU/"/>
     
-      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
       <category term="NVIDIA" scheme="http://yoursite.com/tags/NVIDIA/"/>
+    
+      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
     
       <category term="NVIDIA-Docker" scheme="http://yoursite.com/tags/NVIDIA-Docker/"/>
     

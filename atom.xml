@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-01-02T02:18:38.000Z</updated>
+  <updated>2018-01-02T02:21:09.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://yoursite.com/2018/01/02/NVIDIA-DIGITS%E6%B5%8B%E8%AF%95%E4%BD%BF%E7%94%A8/"/>
     <id>http://yoursite.com/2018/01/02/NVIDIA-DIGITS测试使用/</id>
     <published>2018-01-02T02:14:32.000Z</published>
-    <updated>2018-01-02T02:18:38.000Z</updated>
+    <updated>2018-01-02T02:21:09.000Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="GITS简介"><a href="#GITS简介" class="headerlink" title="GITS简介"></a>GITS简介</h3><p><a href="https://github.com/NVIDIA/DIGITS" target="_blank" rel="external">DIGITS</a>: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设计最优的DNN。DIGITS是开源软件，可在GitHub上找到，因而开发人员可以扩展和自定义DIGITS。</p>
+    <content type="html"><![CDATA[<h3 id="DIGITS简介"><a href="#DIGITS简介" class="headerlink" title="DIGITS简介"></a>DIGITS简介</h3><p><a href="https://github.com/NVIDIA/DIGITS" target="_blank" rel="external">DIGITS</a>: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设计最优的DNN。DIGITS是开源软件，可在GitHub上找到，因而开发人员可以扩展和自定义DIGITS。</p>
 <a id="more"></a>
 <p><a href="https://devblogs.nvidia.com/parallelforall/digits-deep-learning-gpu-training-system/" target="_blank" rel="external">英文介绍</a></p>
 <h3 id="DIGITS特性"><a href="#DIGITS特性" class="headerlink" title="DIGITS特性"></a>DIGITS特性</h3><ul>
@@ -85,7 +85,7 @@
     
     <summary type="html">
     
-      &lt;h3 id=&quot;GITS简介&quot;&gt;&lt;a href=&quot;#GITS简介&quot; class=&quot;headerlink&quot; title=&quot;GITS简介&quot;&gt;&lt;/a&gt;GITS简介&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/NVIDIA/DIGITS&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;DIGITS&lt;/a&gt;: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设计最优的DNN。DIGITS是开源软件，可在GitHub上找到，因而开发人员可以扩展和自定义DIGITS。&lt;/p&gt;
+      &lt;h3 id=&quot;DIGITS简介&quot;&gt;&lt;a href=&quot;#DIGITS简介&quot; class=&quot;headerlink&quot; title=&quot;DIGITS简介&quot;&gt;&lt;/a&gt;DIGITS简介&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/NVIDIA/DIGITS&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;DIGITS&lt;/a&gt;: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设计最优的DNN。DIGITS是开源软件，可在GitHub上找到，因而开发人员可以扩展和自定义DIGITS。&lt;/p&gt;
     
     </summary>
     
@@ -109,7 +109,7 @@
     <link href="http://yoursite.com/2018/01/01/%E5%9B%9E%E9%A1%BE2017-%E5%B1%95%E6%9C%9B2018/"/>
     <id>http://yoursite.com/2018/01/01/回顾2017-展望2018/</id>
     <published>2018-01-01T11:29:09.000Z</published>
-    <updated>2018-01-01T11:31:04.000Z</updated>
+    <updated>2018-01-02T05:43:19.000Z</updated>
     
     <content type="html"><![CDATA[<p>2017年，除工作之外的时间估计更多的都花费在跑步上了。从4月15日的TNF50，到7月14日的崇礼越野50，再到9月10的太原国际马拉松和9月17日的北京国际马拉松，以及11月4号陪我宇神奥森100的最后30公里。当然，跑量不算多，但是和忙碌的工作穿插起来，也构成了2017完美的一年，这一年以跑步开始以跑步结束，收获乐趣的同时也让我成长了更多。2017，首先感谢我的家人朋友，我的京东跑友以及我的同事领导们，最后也要感谢在你们指导下的我自己，是你们的指导、包容和支持，让我在这一年里收获良多。<br><a id="more"></a></p>
 <p><img src="http://oyep1jupk.bkt.clouddn.com/2018-run.jpeg" alt=""><br><img src="http://oyep1jupk.bkt.clouddn.com/2018.png" alt=""></p>
@@ -127,7 +127,7 @@
 <p>2017年，个人感觉工作上除了经历比较多，犯错比较多之外，好像没有什么做的比较成功的地方，但本身这种经历对于我而言已经是莫大的财富了，这也要感谢我领导超哥的支持，以及团队其他小伙伴们的包容和理解了。</p>
 <h3 id="展望2018"><a href="#展望2018" class="headerlink" title="展望2018"></a>展望2018</h3><p><img src="http://oyep1jupk.bkt.clouddn.com/8.png" alt=""></p>
 <p>突然很喜欢8这个数字，不仅仅是它有”fa”的谐音，也不仅仅是因为昨天跑”2018”只剩下”8”的图案，而是因为对”8”有了另外一种解读—“双循环结构”，不断更新迭代的循环系统会让系统本身更加健壮有力。</p>
-<p>2018，专注于自己想做的并结合实际的业务场景踏实去做，且要不断积累自己的各方面能力。金融领域的运维并不只是有”稳定，效率，成本”,”质量和安全”，所以专注于某一个点精耕细作，结合金融领域的运维继续努力去做事。</p>
+<p>2018，专注于自己想做的并结合实际的业务场景踏实去做，且要不断积累自己的各方面能力。金融领域的运维并不只是有”稳定，效率，成本”,”质量和安全”可能更加重要，所以专注于某一个点精耕细作，结合金融领域的运维继续努力去做事。</p>
 <p>对了，得什么不要得病，2018，身体健康很重要。祝大家在新的一年里身体健康，888！</p>
 ]]></content>
     
@@ -824,9 +824,9 @@
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
     
-      <category term="Etcd-Cluster" scheme="http://yoursite.com/tags/Etcd-Cluster/"/>
-    
       <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
+    
+      <category term="Etcd-Cluster" scheme="http://yoursite.com/tags/Etcd-Cluster/"/>
     
       <category term="systemd" scheme="http://yoursite.com/tags/systemd/"/>
     

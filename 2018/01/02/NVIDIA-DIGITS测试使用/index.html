@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="AI,docker,nvidia,nvidia-digits,deeplearning," />
 
 
 
@@ -97,16 +97,30 @@
 
 
 
-<meta name="description" content="一个长跑者的运维以及人生经历">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BG运维说">
-<meta property="og:url" content="http://yoursite.com/archives/2017/10/index.html">
+<meta name="description" content="GITS简介DIGITS: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设">
+<meta name="keywords" content="AI,docker,nvidia,nvidia-digits,deeplearning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NVIDIA-DIGITS测试使用">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/NVIDIA-DIGITS测试使用/index.html">
 <meta property="og:site_name" content="BG运维说">
-<meta property="og:description" content="一个长跑者的运维以及人生经历">
+<meta property="og:description" content="GITS简介DIGITS: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/index.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/login.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/dataset.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/dataset1.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/dataset2.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/dataset-final.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/model.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/model2.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/model-train.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/test-model-1.png">
+<meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/test-model.png">
+<meta property="og:updated_time" content="2018-01-02T02:18:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BG运维说">
-<meta name="twitter:description" content="一个长跑者的运维以及人生经历">
+<meta name="twitter:title" content="NVIDIA-DIGITS测试使用">
+<meta name="twitter:description" content="GITS简介DIGITS: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设">
+<meta name="twitter:image" content="http://oyep1jupk.bkt.clouddn.com/index.png">
 
 
 
@@ -136,13 +150,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2017/10/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/NVIDIA-DIGITS测试使用/"/>
 
 
 
 
 
-  <title>归档 | BG运维说</title>
+  <title>NVIDIA-DIGITS测试使用 | BG运维说</title>
   
 
 
@@ -161,7 +175,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
     <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
 
@@ -310,259 +324,246 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/NVIDIA-DIGITS测试使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BG运维说">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">NVIDIA-DIGITS测试使用</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T10:14:32+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 24 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index">
+                    <span itemprop="name">AI</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/玩转Docker运维管理/" itemprop="url">
-              
-                <span itemprop="name">玩转Docker运维管理</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:41:34+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/Docker-API-for-Python/" itemprop="url">
-              
-                <span itemprop="name">Docker API for Python</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:37:34+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/GPU环境下玩转Docker-三/" itemprop="url">
-              
-                <span itemprop="name">GPU环境下玩转Docker(三)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:08:39+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h3 id="GITS简介"><a href="#GITS简介" class="headerlink" title="GITS简介"></a>GITS简介</h3><p><a href="https://github.com/NVIDIA/DIGITS" target="_blank" rel="external">DIGITS</a>: Deep Learning GPU Training System1，是由英伟达（NVIDIA）公司开发的第一个交互式深度学习GPU训练系统。目的在于整合现有的Deep Learning开发工具，实现深度神经网络（Deep Neural Network，DNN）设计、训练和可视化等任务变得简单化。DIGITS是基于浏览器的接口，因而通过实时的网络行为的可视化，可以快速设计最优的DNN。DIGITS是开源软件，可在GitHub上找到，因而开发人员可以扩展和自定义DIGITS。</p>
+<a id="more"></a>
+<p><a href="https://devblogs.nvidia.com/parallelforall/digits-deep-learning-gpu-training-system/" target="_blank" rel="external">英文介绍</a></p>
+<h3 id="DIGITS特性"><a href="#DIGITS特性" class="headerlink" title="DIGITS特性"></a>DIGITS特性</h3><ul>
+<li>提供了友好的用户界面，只需简单的点击即完成DNNs的训练。DIGITS是一个Web应用，用浏览器访问，上图是典型的工作流程图。</li>
+<li>DIGITS用户接口提供了DNN优化工具。主控制台列出了现有的数据库和机器上可用的先前训练好的网络模型以及正在进行的训练活动。</li>
+<li>DIGITS使可视化网络和快速对比精度变得简单。你选择一个模型，DIGITS显示训练状态和精度，并提供在网络训练时或训练完毕后加载和分类图像的选项。</li>
+<li>由于DIGITS运行在一个web服务器上，团队用户可以很方便地分享数据库和网络配置，以及测试和分享结果。</li>
+<li>DIGITS集成了流行的Caffe deep learning framework，并支持使用cudnn进行GPU加速。</li>
+</ul>
+<p>尝试使用DIGITS进行模型训练后，不得不说，这个平台功能做的真心不错。</p>
+<h3 id="部署测试"><a href="#部署测试" class="headerlink" title="部署测试"></a>部署测试</h3><p>官方给了基于<code>Ubuntu</code>发行版的部署指南(估计是因为ubuntu上比较好处理python的各种依赖吧)，不过官方也构建的相关的Docker image来帮助用户进行部署。用户可以<code>docker pull nvidia/digits</code>直接下载最新版本。</p>
+<p>容器镜像中使用5000端口来暴露web服务，因此需要将5000端口映射出来。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># docker run -itd --name digits -p 5000:5000 nvidia/digits:6.0</div><div class="line"># docker logs digits </div><div class="line">  ___ ___ ___ ___ _____ ___</div><div class="line"> |   \_ _/ __|_ _|_   _/ __|</div><div class="line"> | |) | | (_ || |  | | \__ \</div><div class="line"> |___/___\___|___| |_| |___/ 6.0.0</div><div class="line"></div><div class="line">libdc1394 error: Failed to initialize libdc1394</div><div class="line">/usr/local/lib/python2.7/dist-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.</div><div class="line">  warnings.warn(&apos;Matplotlib is building the font cache using fc-list. This may take a moment.&apos;)</div><div class="line">2017-12-27 13:24:54 [INFO ] Loaded 0 jobs.</div></pre></td></tr></table></figure></p>
+<p>查看日志如上环境即部署成功。</p>
+<h3 id="环境测试"><a href="#环境测试" class="headerlink" title="环境测试"></a>环境测试</h3><p>官方也给了一份测试数据以及文档来运行模型训练。<br><a href="https://github.com/NVIDIA/DIGITS/blob/master/docs/GettingStarted.md" target="_blank" rel="external">doc</a></p>
+<h4 id="下载模型数据"><a href="#下载模型数据" class="headerlink" title="下载模型数据"></a>下载模型数据</h4><p>可以登录到<code>digits</code>容器内部执行以下命令进行模型数据初始化。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">$ python -m digits.download_data mnist ~/mnist</div><div class="line">Downloading url=http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz ...</div><div class="line">Downloading url=http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz ...</div><div class="line">Downloading url=http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz ...</div><div class="line">Downloading url=http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz ...</div><div class="line">Uncompressing file=train-images-idx3-ubyte.gz ...</div><div class="line">Uncompressing file=train-labels-idx1-ubyte.gz ...</div><div class="line">Uncompressing file=t10k-images-idx3-ubyte.gz ...</div><div class="line">Uncompressing file=t10k-labels-idx1-ubyte.gz ...</div><div class="line">Reading labels from /home/username/mnist/train-labels.bin ...</div><div class="line">Reading images from /home/username/mnist/train-images.bin ...</div><div class="line">Reading labels from /home/username/mnist/test-labels.bin ...</div><div class="line">Reading images from /home/username/mnist/test-images.bin ...</div><div class="line">Dataset directory is created successfully at &apos;/home/username/mnist&apos;</div><div class="line">Done after 16.722807169 seconds.</div></pre></td></tr></table></figure></p>
+<p>当然如果容器内部无法访问外网，也可以将相关模型数据下载后进行解压。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"># ls dataset/</div><div class="line">  t10k-images-idx3-ubyte.gz  t10k-labels-idx1-ubyte.gz  train-images-idx3-ubyte.gz  train-labels-idx1-ubyte.gz </div><div class="line"># docker cp dataset digits:/</div></pre></td></tr></table></figure>
+<p>需要注意的是，该模型文件好像不能直接解压。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># docker exec -it digits bash</div><div class="line">root@aa3e7a2437af:/# cd dataset/</div><div class="line">root@aa3e7a2437af:/dataset# ls</div><div class="line">t10k-images-idx3-ubyte.gz  t10k-labels-idx1-ubyte.gz  train-images-idx3-ubyte.gz  train-labels-idx1-ubyte.gz</div><div class="line">root@aa3e7a2437af:/dataset# python -m digits.download_data mnist .</div><div class="line">Uncompressing file=train-images-idx3-ubyte.gz ...</div><div class="line">Uncompressing file=train-labels-idx1-ubyte.gz ...</div><div class="line">Uncompressing file=t10k-images-idx3-ubyte.gz ...</div><div class="line">Uncompressing file=t10k-labels-idx1-ubyte.gz ...</div><div class="line">Reading labels from ./train-labels.bin ...</div><div class="line">Reading images from ./train-images.bin ...</div><div class="line">Reading labels from ./test-labels.bin ...</div><div class="line">Reading images from ./test-images.bin ...</div><div class="line">Dataset directory is created successfully at &apos;.&apos;</div><div class="line">Done after 18.2706720829 seconds.</div><div class="line">root@aa3e7a2437af:/dataset#</div></pre></td></tr></table></figure>
+<h4 id="使用WebApp"><a href="#使用WebApp" class="headerlink" title="使用WebApp"></a>使用WebApp</h4><p>使用浏览器访问容器宿主机的5000端口，即可看到首页数据</p>
+<p><img src="http://oyep1jupk.bkt.clouddn.com/index.png" alt="index"></p>
+<p><strong>登录</strong></p>
+<p>点击右上角的<code>login</code>按钮进行登录。</p>
+<p><code>这里其实没有认证信息，用户随便输入就可以登录</code></p>
+<p><img src="http://oyep1jupk.bkt.clouddn.com/login.png" alt="login"></p>
+<p><strong>创建DataSet</strong></p>
+<p>登录后点击”New Image Classification Dataset”<br>并进行相关设置。</p>
+<p><img src="http://oyep1jupk.bkt.clouddn.com/dataset.png" alt="dataset"></p>
+<p>当job运行时，就可以在右侧看到运行的时间，以及结果。<br><img src="http://oyep1jupk.bkt.clouddn.com/dataset1.png" alt="dataset1"><br><img src="http://oyep1jupk.bkt.clouddn.com/dataset2.png" alt="dataset2"></p>
+<p>当运行完成之后，点击左上角的<code>DIGITS</code>,可以看到创建的<code>dataset</code><br><img src="http://oyep1jupk.bkt.clouddn.com/dataset-final.png" alt="dataset-final"></p>
+<p><strong>训练模型</strong></p>
+<p>点击 <code>Models &gt; New Model &gt; Images &gt; Classification</code>.将引导你到<code>New Image Classification Model</code> 页面。</p>
+<p>按照以下步骤进行操作</p>
+<ul>
+<li>在<code>Select Dataset field</code>选择 “testbiaoge” 数据集</li>
+<li>在<code>Standard Networks</code>窗口选择<code>LeNet</code>网络</li>
+<li>填写GPU卡数量以及模型名称</li>
+<li>点击<code>Create</code>按钮进行创建</li>
+</ul>
+<p><img src="http://oyep1jupk.bkt.clouddn.com/model.png" alt="model-1"><br><img src="http://oyep1jupk.bkt.clouddn.com/model2.png" alt="model-2"></p>
+<p>在训练过程中用户可以看到悬链环境以及训练时间等相关信息。</p>
+<p>训练完成的状态：<br><img src="http://oyep1jupk.bkt.clouddn.com/model-train.png" alt="model-train"></p>
+<p>为了测试这个模型，可以拉到页面最底部</p>
+<ul>
+<li><p>点击<code>Upload image</code> 按钮选择一个文件，测试过程中选择<code>/dataset/test/2/00035.png</code></p>
+</li>
+<li><p>或者在网络上找一张图片，黏贴URL到<code>Image URL</code></p>
+</li>
+<li><p>选中<code>Show visualizations and statistics</code></p>
+</li>
+<li><p>点击<code>Classify One</code></p>
+</li>
+</ul>
+<p>在页面顶部，展示了五个分类以及相关的值。<code>DIGITS</code>也提供了一些可视化以及网络中每个层的权重和激活统计信息。</p>
+<p><img src="http://oyep1jupk.bkt.clouddn.com/test-model-1.png" alt="test-model"></p>
+<p><img src="http://oyep1jupk.bkt.clouddn.com/test-model.png" alt="test-model2"></p>
+<p>查看最终任务运行的过程信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">2017-12-29 06:50:54 [20171229-065052-5cc9] [INFO ] Infer Model task started.</div><div class="line">2017-12-29 06:50:54 [20171229-065052-5cc9] [INFO ] Task subprocess args: &quot;/usr/bin/python /usr/local/lib/python2.7/dist-packages/digits/tools/inference.py /jobs/20171229-065052-5cc9/tmpctzfnI.txt /jobs/20171229-065052-5cc9 20171229-064432-4c8a --jobs_dir=/jobs --epoch=30.0 --layers=all --gpu=0&quot;</div><div class="line">2017-12-29 06:50:54 [20171229-065052-5cc9] [WARNING] Infer Model unrecognized output: libdc1394 error: Failed to initialize libdc1394</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">2017-12-29 06:52:43 [20171229-065052-5cc9] [INFO ] Infer Model task completed.</div><div class="line">2017-12-29 06:52:43 [20171229-065052-5cc9] [INFO ] Job complete.</div><div class="line">2017-12-29 06:52:43 [20171229-065052-5cc9] [INFO ] Job deleted.</div></pre></td></tr></table></figure></p>
+<p>至此，使用NVIDIA-DIGITS已经完成了一个模型训练。</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/30/Manager-your-GPUs/" itemprop="url">
-              
-                <span itemprop="name">Manager-your-GPUs.md</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-30T22:03:27+08:00"
-              content="2017-10-30" >
-          10-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/26/GPU环境下玩转Docker-二/" itemprop="url">
-              
-                <span itemprop="name">GPU环境下玩转Docker(二)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-26T10:07:46+08:00"
-              content="2017-10-26" >
-          10-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/26/GPU环境下玩转Docker-一/" itemprop="url">
-              
-                <span itemprop="name">GPU环境下玩转Docker(一)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-26T10:07:34+08:00"
-              content="2017-10-26" >
-          10-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
+          
+            <a href="/tags/docker/" rel="tag"><i class="fa fa-tag"></i> docker</a>
+          
+            <a href="/tags/nvidia/" rel="tag"><i class="fa fa-tag"></i> nvidia</a>
+          
+            <a href="/tags/nvidia-digits/" rel="tag"><i class="fa fa-tag"></i> nvidia-digits</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"><i class="fa fa-tag"></i> deeplearning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/01/回顾2017-展望2018/" rel="next" title="回顾2017-展望2018">
+                <i class="fa fa-chevron-left"></i> 回顾2017-展望2018
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -570,6 +571,15 @@
 
 
           
+  <div class="comments" id="comments">
+    
+        
+          <div onclick="ShowGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+          <div id="gitment-container" style="display:none"></div>
+        
+    
+  </div>
+
 
         </div>
         
@@ -590,8 +600,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/me.png"
@@ -726,6 +745,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GITS简介"><span class="nav-number">1.</span> <span class="nav-text">GITS简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DIGITS特性"><span class="nav-number">2.</span> <span class="nav-text">DIGITS特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署测试"><span class="nav-number">3.</span> <span class="nav-text">部署测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#环境测试"><span class="nav-number">4.</span> <span class="nav-text">环境测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载模型数据"><span class="nav-number">4.1.</span> <span class="nav-text">下载模型数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用WebApp"><span class="nav-number">4.2.</span> <span class="nav-text">使用WebApp</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -863,11 +898,6 @@
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
 
 
   

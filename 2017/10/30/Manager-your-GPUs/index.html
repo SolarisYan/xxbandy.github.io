@@ -106,7 +106,7 @@
 <meta property="og:description" content="使用nvidia-smi管理你的GPU卡nvidia-smi命令是NVIDIA系统管理接口，之前提到使用nvidia-docker实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png">
-<meta property="og:updated_time" content="2017-11-09T13:32:03.000Z">
+<meta property="og:updated_time" content="2018-01-19T02:52:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Manager-your-GPUs.md">
 <meta name="twitter:description" content="使用nvidia-smi管理你的GPU卡nvidia-smi命令是NVIDIA系统管理接口，之前提到使用nvidia-docker实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。">
@@ -451,6 +451,7 @@
 <li>NV# = 贯穿一组NVLinks设备</li>
 </ul>
 <p><code>划重点啦：其实由上面的GPU拓扑可以看出来，我们系统上的4块设备是两两互相直连的架构！因为4块卡是通过一个PCIe switch来互相通信的。大体结构如图：</code><br><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png" alt=""></p>
+<p><strong><code>补充：查看GPU卡之间的邻居和链接关系</code></strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"># nvidia-smi topo 命令有个参数-n可以用来指定gpu卡以及互联结构来查看和它互联结构</div><div class="line">#                   0 = a single PCIe switch on a dual GPU board</div><div class="line">#                   1 = a single PCIe switch</div><div class="line">#                   2 = multiple PCIe switches</div><div class="line">#                   3 = a PCIe host bridge</div><div class="line">#                   4 = a socket-level link</div><div class="line"></div><div class="line"># 查看每个GPU卡所在的socket上链接的其他GPU卡设备</div><div class="line">for uuid in `nvidia-smi --query-gpu=uuid --format=csv | grep GPU  | xargs`;do nvidia-smi topo -i $uuid -n 4;done</div><div class="line"># 查看每个GPU卡所在的PCIe host bridge 上链接的其他GPU卡设备</div><div class="line">for uuid in `nvidia-smi --query-gpu=uuid --format=csv | grep GPU  | xargs`;do nvidia-smi topo -i $uuid -n 3;done</div><div class="line"># 查看每个GPU卡所在的PCIe switch 上链接的其他GPU卡设备</div><div class="line">for uuid in `nvidia-smi --query-gpu=uuid --format=csv | grep GPU  | xargs`;do nvidia-smi topo -i $uuid -n 1;done</div></pre></td></tr></table></figure></p>
 <p><a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/" target="_blank" rel="external">nvidia-smi命令使用帮助</a></p>
 
       
@@ -786,7 +787,7 @@ var jiathis_config = {data_track_clickback:'true'};
 
 <div class="theme-info">
 <div class="powered-by"></div>
-<span class="post-count">博客全站共47.4k字</span>
+<span class="post-count">博客全站共47.6k字</span>
 </div>
 
         

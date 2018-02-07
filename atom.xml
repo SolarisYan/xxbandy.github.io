@@ -309,13 +309,14 @@
     <link href="http://yoursite.com/2017/11/28/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7%E6%8A%80%E5%B7%A7/"/>
     <id>http://yoursite.com/2017/11/28/效率工具技巧/</id>
     <published>2017-11-28T06:17:54.000Z</published>
-    <updated>2017-12-24T09:13:11.000Z</updated>
+    <updated>2018-01-18T14:48:54.000Z</updated>
     
     <content type="html"><![CDATA[<a id="more"></a>
 <h3 id="Yaml语法检测"><a href="#Yaml语法检测" class="headerlink" title="Yaml语法检测"></a>Yaml语法检测</h3><p><a href="http://www.yamllint.com/" target="_blank" rel="external">yaml语法在线检测</a></p>
 <h3 id="Json字符串解析"><a href="#Json字符串解析" class="headerlink" title="Json字符串解析"></a>Json字符串解析</h3><p><a href="http://www.kjson.com/" target="_blank" rel="external">json格式化在线校验工具</a></p>
 <h3 id="Restful-API-文档-设计"><a href="#Restful-API-文档-设计" class="headerlink" title="Restful API 文档+设计"></a>Restful API 文档+设计</h3><p><a href="https://app.apiary.io" target="_blank" rel="external">在线api设计</a></p>
 <h3 id="URL转PDF"><a href="#URL转PDF" class="headerlink" title="URL转PDF"></a>URL转PDF</h3><p><a href="http://pdfmyurl.com/" target="_blank" rel="external">在线URL转换PDF工具</a></p>
+<p><a href="https://smallpdf.com/" target="_blank" rel="external">pdf在线转换工具</a></p>
 ]]></content>
     
     <summary type="html">
@@ -824,9 +825,9 @@
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
     
-      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
-    
       <category term="Etcd-Cluster" scheme="http://yoursite.com/tags/Etcd-Cluster/"/>
+    
+      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
     
       <category term="systemd" scheme="http://yoursite.com/tags/systemd/"/>
     
@@ -1021,7 +1022,7 @@
     <link href="http://yoursite.com/2017/10/30/Manager-your-GPUs/"/>
     <id>http://yoursite.com/2017/10/30/Manager-your-GPUs/</id>
     <published>2017-10-30T14:03:27.000Z</published>
-    <updated>2017-11-09T13:32:03.000Z</updated>
+    <updated>2018-01-19T02:52:43.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="使用nvidia-smi管理你的GPU卡"><a href="#使用nvidia-smi管理你的GPU卡" class="headerlink" title="使用nvidia-smi管理你的GPU卡"></a>使用nvidia-smi管理你的GPU卡</h2><p><code>nvidia-smi</code>命令是NVIDIA系统管理接口，之前提到使用<code>nvidia-docker</code>实际上底层也是调用的该接口。该接口可以查看到当前主机上的相关GPU设备，任务以及当前状态等信息，熟练使用该接口能够更好的管理好GPU系统资源。</p>
 <a id="more"></a>
@@ -1057,6 +1058,7 @@
 <li>NV# = 贯穿一组NVLinks设备</li>
 </ul>
 <p><code>划重点啦：其实由上面的GPU拓扑可以看出来，我们系统上的4块设备是两两互相直连的架构！因为4块卡是通过一个PCIe switch来互相通信的。大体结构如图：</code><br><img src="http://oyep1jupk.bkt.clouddn.com/docker/nvidia-docker/gpu-topo.png" alt=""></p>
+<p><strong><code>补充：查看GPU卡之间的邻居和链接关系</code></strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"># nvidia-smi topo 命令有个参数-n可以用来指定gpu卡以及互联结构来查看和它互联结构</div><div class="line">#                   0 = a single PCIe switch on a dual GPU board</div><div class="line">#                   1 = a single PCIe switch</div><div class="line">#                   2 = multiple PCIe switches</div><div class="line">#                   3 = a PCIe host bridge</div><div class="line">#                   4 = a socket-level link</div><div class="line"></div><div class="line"># 查看每个GPU卡所在的socket上链接的其他GPU卡设备</div><div class="line">for uuid in `nvidia-smi --query-gpu=uuid --format=csv | grep GPU  | xargs`;do nvidia-smi topo -i $uuid -n 4;done</div><div class="line"># 查看每个GPU卡所在的PCIe host bridge 上链接的其他GPU卡设备</div><div class="line">for uuid in `nvidia-smi --query-gpu=uuid --format=csv | grep GPU  | xargs`;do nvidia-smi topo -i $uuid -n 3;done</div><div class="line"># 查看每个GPU卡所在的PCIe switch 上链接的其他GPU卡设备</div><div class="line">for uuid in `nvidia-smi --query-gpu=uuid --format=csv | grep GPU  | xargs`;do nvidia-smi topo -i $uuid -n 1;done</div></pre></td></tr></table></figure></p>
 <p><a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/" target="_blank" rel="external">nvidia-smi命令使用帮助</a></p>
 ]]></content>
     

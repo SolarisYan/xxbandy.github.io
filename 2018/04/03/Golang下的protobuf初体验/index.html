@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Golang,protobuf," />
 
 
 
@@ -97,16 +97,18 @@
 
 
 
-<meta name="description" content="一个长跑者的运维以及人生经历">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BG运维说">
-<meta property="og:url" content="http://yoursite.com/tags/Tesseract4-0/index.html">
+<meta name="description" content="protpbuf简介 protobuffer(以下简称PB)是google 的一种数据交换的格式，它独立于语言，独立于平台。google 提供了多种语言的实现：Java、c#、c++、Go 和 Python，每一种实现都包含了相应语言的编译器以及库文件。由于它是一种二进制的格式，比使用 xml、json等 进行数据交换快许多。可以把它用于分布式应用之间的数据通信或者异构环境下的数据交换。作为一种效">
+<meta name="keywords" content="Golang,protobuf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang下的protobuf初体验">
+<meta property="og:url" content="http://yoursite.com/2018/04/03/Golang下的protobuf初体验/index.html">
 <meta property="og:site_name" content="BG运维说">
-<meta property="og:description" content="一个长跑者的运维以及人生经历">
+<meta property="og:description" content="protpbuf简介 protobuffer(以下简称PB)是google 的一种数据交换的格式，它独立于语言，独立于平台。google 提供了多种语言的实现：Java、c#、c++、Go 和 Python，每一种实现都包含了相应语言的编译器以及库文件。由于它是一种二进制的格式，比使用 xml、json等 进行数据交换快许多。可以把它用于分布式应用之间的数据通信或者异构环境下的数据交换。作为一种效">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-03T07:03:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BG运维说">
-<meta name="twitter:description" content="一个长跑者的运维以及人生经历">
+<meta name="twitter:title" content="Golang下的protobuf初体验">
+<meta name="twitter:description" content="protpbuf简介 protobuffer(以下简称PB)是google 的一种数据交换的格式，它独立于语言，独立于平台。google 提供了多种语言的实现：Java、c#、c++、Go 和 Python，每一种实现都包含了相应语言的编译器以及库文件。由于它是一种二进制的格式，比使用 xml、json等 进行数据交换快许多。可以把它用于分布式应用之间的数据通信或者异构环境下的数据交换。作为一种效">
 
 
 
@@ -136,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Tesseract4-0/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/03/Golang下的protobuf初体验/"/>
 
 
 
 
 
-  <title>标签: Tesseract4.0 | BG运维说</title>
+  <title>Golang下的protobuf初体验 | BG运维说</title>
   
 
 
@@ -161,7 +163,7 @@
     
   
 
-  <div class="container sidebar-position-right ">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
     <a href="https://github.com/xxbandy/xxbandy.github.io"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
 
@@ -310,54 +312,213 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Tesseract4.0<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/03/Golang下的protobuf初体验/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Andy Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BG运维说">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2017/12/09/开源OCR引擎tesseract的构建使用/" itemprop="url">
-              
-                <span itemprop="name">开源OCR引擎tesseract的构建使用</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Golang下的protobuf初体验</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-09T15:59:29+08:00"
-              content="2017-12-09" >
-          12-09
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T15:01:07+08:00">
+                2018-04-03
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Golang/" itemprop="url" rel="index">
+                    <span itemprop="name">Golang</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="protpbuf简介"><a href="#protpbuf简介" class="headerlink" title="protpbuf简介"></a>protpbuf简介</h3><blockquote>
+<p>protobuffer(以下简称PB)是google 的一种数据交换的格式，它独立于语言，独立于平台。<br>google 提供了多种语言的实现：Java、c#、c++、Go 和 Python，每一种实现都包含了相应语言的编译器以及库文件。由于它是一种二进制的格式，比使用 xml、json等 进行数据交换快许多。<br>可以把它用于分布式应用之间的数据通信或者异构环境下的<code>数据交换</code>。<br>作为一种效率和兼容性都很优秀的二进制数据传输格式，可以用于诸如网络传输、配置文件、数据存储等诸多领域。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
+<li>准备golang的基础环境，GOPATH等等</li>
+<li>准备protobuf底层库环境(conda或者源码编译)</li>
+<li>准备protobuf相关包和插件</li>
+</ul>
+<h3 id="准备基础环境"><a href="#准备基础环境" class="headerlink" title="准备基础环境"></a>准备基础环境</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">sh-4.2# go version</div><div class="line">go version go1.8.3 linux/amd64</div><div class="line">sh-4.2# go env</div><div class="line">....</div><div class="line">GOROOT=&quot;/usr/lib/golang&quot;</div><div class="line">GOPATH=&quot;/root/go&quot;</div><div class="line">....</div></pre></td></tr></table></figure>
+<h3 id="准备protobuf底层库环境"><a href="#准备protobuf底层库环境" class="headerlink" title="准备protobuf底层库环境"></a>准备protobuf底层库环境</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 因为工作原因会使用conda管理一些基础包，所以可以使用conda去安装基础模块</div><div class="line"></div><div class="line">$ source /export/python2.7/setenv.sh</div><div class="line">$ conda install libprotobuf -y</div><div class="line">$ protoc --version</div><div class="line">libprotoc 3.0.0</div></pre></td></tr></table></figure>
+<h3 id="准备protobuf模块以及插件"><a href="#准备protobuf模块以及插件" class="headerlink" title="准备protobuf模块以及插件"></a>准备protobuf模块以及插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># protoc-gen-go是用来将protobuf的的代码转换成go语言代码的一个插件</div><div class="line">$ go get -u github.com/golang/protobuf/protoc-gen-go</div><div class="line"># proto是protobuf在golang中的接口模块</div><div class="line">$ go get -u github.com/golang/protobuf/proto</div></pre></td></tr></table></figure>
+<h3 id="使用protobuf构造golang的模块代码"><a href="#使用protobuf构造golang的模块代码" class="headerlink" title="使用protobuf构造golang的模块代码"></a>使用protobuf构造golang的模块代码</h3><p><a href="https://segmentfault.com/a/1190000007917576" target="_blank" rel="external">Protobuf语法</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"># 创建项目</div><div class="line">$ mkdir -p &quot;$&#123;GOPATH&#125;/src/protobuf-study&quot;</div><div class="line"></div><div class="line"># 生成protobuf和相应的golang代码</div><div class="line">$ mkdir -p &quot;$&#123;GOPATH&#125;/src/protobuf-study/protobuf&quot; &amp;&amp; pushd &quot;$&#123;GOPATH&#125;/src/protobuf-study/goprotobuf&quot;</div><div class="line"></div><div class="line"># 定义protobuf消息格式</div><div class="line">sh-4.2# cat test.proto</div><div class="line">//这里的语法必须使用proto2,在proto3的版本中和optional参数冲突了</div><div class="line">syntax = &quot;proto2&quot;;</div><div class="line">//显式生命报名，在其他消息格式定义中可以使用package.message的方式来使用类型</div><div class="line">//比如goprotobuf.HelloWorld</div><div class="line">package goprotobuf;</div><div class="line">//声明一个消息体描述一个请求或者响应的消息格式</div><div class="line">message HelloWorld &#123;</div><div class="line">    required int32     id = 1;</div><div class="line">    required string    name = 2;</div><div class="line">    optional int32     opt = 3;</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 生成对应的golang模块代码(会将protobuf消息格式转换为对应golang结构体)</div><div class="line">sh-4.2# protoc --go_out=./ test.proto</div><div class="line">sh-4.2# ls</div><div class="line">test.pb.go  test.proto</div><div class="line"></div><div class="line"># 看一下生成的test.pd.go的核心代码</div><div class="line">// 声明一个消息体描述一个请求或者响应的消息格式</div><div class="line">type HelloWorld struct &#123;</div><div class="line">	Id               *int32  `protobuf:&quot;varint,1,req,name=id&quot; json:&quot;id,omitempty&quot;`</div><div class="line">	Name             *string `protobuf:&quot;bytes,2,req,name=name&quot; json:&quot;name,omitempty&quot;`</div><div class="line">	Opt              *int32  `protobuf:&quot;varint,3,opt,name=opt&quot; json:&quot;opt,omitempty&quot;`</div><div class="line">	XXX_unrecognized []byte  `json:&quot;-&quot;`</div><div class="line">&#125;</div><div class="line"></div><div class="line">func (m *HelloWorld) Reset()                    &#123; *m = HelloWorld&#123;&#125; &#125;</div><div class="line">func (m *HelloWorld) String() string            &#123; return proto.CompactTextString(m) &#125;</div><div class="line">func (*HelloWorld) ProtoMessage()               &#123;&#125;</div><div class="line">func (*HelloWorld) Descriptor() ([]byte, []int) &#123; return fileDescriptor0, []int&#123;0&#125; &#125;</div><div class="line"></div><div class="line">func (m *HelloWorld) GetId() int32 &#123;</div><div class="line">	if m != nil &amp;&amp; m.Id != nil &#123;</div><div class="line">		return *m.Id</div><div class="line">	&#125;</div><div class="line">	return 0</div><div class="line">&#125;</div><div class="line"></div><div class="line">func (m *HelloWorld) GetName() string &#123;</div><div class="line">	if m != nil &amp;&amp; m.Name != nil &#123;</div><div class="line">		return *m.Name</div><div class="line">	&#125;</div><div class="line">	return &quot;&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">func (m *HelloWorld) GetOpt() int32 &#123;</div><div class="line">	if m != nil &amp;&amp; m.Opt != nil &#123;</div><div class="line">		return *m.Opt</div><div class="line">	&#125;</div><div class="line">	return 0</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="使用goprotobuf包中定义的protobuf数据格式进行通信"><a href="#使用goprotobuf包中定义的protobuf数据格式进行通信" class="headerlink" title="使用goprotobuf包中定义的protobuf数据格式进行通信"></a>使用<code>goprotobuf</code>包中定义的protobuf数据格式进行通信</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line">$ pushd $GOPATH/src/protobuf-study</div><div class="line"></div><div class="line"># 一个简单使用protobuf进行读写文件的例子</div><div class="line">$ cat write.go</div><div class="line">package main</div><div class="line">import (</div><div class="line">    protobuf &quot;github.com/golang/protobuf/proto&quot;</div><div class="line">    &quot;protobuf-study/goprotobuf&quot;</div><div class="line">    &quot;fmt&quot;</div><div class="line">    &quot;os&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">    //初始化protobuf数据格式</div><div class="line">    msg := &amp;goprotobuf.HelloWorld&#123;</div><div class="line">        Id:     protobuf.Int32(17),</div><div class="line">        Name:   protobuf.String(&quot;BGbiao&quot;),</div><div class="line">        Opt:    protobuf.Int32(18),</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    filename := &quot;./protobuf-test.txt&quot;</div><div class="line">    fmt.Printf(&quot;使用protobuf创建文件 %s\n&quot;,filename)</div><div class="line">    fObj,_ := os.Create(filename)</div><div class="line">    defer fObj.Close()</div><div class="line">    buffer,_ := protobuf.Marshal(msg)</div><div class="line">    fObj.Write(buffer)</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"># 测试执行写文件程序</div><div class="line">sh-4.2# go run write.go</div><div class="line">使用protobuf创建文件 ./protobuf-test.txt</div><div class="line">sh-4.2# cat -A protobuf-test.txt</div><div class="line">^H^Q^R^FBGbiao^X^R</div><div class="line">sh-4.2#</div><div class="line"></div><div class="line"># 一个简单的通过之前定义的protobuf格式进行读取文件内容的例子</div><div class="line">sh-4.2# cat read.go</div><div class="line">package main</div><div class="line">import (</div><div class="line">    protobuf &quot;github.com/golang/protobuf/proto&quot;</div><div class="line">    &quot;protobuf-study/goprotobuf&quot;</div><div class="line">    &quot;fmt&quot;</div><div class="line">    &quot;io&quot;</div><div class="line">    &quot;os&quot;</div><div class="line">)</div><div class="line"></div><div class="line">func checkError(err error) &#123;</div><div class="line">    if err != nil &#123;</div><div class="line">        fmt.Println(err.Error())</div><div class="line">        os.Exit(-1)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">    filename := &quot;protobuf-test.txt&quot;</div><div class="line">    file,fileErr := os.Open(filename)</div><div class="line">    checkError(fileErr)</div><div class="line"></div><div class="line">    defer file.Close()</div><div class="line">    fs,fsErr := file.Stat()</div><div class="line">    checkError(fsErr)</div><div class="line">    buffer := make([]byte,fs.Size())</div><div class="line">    //把file文件内容读取到buffer</div><div class="line">    _,readErr := io.ReadFull(file,buffer)</div><div class="line">    checkError(readErr)</div><div class="line"></div><div class="line">    //初始化pb结构体对象并将buffer中的文件内容读取到pb结构体中</div><div class="line">    msg := &amp;goprotobuf.HelloWorld&#123;&#125;</div><div class="line">    pbErr := protobuf.Unmarshal(buffer, msg)</div><div class="line">    checkError(pbErr)</div><div class="line">    fmt.Printf(&quot;读取文件:%s \r\nname:%s\nid:%d\nopt:%d\n&quot;,filename,msg.GetName(),msg.GetId(),msg.GetOpt())</div><div class="line">&#125;</div><div class="line">sh-4.2# go run read.go</div><div class="line">读取文件:protobuf-test.txt</div><div class="line">name:BGbiao</div><div class="line">id:17</div><div class="line">opt:18</div></pre></td></tr></table></figure>
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><p><a href="https://segmentfault.com/a/1190000007917576" target="_blank" rel="external">Protobuf语法</a></p>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢客官的阅读-------------</div>
+    
+</div>
 
       
     </div>
 
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Golang/" rel="tag"><i class="fa fa-tag"></i> Golang</a>
+          
+            <a href="/tags/protobuf/" rel="tag"><i class="fa fa-tag"></i> protobuf</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/03/新年已过，你的新目标确定了吗/" rel="next" title="新年已过，你的新目标确定了吗">
+                <i class="fa fa-chevron-left"></i> 新年已过，你的新目标确定了吗
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a href="http://www.jiathis.com/share?uid=" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+var jiathis_config = {data_track_clickback:'true'};
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -365,6 +526,15 @@
 
 
           
+  <div class="comments" id="comments">
+    
+        
+          <div onclick="ShowGitment()" id="gitment-display-button">显示 Gitment 评论</div>
+          <div id="gitment-container" style="display:none"></div>
+        
+    
+  </div>
+
 
         </div>
         
@@ -385,8 +555,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/me.png"
@@ -522,6 +701,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#protpbuf简介"><span class="nav-number">1.</span> <span class="nav-text">protpbuf简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备基础环境"><span class="nav-number">3.</span> <span class="nav-text">准备基础环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备protobuf底层库环境"><span class="nav-number">4.</span> <span class="nav-text">准备protobuf底层库环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备protobuf模块以及插件"><span class="nav-number">5.</span> <span class="nav-text">准备protobuf模块以及插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用protobuf构造golang的模块代码"><span class="nav-number">6.</span> <span class="nav-text">使用protobuf构造golang的模块代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用goprotobuf包中定义的protobuf数据格式进行通信"><span class="nav-number">7.</span> <span class="nav-text">使用goprotobuf包中定义的protobuf数据格式进行通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关链接"><span class="nav-number">8.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -655,10 +850,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 

@@ -643,9 +643,9 @@
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
     
-      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
-    
       <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
     
       <category term="最佳实践" scheme="http://yoursite.com/tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/"/>
     
@@ -960,9 +960,9 @@
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
     
-      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
-    
       <category term="Etcd-Cluster" scheme="http://yoursite.com/tags/Etcd-Cluster/"/>
+    
+      <category term="Docker" scheme="http://yoursite.com/tags/Docker/"/>
     
       <category term="systemd" scheme="http://yoursite.com/tags/systemd/"/>
     
